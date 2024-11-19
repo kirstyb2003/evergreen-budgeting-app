@@ -1,0 +1,51 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="content">
+    <h3 class="title">Register</h3>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <label id="user" class="label"><span style="color:red">*</span> Username:</label>
+        <input type="text" id="user" formControlName="username" class="input" required />
+        <div [ngClass]="{ 'show-error': username.errors?.['required'] && username.touched }" class="error">Username is
+            required.</div>
+
+        <label id="user" class="label"><span style="color:red">*</span> Email:</label>
+        <input type="text" id="email" formControlName="email" class="input" required />
+        <div [ngClass]="{ 'show-error': email.errors?.['required'] && email.touched }" class="error">Email is required.
+        </div>
+
+        <label id="password" class="label"><span style="color:red">*</span> Password:</label>
+        <input type="password" id="password" formControlName="password" required class="input" />
+        <div class="error" [ngClass]="{ 'show-error': password.errors?.['required'] && password.touched }">Password is
+            required.</div>
+
+        <label id="password_confirm" class="label"><span style="color:red">*</span> Confirm Password:</label>
+        <input type="password" id="password_confirm" formControlName="password_confirm" required class="input" />
+        <div class="error"
+            [ngClass]="{ 'show-error': password_confirm.touched && (password_confirm.hasError('required') || password_confirm.hasError('passwordMismatch')) }">
+            <div *ngIf="password_confirm.touched">
+                <div *ngIf="password_confirm.hasError('required')">
+                    Please confirm your password.
+                </div>
+                <div *ngIf="password_confirm.hasError('passwordMismatch')">
+                    Passwords do not match.
+                </div>
+            </div>
+        </div>
+
+        <label id="user" class="label"><span style="color:red">*</span> Default Currency:</label>
+        <select name="currency" id="currency" formControlName="default_currency" class="input" required>
+            <option value="">Please select a currency type</option>
+            @for (curr of currencyList; track curr) {
+            <option [value]="curr.code">{{ curr.name }}</option>
+            }
+        </select>
+        <div [ngClass]="{ 'show-error': default_currency.errors?.['required'] && default_currency.touched }"
+            class="error">A default currency is required.</div>
+
+        <label id="user" class="label">Starting Balance:</label>
+        <input type="number" id="starting_balance" formControlName="starting_balance" class="input" required />
+        <!-- <div [ngClass]="{ 'show-error': starting_balance.errors?.['required'] && starting_balance.touched }" class="error">A Start is required.</div> -->
+
+        <button class="submit_button" type="submit">Sign In</button>
+    </form>
+</div>

@@ -1,0 +1,121 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    max-width: 600px;
+    padding: 2rem;
+    border: 2px solid $main-green;
+    border-radius: 8px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    gap: 0.5rem 0.75rem;                      
+    width: 70%;
+    margin: auto;                        
+}
+
+.label, .input, .error {
+    align-self: center;
+}
+
+
+.label {
+    grid-column: 1 / 2;                 
+    text-align: left;
+    // width: 3rem;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.input {
+    grid-column: 2 / 3;                    
+    width: 90%;                           
+    max-width: 300px;
+                         
+}
+
+.error {
+    grid-column: 2 / 3;                    
+    color: red;
+    font-size: 0.75rem;
+    min-height: 0.5rem;                    
+    line-height: 0.75rem;                  
+    visibility: hidden;                    
+    opacity: 0;                            
+    transition: visibility 0s, opacity 0.3s ease-in-out;
+    text-align: center;
+}
+
+.error.show-error {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.submit_button {
+    grid-column: 1 / 3;                    
+    justify-self: center;                  
+    width: fit-content;
+    padding: 0.5rem 1.5rem;
+    background-color: $light-green;
+    color: white;
+    font-weight: bold;
+    border: 2px solid $light-green;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 3rem;
+}
+
+.submit_button:hover {
+    background-color: white;
+    color: $light-green;
+}
+
+.submit_button:disabled {
+    cursor: not-allowed
+}
+
+.register_text {
+    grid-column: 1 / 3;                    
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.register_text a {
+    color: $main-green;                        
+    text-decoration: underline;
+}
+
+.title {
+    grid-column: 1 / -1;                   
+    font-size: 1.8rem;
+    color: $light-green;                        
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 932px) {
+    .label {
+        font-size: 1rem;
+        min-width: 95px;
+    }
+
+    .content {
+        width: 65%
+    }
+}
+
+select {
+    height: 23px;
+    width: 92% !important;
+}
