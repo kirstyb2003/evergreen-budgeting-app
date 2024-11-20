@@ -7,8 +7,6 @@ require('dotenv').config();
 const allowCors = fn => async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', '*')
-  // another common pattern
-  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
   res.setHeader(
     'Access-Control-Allow-Headers',
@@ -38,6 +36,7 @@ const pool = new Pool({
 app.use(cors());
 app.use(bodyParser.json());
 
+// Wrap the call in the allowCors function to indicate that the call from the frontend is allowed
 app.post('/api/register', allowCors(async (req, res) => {
   const { username, email, password, default_currency, starting_balance } = req.body;
 
@@ -63,20 +62,15 @@ app.get('/api/status', (req, res) => {
   res.json({info: 'Node.js, Express, and Postgres API 2.0'});
 });
 app.get('/', (req, res) => {
-  res.send('Express on Vercel');
+  res.send('Evergreen Budgeting Server up and running...');
 });
+
 // Listen to the specified port, otherwise 3080
 const PORT = process.env.PORT || 3080;
 const server = app.listen(PORT, () => {
   console.log(`Server Running: http://localhost:${PORT}`);
 });
-/**
- * The SIGTERM signal is a generic signal used to cause program 
- * termination. Unlike SIGKILL , this signal can be blocked, 
- * handled, and ignored. It is the normal way to politely ask a 
- * program to terminate. The shell command kill generates 
- * SIGTERM by default.
- */
+
 process.on('SIGTERM', () => {
     server.close(() => {
         console.log('Server Close: Process Terminated!');
