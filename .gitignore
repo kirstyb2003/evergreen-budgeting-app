@@ -1,10 +1,15 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Client folder
+/client/node_modules
+/client/.angular/cache
+/client/dist
+/client/tmp
+/client/out-tsc
+/client/bazel-out
+
+# Server folder
+/server/node_modules
 
 # Node
 /node_modules
@@ -29,13 +34,12 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
 .sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+.connect.lock
+.coverage
+.libpeerconnection.log
 testem.log
-/typings
+.typings
 
 # System files
 .DS_Store

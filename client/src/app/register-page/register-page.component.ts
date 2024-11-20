@@ -4,6 +4,7 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validatio
 import { NgIf, NgClass } from '@angular/common';
 import { currencyList } from '../data-structures/currency-codes';
 import { RouterLink } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
 
 function passwordMatchValidator(passwordControlName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -30,6 +31,8 @@ export class RegisterPageComponent implements OnInit{
   currencyList: { name: string; code: string }[] = currencyList;
 
   registerForm!: FormGroup;
+
+  constructor(private authService: AuthenticationService) {}
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -70,8 +73,14 @@ export class RegisterPageComponent implements OnInit{
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
     } else {
-      var formData = this.registerForm.value;
-      console.log('Form Submitted:', formData);
+      this.authService.registerUser(this.registerForm.value).subscribe({
+        next: (response) => {
+          console.log('User registered successfully!', response);
+        },
+        error: (err) => {
+          console.error('Error registering user', err);
+        },
+      });
     }
   }
 }
