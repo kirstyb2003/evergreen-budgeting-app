@@ -4,6 +4,23 @@ const { Pool } = require('pg');
 const cors = require('cors');
 require('dotenv').config();
 
+const allowCors = fn => async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  return await fn(req, res)
+}
+
 const app = express();
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE } = process.env;
@@ -21,7 +38,7 @@ const pool = new Pool({
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', allowCors(async (req, res) => {
   const { username, email, password, default_currency, starting_balance } = req.body;
 
   console.log(req.body);
@@ -40,10 +57,10 @@ app.post('/api/register', async (req, res) => {
     console.error(err.message);
     res.status(500).json({ error: "Internal server error" });
   }
-})
+}));
 
 app.get('/api/status', (req, res) => {
-  res.json({info: 'Node.js, Express, and Postgres API'});
+  res.json({info: 'Node.js, Express, and Postgres API 2.0'});
 });
 app.get('/', (req, res) => {
   res.send('Express on Vercel');
