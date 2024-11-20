@@ -44,8 +44,8 @@
 
         <label id="user" class="label">Starting Balance:</label>
         <input type="number" id="starting_balance" formControlName="starting_balance" class="input" required />
-        <!-- <div [ngClass]="{ 'show-error': starting_balance.errors?.['required'] && starting_balance.touched }" class="error">A Start is required.</div> -->
 
-        <button class="submit_button" type="submit">Sign In</button>
+        <button class="submit_button" type="submit">Register</button>
     </form>
+    <p class="login_text">Already registered? <a routerLink="/login">Login Here!</a></p>
 </div>

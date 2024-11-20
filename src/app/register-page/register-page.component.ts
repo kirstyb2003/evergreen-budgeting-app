@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgIf, NgClass } from '@angular/common';
 import { currencyList } from '../data-structures/currency-codes';
+import { RouterLink } from '@angular/router';
 
 function passwordMatchValidator(passwordControlName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -21,11 +22,11 @@ function passwordMatchValidator(passwordControlName: string): ValidatorFn {
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [NavBarComponent, NavBarComponent, ReactiveFormsModule, NgIf, NgClass],
+  imports: [NavBarComponent, NavBarComponent, ReactiveFormsModule, NgIf, NgClass, RouterLink],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
 })
-export class RegisterPageComponent {
+export class RegisterPageComponent implements OnInit{
   currencyList: { name: string; code: string }[] = currencyList;
 
   registerForm!: FormGroup;
@@ -69,7 +70,8 @@ export class RegisterPageComponent {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
     } else {
-      console.log('Form Submitted:', this.registerForm.value);
+      var formData = this.registerForm.value;
+      console.log('Form Submitted:', formData);
     }
   }
 }

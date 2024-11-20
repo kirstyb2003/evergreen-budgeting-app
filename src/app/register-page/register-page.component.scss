@@ -86,13 +86,13 @@ form {
     cursor: not-allowed
 }
 
-.register_text {
+.login_text {
     grid-column: 1 / 3;                    
     text-align: center;
     margin-top: 2rem;
 }
 
-.register_text a {
+.login_text a {
     color: $main-green;                        
     text-decoration: underline;
 }
