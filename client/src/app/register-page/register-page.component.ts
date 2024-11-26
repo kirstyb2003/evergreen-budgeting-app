@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgIf, NgClass } from '@angular/common';
 import { currencyList } from '../data-structures/currency-codes';
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
+import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
 
 function passwordMatchValidator(passwordControlName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -17,6 +18,28 @@ function passwordMatchValidator(passwordControlName: string): ValidatorFn {
 
     // Check if the password and confirm password are the same
     return password === confirmPassword ? null : { passwordMismatch: true };
+  };
+}
+
+function uniqueValue(field: string, httpConnect: AuthenticationService): AsyncValidatorFn {
+  return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    const value = control.value;
+
+    if (!value) {
+      return of(null);
+    }
+
+    return of(value).pipe(
+      debounceTime(300),
+      switchMap(() =>
+        httpConnect.getValue(value, field).pipe(
+          map((response) => {
+            return response.length > 0 ? { nonUniqueVal: true } : null;
+          }),
+          catchError(() => of(null))
+        )
+      )
+    );
   };
 }
 
@@ -36,11 +59,19 @@ export class RegisterPageComponent implements OnInit{
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
-      username: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
+      username: new FormControl('', {
+        validators: [Validators.required],
+        asyncValidators: [uniqueValue("username", this.authService)],
+        updateOn: 'blur',
+      }),
+      email: new FormControl('', {
+        validators: [Validators.required],
+        asyncValidators: [uniqueValue("email", this.authService)],
+        updateOn: 'blur',
+      }),
       password: new FormControl('', Validators.required),
       password_confirm: new FormControl('', [Validators.required, passwordMatchValidator("password")]),
-      default_currency: new FormControl('', Validators.required),
+      default_currency: new FormControl('', Validators.required), 
       starting_balance: new FormControl('0'),
     });
   }

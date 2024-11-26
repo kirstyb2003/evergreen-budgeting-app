@@ -5,12 +5,30 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <label id="user" class="label"><span style="color:red">*</span> Username:</label>
         <input type="text" id="user" formControlName="username" class="input" required />
-        <div [ngClass]="{ 'show-error': username.errors?.['required'] && username.touched }" class="error">Username is
-            required.</div>
+        <div class="error"
+            [ngClass]="{ 'show-error': username.touched && (username.hasError('required') || username.hasError('nonUniqueVal')) }">
+            <div *ngIf="username.touched">
+                <div *ngIf="username.hasError('required')">
+                    Username is required.
+                </div>
+                <div *ngIf="username.hasError('nonUniqueVal')">
+                    This username already exists. Please pick another.
+                </div>
+            </div>
+        </div>
 
         <label id="user" class="label"><span style="color:red">*</span> Email:</label>
         <input type="text" id="email" formControlName="email" class="input" required />
-        <div [ngClass]="{ 'show-error': email.errors?.['required'] && email.touched }" class="error">Email is required.
+        <div class="error"
+            [ngClass]="{ 'show-error': email.touched && (email.hasError('required') || email.hasError('nonUniqueVal')) }">
+            <div *ngIf="email.touched">
+                <div *ngIf="email.hasError('required')">
+                    Email is required.
+                </div>
+                <div *ngIf="email.hasError('nonUniqueVal')">
+                    This email is already in use. Please use another.
+                </div>
+            </div>
         </div>
 
         <label id="password" class="label"><span style="color:red">*</span> Password:</label>
