@@ -4,6 +4,9 @@ export type CurrencyInfo = {
 };
 
 export const currencyMap: Record<string, CurrencyInfo> = {
+    "GBP": { name: "Pound sterling", symbol: "£" },
+    "EUR": { name: "Euro", symbol: "€" },
+    "USD": { name: "United States dollar", symbol: "$" },
     "AFN": { name: "Afghan afghani", symbol: "؋" },
     "ALL": { name: "Albanian lek", symbol: "Lek" },
     "DZD": { name: "Algerian dinar", symbol: "د.ج" },
@@ -50,7 +53,6 @@ export const currencyMap: Record<string, CurrencyInfo> = {
     "EGP": { name: "Egyptian pound", symbol: "£" },
     "ERN": { name: "Eritrean nakfa", symbol: "Nfk" },
     "ETB": { name: "Ethiopian birr", symbol: "Br" },
-    "EUR": { name: "Euro", symbol: "€" },
     "FKP": { name: "Falkland Islands pound", symbol: "£" },
     "FJD": { name: "Fiji dollar", symbol: "$" },
     "GMD": { name: "Gambian dalasi", symbol: "D" },
@@ -117,7 +119,6 @@ export const currencyMap: Record<string, CurrencyInfo> = {
     "PHP": { name: "Philippine peso", symbol: "₱" },
     "XPT": { name: "Platinum (one troy ounce)", symbol: "N/A" },
     "PLN": { name: "Polish złoty", symbol: "zł" },
-    "GBP": { name: "Pound sterling", symbol: "£" },
     "QAR": { name: "Qatari riyal", symbol: "ر.ق" },
     "CNY": { name: "Renminbi", symbol: "¥" },
     "RON": { name: "Romanian leu", symbol: "lei" },
@@ -161,7 +162,6 @@ export const currencyMap: Record<string, CurrencyInfo> = {
     "COU": { name: "Unidad de Valor Real", symbol: "N/A" },
     "UYW": { name: "Unidad previsional", symbol: "N/A" },
     "AED": { name: "United Arab Emirates dirham", symbol: "د.إ" },
-    "USD": { name: "United States dollar", symbol: "$" },
     "UYI": { name: "Uruguay Peso en Unidades Indexadas", symbol: "N/A" },
     "UYU": { name: "Uruguayan peso", symbol: "$" },
     "UZS": { name: "Uzbekistani sum", symbol: "лв" },

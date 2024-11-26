@@ -3,67 +3,73 @@
 <div class="content">
     <h3 class="title">Register</h3>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <label id="user" class="label"><span style="color:red">*</span> Username:</label>
-        <input type="text" id="user" formControlName="username" class="input" required />
-        <div class="error"
-            [ngClass]="{ 'show-error': username.touched && (username.hasError('required') || username.hasError('nonUniqueVal')) }">
-            <div *ngIf="username.touched">
-                <div *ngIf="username.hasError('required')">
-                    Username is required.
-                </div>
-                <div *ngIf="username.hasError('nonUniqueVal')">
-                    This username already exists. Please pick another.
-                </div>
-            </div>
-        </div>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" formControlName="username" required />
+            <mat-error *ngIf="username.touched && username.hasError('required')">
+                Username is required.
+            </mat-error>
+            <mat-error *ngIf="username.touched && username.hasError('nonUniqueVal')">
+                This username already exists. Please pick another.
+            </mat-error>
+        </mat-form-field>
 
-        <label id="user" class="label"><span style="color:red">*</span> Email:</label>
-        <input type="text" id="email" formControlName="email" class="input" required />
-        <div class="error"
-            [ngClass]="{ 'show-error': email.touched && (email.hasError('required') || email.hasError('nonUniqueVal')) }">
-            <div *ngIf="email.touched">
-                <div *ngIf="email.hasError('required')">
-                    Email is required.
-                </div>
-                <div *ngIf="email.hasError('nonUniqueVal')">
-                    This email is already in use. Please use another.
-                </div>
-            </div>
-        </div>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" required />
+            <mat-error *ngIf="email.touched && email.hasError('required')">
+                Email is required.
+            </mat-error>
+            <mat-error *ngIf="email.touched && email.hasError('nonUniqueVal')">
+                This email is already in use. Please use another.
+            </mat-error>
+        </mat-form-field>
 
-        <label id="password" class="label"><span style="color:red">*</span> Password:</label>
-        <input type="password" id="password" formControlName="password" required class="input" />
-        <div class="error" [ngClass]="{ 'show-error': password.errors?.['required'] && password.touched }">Password is
-            required.</div>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" required />
+            <mat-error *ngIf="password.touched && password.hasError('required')">
+                Password is required.
+            </mat-error>
+        </mat-form-field>
 
-        <label id="password_confirm" class="label"><span style="color:red">*</span> Confirm Password:</label>
-        <input type="password" id="password_confirm" formControlName="password_confirm" required class="input" />
-        <div class="error"
-            [ngClass]="{ 'show-error': password_confirm.touched && (password_confirm.hasError('required') || password_confirm.hasError('passwordMismatch')) }">
-            <div *ngIf="password_confirm.touched">
-                <div *ngIf="password_confirm.hasError('required')">
-                    Please confirm your password.
-                </div>
-                <div *ngIf="password_confirm.hasError('passwordMismatch')">
-                    Passwords do not match.
-                </div>
-            </div>
-        </div>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput type="password" formControlName="password_confirm" required />
+            <mat-error *ngIf="password_confirm.touched && password_confirm.hasError('required')">
+                Please confirm your password.
+            </mat-error>
+            <mat-error *ngIf="password_confirm.touched && password_confirm.hasError('passwordMismatch')">
+                Passwords do not match.
+            </mat-error>
+        </mat-form-field>
 
-        <label id="user" class="label"><span style="color:red">*</span> Default Currency:</label>
-        <select name="currency" id="currency" formControlName="default_currency" class="input" required>
-            <option value="">Please select a currency type</option>
-            @for (curr of currencyList; track curr) {
-            <option [value]="curr.code">{{ curr.name }}</option>
-            }
-        </select>
-        <div [ngClass]="{ 'show-error': default_currency.errors?.['required'] && default_currency.touched }"
-            class="error">A default currency is required.</div>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Default Currency</mat-label>
+            <mat-select formControlName="default_currency" required>
+                <mat-option value="" disabled>Please select a currency type</mat-option>
+                <ng-container *ngFor="let curr of currencyList.slice(0, 3)">
+                    <mat-option [value]="curr.code">{{ curr.name }}</mat-option>
+                  </ng-container>
+                  <mat-divider></mat-divider>
+                  <ng-container *ngFor="let curr of currencyList.slice(3)">
+                    <mat-option [value]="curr.code">{{ curr.name }}</mat-option>
+                  </ng-container>
+            </mat-select>
+            <mat-error *ngIf="default_currency.touched && default_currency.hasError('required')">
+                A default currency is required.
+            </mat-error>
+        </mat-form-field>
 
-        <label id="user" class="label">Starting Balance:</label>
-        <input type="number" id="starting_balance" formControlName="starting_balance" class="input" required />
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Starting Balance</mat-label>
+            <input matInput type="number" formControlName="starting_balance" />
+        </mat-form-field>
 
-        <button class="submit_button" type="submit">Register</button>
+        <button mat-raised-button color="primary" type="submit" class="submit_button">
+            Register
+        </button>
     </form>
+
     <p class="login_text">Already registered? <a routerLink="/login">Login Here!</a></p>
 </div>

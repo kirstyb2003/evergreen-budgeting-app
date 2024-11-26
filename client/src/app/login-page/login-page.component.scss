@@ -19,71 +19,24 @@ $light-green: #7EC636;
 
 form {
     display: grid;
-    grid-template-columns: 0.5fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
     gap: 0.5rem 0.75rem;                      
     width: 70%;
     margin: auto;                        
 }
 
-.username_label, .password_label,
-.username_input, .password_input,
-.username_error, .password_error {
-    align-self: center;
-}
-
-
-.username_label, .password_label {
-    grid-column: 1 / 2;                 
-    text-align: left;
-    width: 2rem;
-    font-size: 1rem;
-}
-
-.username_input, .password_input {
-    grid-column: 2 / 3;                    
-    width: 90%;                           
-    max-width: 300px;
-                         
-}
-
-.username_error, .password_error {
-    grid-column: 2 / 3;                    
-    color: red;
-    font-size: 0.75rem;
-    min-height: 0.5rem;                    
-    line-height: 0.75rem;                  
-    visibility: hidden;                    
-    opacity: 0;                            
-    transition: visibility 0s, opacity 0.3s ease-in-out;
-    text-align: center;
-}
-
-.username_error.show-error, .password_error.show-error {
-    visibility: visible;
-    opacity: 1;
-}
-
 
 .submit_button {
-    grid-column: 1 / 3;                    
-    justify-self: center;                  
-    width: fit-content;
-    padding: 0.5rem 1.5rem;
-    background-color: $light-green;
-    color: white;
-    font-weight: bold;
-    border: 2px solid $light-green;
-    border-radius: 4px;
+    margin-top: 2rem;                             
+    background-color: $light-green !important;
+    color: white !important;
     cursor: pointer;
 }
 
 .submit_button:hover {
-    background-color: white;
-    color: $light-green;
-}
-
-.submit_button:disabled {
-    cursor: not-allowed
+    background-color: white !important;
+    color: $light-green !important;
 }
 
 .register_text {

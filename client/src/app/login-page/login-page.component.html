@@ -3,15 +3,21 @@
 <div class="content">
     <h3 class="title">Sign In</h3>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <label id="user_email" class="username_label">Username/Email:</label>
-        <input type="text" id="user_email" formControlName="username_or_email" class="username_input" required />
-        <div [ngClass]="{ 'show-error': username_or_email.errors?.['required'] && username_or_email.touched }" class="username_error">Username/Email is required.</div>
-        <br>
-        <label id="password" class="password_label">Password:</label>
-        <input type="password" id="password" formControlName="password" required class="password_input" />
-        <div class="password_error" [ngClass]="{ 'show-error': password.errors?.['required'] && password.touched }">Password is required.</div>
-        <br>
-        <button class="submit_button" type="submit">Sign In</button>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Username/Email:</mat-label>
+            <input matInput type="text" formControlName="username_or_email" required />
+            <mat-error *ngIf="username_or_email.errors?.['required'] && username_or_email.touched">
+                Username/Email is required.
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Password:</mat-label>
+            <input matInput type="text" formControlName="password" required />
+            <mat-error *ngIf="password.errors?.['required'] && password.touched">
+                Password is required.
+            </mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" class="submit_button" type="submit">Sign In</button>
     </form>
     <p class="register_text">New to Evergreen? <a routerLink="/register">Register Here!</a></p>
 </div>

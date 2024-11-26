@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { NgIf, NgClass } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { currencyList } from '../data-structures/currency-codes';
 import { RouterLink } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { catchError, debounceTime, map, Observable, of, switchMap } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatError } from '@angular/material/form-field';
+import {MatDividerModule} from '@angular/material/divider';
 
 function passwordMatchValidator(passwordControlName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -46,7 +52,7 @@ function uniqueValue(field: string, httpConnect: AuthenticationService): AsyncVa
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [NavBarComponent, NavBarComponent, ReactiveFormsModule, NgIf, NgClass, RouterLink],
+  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss'
 })
