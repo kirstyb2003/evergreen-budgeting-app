@@ -34,6 +34,11 @@ export class AuthenticationService {
     return this.http.get(`${this.apiUrl}/users/find/${field}/${value}`);
   }
 
+  logout() {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+  }
+
   isLoggedIn(): boolean {
     // Changes value into a boolean type
     return !!this.currentUserSubject.value;
