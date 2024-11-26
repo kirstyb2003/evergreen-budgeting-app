@@ -3,7 +3,7 @@ name: Deploy Angular and Express Apps
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
