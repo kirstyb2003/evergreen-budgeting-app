@@ -6,16 +6,18 @@ import { SettingsPageComponent } from './settings-page/settings-page.component';
 import { ReportsPageComponent } from './reports-page/reports-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { AuthGuard } from './services/auth.guard';
+import { GuestGuard } from './services/guest.guard';
 
 export const routes: Routes = [
-    { path: 'home', component: HomePageComponent },
-    { path: 'profile', component: ProfilePageComponent },
-    { path: 'settings', component: SettingsPageComponent },
-    { path: 'reports', component: ReportsPageComponent },
-    { path: 'login', component: LoginPageComponent },
-    { path: 'register', component: RegisterPageComponent },
+    { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
+    { path: 'profile', component: ProfilePageComponent, canActivate: [AuthGuard] },
+    { path: 'settings', component: SettingsPageComponent, canActivate: [AuthGuard] },
+    { path: 'reports', component: ReportsPageComponent, canActivate: [AuthGuard] },
+    { path: 'login', component: LoginPageComponent, canActivate: [GuestGuard] },
+    { path: 'register', component: RegisterPageComponent, canActivate: [GuestGuard] },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
-];
+  ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
