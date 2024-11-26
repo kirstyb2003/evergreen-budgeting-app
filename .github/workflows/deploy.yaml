@@ -1,0 +1,37 @@
+name: Deploy Angular and Express Apps
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Frontend and Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Ensure this matches the version you use locally
+
+      # Step 3: Deploy Frontend (Firebase)
+      - name: Deploy Angular App to Firebase
+        working-directory: ./client
+        run: |
+          npm install
+          npm run build
+          firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+
+      # Step 4: Deploy Backend (Vercel)
+      - name: Deploy Express.js App to Vercel
+        working-directory: ./server
+        run: |
+          npm install
+          vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
