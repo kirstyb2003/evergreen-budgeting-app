@@ -31,6 +31,9 @@
             <mat-error *ngIf="password.touched && password.hasError('required')">
                 Password is required.
             </mat-error>
+            <mat-error *ngIf="password.touched && password.hasError('passwordStrength')">
+                Your password must have lower case, upper case and numeric characters.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">

@@ -14,6 +14,27 @@ import { MatError } from '@angular/material/form-field';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+export function passwordStrengthValidator(): ValidatorFn {
+  return (control:AbstractControl) : ValidationErrors | null => {
+
+      const value = control.value;
+
+      if (!value) {
+          return null;
+      }
+
+      const hasUpperCase = /[A-Z]+/.test(value);
+
+      const hasLowerCase = /[a-z]+/.test(value);
+
+      const hasNumeric = /[0-9]+/.test(value);
+
+      const passwordValid = hasUpperCase && hasLowerCase && hasNumeric;
+
+      return !passwordValid ? {passwordStrength:true}: null;
+  }
+}
+
 function passwordMatchValidator(passwordControlName: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.parent?.get(passwordControlName)?.value;
@@ -76,7 +97,7 @@ export class RegisterPageComponent implements OnInit{
         asyncValidators: [uniqueValue("email", this.authService)],
         updateOn: 'blur',
       }),
-      password: new FormControl('', Validators.required),
+      password: new FormControl('', [Validators.required, passwordStrengthValidator()]),
       password_confirm: new FormControl('', [Validators.required, passwordMatchValidator("password")]),
       default_currency: new FormControl('', Validators.required), 
       starting_balance: new FormControl('0'),

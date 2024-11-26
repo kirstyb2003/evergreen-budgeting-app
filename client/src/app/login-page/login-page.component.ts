@@ -48,7 +48,12 @@ export class LoginPageComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error logging in', err);
-          this.popup.open('Error logging in. Please try again.', 'Close', { duration: 3000 });
+
+          if (err.statusText === "Unauthorized") {
+            this.popup.open('Username/email or password is incorrect. Please try again.', 'Close', { duration: 3000 });
+          } else {
+            this.popup.open('Error logging in. Please try again.', 'Close', { duration: 3000 });
+          }
         },
       });
     }
