@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api', dbRoutes);
 app.get('/api/status', (req, res) => res.json({ info: 'Node.js, Express, and Postgres API' }));
-app.get('/', (req, res) => res.send('Evergreen Budgeting Server up and running...'));
+app.get('/', (req, res) => res.send('Evergreen Budgeting Server running...'));
 
 // Error handling
 app.use(errorHandler);
