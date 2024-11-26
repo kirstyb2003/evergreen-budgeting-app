@@ -12,10 +12,10 @@ export class AuthenticationService {
   constructor(private http: HttpClient) {}
 
   registerUser(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+    return this.http.post(`${this.apiUrl}/users/register`, userData);
   }
 
   getValue(value: string, field: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/find/${field}/${value}`,);
+    return this.http.get(`${this.apiUrl}/users/find/${field}/${value}`,);
   }
 }

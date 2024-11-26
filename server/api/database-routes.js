@@ -1,10 +1,10 @@
 const express = require('express');
-const { createUser, findUserByUsername, findUserByEmail } = require('./database-queries');
+const { createUser, findUserByUsername, findUserByEmail } = require('./database-queries/users');
 const allowCors = require('./allow-cors');
 
 const router = express.Router();
 
-router.post('/register', allowCors(async (req, res) => {
+router.post('/users/register', allowCors(async (req, res) => {
   const { username, email, password, default_currency, starting_balance } = req.body;
 
   try {
@@ -16,12 +16,11 @@ router.post('/register', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/find/username/:value', allowCors(async (req, res) => {
+router.get('/users/find/username/:value', allowCors(async (req, res) => {
   const { value } = req.params;
 
   try {
     const users = await findUserByUsername(value);
-    console.log("Users found:", users);
     res.status(200).json(users);
   } catch (err) {
     console.error(err.message);
@@ -29,7 +28,7 @@ router.get('/find/username/:value', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/find/email/:value', allowCors(async (req, res) => {
+router.get('/users/find/email/:value', allowCors(async (req, res) => {
     const { value } = req.params;
   
     try {
