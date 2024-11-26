@@ -1,5 +1,5 @@
 const express = require('express');
-const { createUser, findUserByUsername, findUserByEmail } = require('./database-queries/users');
+const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const allowCors = require('./allow-cors');
 
 const router = express.Router();
@@ -15,6 +15,22 @@ router.post('/users/register', allowCors(async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 }));
+
+router.post('/users/login', allowCors(async (req, res) => {
+    const { username_or_email, password } = req.body;
+  
+    try {
+      const user = await authenticateLogin(username_or_email, password);
+      if (user.length === 0) {
+        return res.status(401).json({ message: 'Invalid username, email or password' });
+      }
+
+      res.status(200).json({ message: 'Login successful', user: user[0], });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }));
 
 router.get('/users/find/username/:value', allowCors(async (req, res) => {
   const { value } = req.params;

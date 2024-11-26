@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-login-page',
@@ -17,6 +19,8 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;
+
+  constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -37,7 +41,16 @@ export class LoginPageComponent implements OnInit {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
     } else {
-      console.log('Form Submitted:', this.loginForm.value);
+      this.authService.loginUser(this.loginForm.value).subscribe({
+        next: (response) => {
+          console.log('User logged in successfully!', response);
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          console.error('Error logging in', err);
+          this.popup.open('Error logging in. Please try again.', 'Close', { duration: 3000 });
+        },
+      });
     }
   }
 }

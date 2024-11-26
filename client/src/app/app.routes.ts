@@ -14,7 +14,7 @@ export const routes: Routes = [
     { path: 'reports', component: ReportsPageComponent },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
-    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({

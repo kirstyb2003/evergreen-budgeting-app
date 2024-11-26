@@ -15,7 +15,11 @@ export class AuthenticationService {
     return this.http.post(`${this.apiUrl}/users/register`, userData);
   }
 
+  loginUser(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/login`, userData);
+  }
+
   getValue(value: string, field: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users/find/${field}/${value}`,);
+    return this.http.get(`${this.apiUrl}/users/find/${field}/${value}`);
   }
 }
