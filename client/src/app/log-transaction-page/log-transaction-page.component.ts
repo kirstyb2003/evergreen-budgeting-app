@@ -15,13 +15,14 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import 'moment/locale/en-gb';
+import moment from 'moment';
 
 @Component({
   selector: 'app-log-transaction-page',
   standalone: true,
-  providers: [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}, provideMomentDateAdapter()],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, provideMomentDateAdapter()],
   imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule],
   templateUrl: './log-transaction-page.component.html',
   styleUrls: ['./log-transaction-page.component.scss', '../form.component.scss']
@@ -36,29 +37,29 @@ export class LogTransactionPageComponent {
 
   transactionForm!: FormGroup;
 
-  categoriesList!: {name: String}[];
+  categoriesList!: { name: String }[];
 
   prevUrl: string | null = null;
 
-  constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) {}
+  constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-      this.authService.currentUser.subscribe(user => {
-        this.currentUser = user.user;
-        console.log(this.currentUser);
-      });
+    this.authService.currentUser.subscribe(user => {
+      this.currentUser = user.user;
+      console.log(this.currentUser);
+    });
 
-      this.route.queryParams.subscribe(params => {
-        this.prevUrl = params['prev'] || '/';
-      });
+    this.route.queryParams.subscribe(params => {
+      this.prevUrl = params['prev'] || '/';
+    });
 
-      this.route.paramMap.subscribe(params => {
-        this.transactionType = params.get('type');
-        this.initForm();
-        if (this.transactionType) {
-          this.fetchCategories();
-        }
-      });
+    this.route.paramMap.subscribe(params => {
+      this.transactionType = params.get('type');
+      this.initForm();
+      if (this.transactionType) {
+        this.fetchCategories();
+      }
+    });
   }
 
   initForm() {
@@ -67,7 +68,7 @@ export class LogTransactionPageComponent {
       category: new FormControl({ value: '', disabled: !this.transactionType }, Validators.required),
       name: new FormControl('', Validators.required),
       transaction_date: new FormControl('', Validators.required),
-      amount: new FormControl('0', Validators.required), 
+      amount: new FormControl('0', Validators.required),
       shop: new FormControl(''),
       payment_method: new FormControl(''),
       repeat: new FormControl(false),
@@ -84,6 +85,16 @@ export class LogTransactionPageComponent {
         this.transactionForm.get('category')?.disable();
       }
     });
+
+    this.transactionForm.get('repeat')?.valueChanges.subscribe((isRepeatChecked) => {
+      const repeatScheduleControl = this.transactionForm.get('repeat_schedule');
+      if (isRepeatChecked) {
+        repeatScheduleControl?.setValidators(Validators.required);
+      } else {
+        repeatScheduleControl?.clearValidators();
+      }
+      repeatScheduleControl?.updateValueAndValidity();
+    });
   }
 
   fetchCategories() {
@@ -92,7 +103,7 @@ export class LogTransactionPageComponent {
     });
   }
 
-  getCategoriesList(transaction_type: String): Observable<{name: String}[]> {
+  getCategoriesList(transaction_type: String): Observable<{ name: String }[]> {
     return this.queryService.getCategories(transaction_type).pipe(
       map(response => response),
       catchError(error => {
@@ -106,7 +117,12 @@ export class LogTransactionPageComponent {
     if (this.transactionForm.invalid) {
       this.transactionForm.markAllAsTouched();
     } else {
-      this.queryService.logTransaction(this.transactionForm.value, this.currentUser.user_id).subscribe({
+      const formValue = { ...this.transactionForm.value };
+
+      const transactionDate = moment(formValue.transaction_date);
+      let endDate = formValue.end_date ? moment(formValue.end_date) : null;
+
+      this.queryService.logTransaction(formValue, this.currentUser.user_id).subscribe({
         next: (response) => {
           console.log('Transaction saved successfully!', response);
           this.router.navigateByUrl(this.prevUrl!);
@@ -142,5 +158,9 @@ export class LogTransactionPageComponent {
 
   get repeat() {
     return this.transactionForm.get("repeat")!;
+  }
+
+  get repeat_schedule() {
+    return this.transactionForm.get("repeat_schedule")!;
   }
 }

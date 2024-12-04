@@ -56,7 +56,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
-            <mat-label>Shop</mat-label>
+            <mat-label>Recipient/Shop/Source</mat-label>
             <input matInput type="text" formControlName="shop" />
         </mat-form-field>
 
@@ -74,12 +74,15 @@
 
         <mat-form-field *ngIf="repeat.value" appearance="fill" class="full-width">
             <mat-label>Repeat Schedule</mat-label>
-            <mat-select formControlName="repeat_schedule">
+            <mat-select formControlName="repeat_schedule" required>
                 <mat-option value="" disabled>Please select how often to repeat the transaction</mat-option>
                 <ng-container *ngFor="let r of repeatSchedList">
                     <mat-option [value]="r">{{ r }}</mat-option>
                   </ng-container>
             </mat-select>
+            <mat-error *ngIf="repeat_schedule.touched && repeat_schedule.hasError('required')">
+                How often this transaction should be repeated is required.
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field *ngIf="repeat.value" appearance="fill" class="full-width">
