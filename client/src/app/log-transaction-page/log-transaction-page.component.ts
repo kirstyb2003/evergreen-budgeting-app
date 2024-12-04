@@ -118,14 +118,10 @@ export class LogTransactionPageComponent {
       this.transactionForm.markAllAsTouched();
     } else {
       const formValue = { ...this.transactionForm.value };
-
-      const transactionDate = moment(formValue.transaction_date).startOf('day');
-
-      let endDate = formValue.end_date ? moment(formValue.end_date).startOf('day') : null;
-
-      // Send the dates as they are (in the user's local time) without converting to UTC
-      formValue.transaction_date = transactionDate.toISOString();
-      formValue.end_date = endDate ? endDate.toISOString() : null;
+      const transactionDate = moment(this.transactionForm.value.transaction_date).format('YYYY-MM-DD');
+      this.transactionForm.patchValue({ transaction_date: transactionDate });
+      const endDate = moment(this.transactionForm.value.transaction_date).format('YYYY-MM-DD');
+      this.transactionForm.patchValue({ end_date: endDate });
 
       console.log('Submitting form with adjusted dates:', formValue);
 
