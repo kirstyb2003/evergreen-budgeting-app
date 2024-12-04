@@ -119,8 +119,15 @@ export class LogTransactionPageComponent {
     } else {
       const formValue = { ...this.transactionForm.value };
 
-      const transactionDate = moment(formValue.transaction_date);
-      let endDate = formValue.end_date ? moment(formValue.end_date) : null;
+      const transactionDate = moment(formValue.transaction_date).startOf('day');
+
+      let endDate = formValue.end_date ? moment(formValue.end_date).startOf('day') : null;
+
+      // Send the dates as they are (in the user's local time) without converting to UTC
+      formValue.transaction_date = transactionDate.toISOString();
+      formValue.end_date = endDate ? endDate.toISOString() : null;
+
+      console.log('Submitting form with adjusted dates:', formValue);
 
       this.queryService.logTransaction(formValue, this.currentUser.user_id).subscribe({
         next: (response) => {
