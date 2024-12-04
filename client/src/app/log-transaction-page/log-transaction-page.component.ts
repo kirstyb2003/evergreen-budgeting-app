@@ -118,8 +118,17 @@ export class LogTransactionPageComponent {
       this.transactionForm.markAllAsTouched();
     } else {
       const formValue = { ...this.transactionForm.value };
-      formValue.transaction_date = moment(this.transactionForm.value.transaction_date).format('YYYY-MM-DD');
-      formValue.end_date = this.transactionForm.value.end_date ? moment(this.transactionForm.value.end_date).format('YYYY-MM-DD') : null;
+
+      const transactionDate = moment(this.transactionForm.value.transaction_date).endOf('day').format('YYYY-MM-DD');
+
+      const endDate = this.transactionForm.value.end_date ? moment(this.transactionForm.value.end_date).endOf('day').format('YYYY-MM-DD'): null;
+
+      // Set these values on the form object to be sent to the backend
+      formValue.transaction_date = transactionDate;
+      formValue.end_date = endDate;
+
+      console.log('Adjusted transaction date:', transactionDate);
+      console.log('Adjusted end date:', endDate);
 
       console.log('Submitting form with adjusted dates:', formValue);
 
