@@ -4,3 +4,8 @@
 <a routerLink="/login">Login</a><br>
 <a routerLink="/register">Register</a><br>
 <a (click)="logout()">Log out</a>
+<br><br>
+<a [routerLink]="['/log-transaction', 'expense']">Log Expense</a><br>
+<a [routerLink]="['/log-transaction', 'income']">Log Income</a><br>
+<a [routerLink]="['/log-transaction', 'savings']">Log Savings</a><br>
+<a [routerLink]="['/log-transaction']">Log (No Type)</a><br>

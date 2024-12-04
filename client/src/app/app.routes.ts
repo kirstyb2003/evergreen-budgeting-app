@@ -8,6 +8,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { AuthGuard } from './services/auth.guard';
 import { GuestGuard } from './services/guest.guard';
+import { LogTransactionPageComponent } from './log-transaction-page/log-transaction-page.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
@@ -16,6 +17,8 @@ export const routes: Routes = [
     { path: 'reports', component: ReportsPageComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginPageComponent, canActivate: [GuestGuard] },
     { path: 'register', component: RegisterPageComponent, canActivate: [GuestGuard] },
+    { path: 'log-transaction', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
+    { path: 'log-transaction/:type', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
   ];
 

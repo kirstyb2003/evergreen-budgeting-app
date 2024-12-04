@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgClass, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MatError } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,7 @@ import { AuthenticationService } from '../services/authentication.service';
   standalone: true,
   imports: [NavBarComponent, ReactiveFormsModule, RouterLink, NgIf, MatError, MatButtonModule, MatFormFieldModule, MatInputModule],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.scss'
+  styleUrls: ['./login-page.component.scss', '../form.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;

@@ -76,7 +76,7 @@ function uniqueValue(field: string, httpConnect: AuthenticationService): AsyncVa
   standalone: true,
   imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule],
   templateUrl: './register-page.component.html',
-  styleUrl: './register-page.component.scss'
+  styleUrls: ['./register-page.component.scss', '../form.component.scss']
 })
 export class RegisterPageComponent implements OnInit{
   currencyList: { name: string; code: string }[] = currencyList;

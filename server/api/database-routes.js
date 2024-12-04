@@ -1,5 +1,6 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
+const { getCategories } = require('./database-queries/categories');
 const allowCors = require('./allow-cors');
 
 const router = express.Router();
@@ -54,6 +55,18 @@ router.get('/users/find/email/:value', allowCors(async (req, res) => {
       console.error(err.message);
       res.status(500).json({ error: "Internal server error" });
     }
+}));
+
+router.get('/categories/:type', allowCors(async (req, res) => {
+  const { type } = req.params;
+
+  try {
+    const cats = await getCategories(type);
+    res.status(200).json(cats);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }));
 
 module.exports = router;

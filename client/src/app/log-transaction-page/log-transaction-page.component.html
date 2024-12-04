@@ -1,0 +1,36 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="content">
+    <h3 class="title">Log a Transaction</h3>
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Transaction Type</mat-label>
+            <mat-select formControlName="type" required>
+                <mat-option value="" disabled>Please select a transaction type</mat-option>
+                <ng-container *ngFor="let t of typeList">
+                    <mat-option [value]="t">{{ t }}</mat-option>
+                  </ng-container>
+            </mat-select>
+            <mat-error *ngIf="type.touched && type.hasError('required')">
+                Transaction type is required.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category" required>
+                <mat-option value="" disabled>Please select a category</mat-option>
+                <ng-container *ngFor="let cat of categoriesList">
+                    <mat-option [value]="cat.name">{{ cat.name }}</mat-option>
+                  </ng-container>
+            </mat-select>
+            <mat-error *ngIf="category.touched && category.hasError('required')">
+                Category type is required.
+            </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" class="submit_button">
+            Log
+        </button>
+    </form>
+</div>
