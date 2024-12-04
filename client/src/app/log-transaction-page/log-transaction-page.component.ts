@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { passwordStrengthValidator } from '../register-page/register-page.component';
 import { QueryService } from '../services/query.service';
 import { catchError, map, Observable, of } from 'rxjs';
 
@@ -31,12 +30,18 @@ export class LogTransactionPageComponent {
 
   categoriesList!: {name: String}[];
 
+  prevUrl: string | null = null;
+
   constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
       this.authService.currentUser.subscribe(user => {
         this.currentUser = user.user;
         console.log(this.currentUser);
+      });
+
+      this.route.queryParams.subscribe(params => {
+        this.prevUrl = params['prev'] || '/';
       });
 
       this.route.paramMap.subscribe(params => {
@@ -52,14 +57,14 @@ export class LogTransactionPageComponent {
     this.transactionForm = new FormGroup({
       type: new FormControl(this.transactionType, Validators.required),
       category: new FormControl({ value: '', disabled: !this.transactionType }, Validators.required),
-      name: new FormControl('', Validators.required),
-      transaction_date: new FormControl('', Validators.required),
-      amount: new FormControl('0', Validators.required), 
-      shop: new FormControl(''),
-      payment_method: new FormControl(''),
-      repeat: new FormControl(''),
-      repeat_schedule: new FormControl(''),
-      end_date: new FormControl(''),
+      // name: new FormControl('', Validators.required),
+      // transaction_date: new FormControl('', Validators.required),
+      // amount: new FormControl('0', Validators.required), 
+      // shop: new FormControl(''),
+      // payment_method: new FormControl(''),
+      // repeat: new FormControl(''),
+      // repeat_schedule: new FormControl(''),
+      // end_date: new FormControl(''),
     });
 
     this.transactionForm.get('type')?.valueChanges.subscribe(type => {
@@ -90,7 +95,13 @@ export class LogTransactionPageComponent {
   }
 
   onSubmit() {
-
+    if (this.transactionForm.valid) {
+      console.log('Form submitted:', this.transactionForm.value);
+      this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
+      this.router.navigateByUrl(this.prevUrl!);
+    } else {
+      this.popup.open('Please fill out all required fields!', 'Close', { duration: 3000 });
+    }
   }
 
   get type() {

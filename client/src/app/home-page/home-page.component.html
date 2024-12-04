@@ -5,7 +5,7 @@
 <a routerLink="/register">Register</a><br>
 <a (click)="logout()">Log out</a>
 <br><br>
-<a [routerLink]="['/log-transaction', 'expense']">Log Expense</a><br>
-<a [routerLink]="['/log-transaction', 'income']">Log Income</a><br>
-<a [routerLink]="['/log-transaction', 'savings']">Log Savings</a><br>
-<a [routerLink]="['/log-transaction']">Log (No Type)</a><br>
+<a [routerLink]="['/log-transaction', 'expense']" [queryParams]="{ prev: currentUrl }">Log Expense</a><br>
+<a [routerLink]="['/log-transaction', 'income']" [queryParams]="{ prev: currentUrl }">Log Income</a><br>
+<a [routerLink]="['/log-transaction', 'savings']" [queryParams]="{ prev: currentUrl }">Log Savings</a><br>
+<a [routerLink]="['/log-transaction']" [queryParams]="{ prev: currentUrl }">Log (No Type)</a><br>

@@ -12,8 +12,11 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class HomePageComponent implements OnInit{
   currentUser!: any;
+  currentUrl!: String;
 
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(private authService: AuthenticationService, private router: Router) {
+    this.currentUrl = this.router.url;
+  }
 
   ngOnInit(): void {
       this.authService.currentUser.subscribe(user => {
