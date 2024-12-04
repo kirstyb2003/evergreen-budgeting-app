@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component } from '@angular/core';
 import { NavBarComponent } from "../nav-bar/nav-bar.component";
 import { AuthenticationService } from '../services/authentication.service';
 import { NgIf, NgFor } from '@angular/common';
@@ -12,28 +12,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { QueryService } from '../services/query.service';
 import { catchError, map, Observable, of } from 'rxjs';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
-export const MY_DATE_FORMAT = {
-  parse: {
-    dateInput: 'DD/MM/YYYY',
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import 'moment/locale/en-gb';
 
 @Component({
   selector: 'app-log-transaction-page',
   standalone: true,
-  providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-  { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMAT }],
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}, provideMomentDateAdapter()],
   imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule],
   templateUrl: './log-transaction-page.component.html',
   styleUrls: ['./log-transaction-page.component.scss', '../form.component.scss']
@@ -82,7 +70,7 @@ export class LogTransactionPageComponent {
       amount: new FormControl('0', Validators.required), 
       shop: new FormControl(''),
       payment_method: new FormControl(''),
-      repeat: new FormControl(''),
+      repeat: new FormControl(false),
       repeat_schedule: new FormControl(''),
       end_date: new FormControl(''),
     });

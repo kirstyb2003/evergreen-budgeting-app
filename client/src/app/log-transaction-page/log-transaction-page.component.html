@@ -62,7 +62,7 @@
 
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Payment Method</mat-label>
-            <mat-select formControlName="payement_method">
+            <mat-select formControlName="payment_method">
                 <mat-option value="" disabled>Please select a payment method</mat-option>
                 <ng-container *ngFor="let m of methodList">
                     <mat-option [value]="m">{{ m }}</mat-option>
