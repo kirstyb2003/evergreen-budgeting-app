@@ -14,4 +14,12 @@ export class QueryService {
   getCategories(transaction_type: String): Observable<any> {
     return this.http.get(`${this.apiUrl}/categories/${transaction_type}`);
   }
+
+  logTransaction(transactionData: any, userID: String): Observable<any> {
+    return this.http.post(`${this.apiUrl}/transactions/${userID}`, transactionData).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
 }

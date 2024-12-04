@@ -29,8 +29,68 @@
             </mat-error>
         </mat-form-field>
 
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Transaction Name/Description</mat-label>
+            <input matInput type="text" formControlName="name" required />
+            <mat-error *ngIf="name.touched && name.hasError('required')">
+                A name/description is required.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="transaction_date" required />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="transaction_date.touched && transaction_date.hasError('required')">
+                A transaction date is required.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Amount</mat-label>
+            <input matInput type="number" formControlName="amount" required />
+            <mat-error *ngIf="amount.touched && amount.hasError('required')">
+                The payment amount is required.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Shop</mat-label>
+            <input matInput type="text" formControlName="shop" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Payment Method</mat-label>
+            <mat-select formControlName="payement_method">
+                <mat-option value="" disabled>Please select a payment method</mat-option>
+                <ng-container *ngFor="let m of methodList">
+                    <mat-option [value]="m">{{ m }}</mat-option>
+                  </ng-container>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="repeat">Repeat Transaction?</mat-checkbox>
+
+        <mat-form-field *ngIf="repeat.value" appearance="fill" class="full-width">
+            <mat-label>Repeat Schedule</mat-label>
+            <mat-select formControlName="repeat_schedule">
+                <mat-option value="" disabled>Please select how often to repeat the transaction</mat-option>
+                <ng-container *ngFor="let r of repeatSchedList">
+                    <mat-option [value]="r">{{ r }}</mat-option>
+                  </ng-container>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="repeat.value" appearance="fill" class="full-width">
+            <mat-label>Repeat End Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="end_date" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
         <button mat-raised-button color="primary" type="submit" class="submit_button">
-            Log
+            Save
         </button>
     </form>
 </div>

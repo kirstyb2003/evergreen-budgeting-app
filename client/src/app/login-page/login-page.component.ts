@@ -15,7 +15,7 @@ import { AuthenticationService } from '../services/authentication.service';
   standalone: true,
   imports: [NavBarComponent, ReactiveFormsModule, RouterLink, NgIf, MatError, MatButtonModule, MatFormFieldModule, MatInputModule],
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss', '../form.component.scss'],
+  styleUrls: ['../form.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;
