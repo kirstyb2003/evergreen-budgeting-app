@@ -1,7 +1,7 @@
 const pool = require('../pool');
 
-const logTransaction = async (body, userID) => {
-  const { transactionData, dates } = body;
+const logTransaction = async (req, userID) => {
+  const { transactionData, dates } = req.body;
   const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat, repeat_schedule = null, end_date = null } = transactionData;
 
   const categoryQuery = `SELECT category_id FROM category WHERE name = $1 LIMIT 1;`;
