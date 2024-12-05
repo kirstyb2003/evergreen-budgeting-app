@@ -136,10 +136,6 @@ export class LogTransactionPageComponent {
         dates = [formValue.transaction_date];
       }
 
-      console.log("Dates: ");
-      console.log(dates);
-
-
       this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
         next: (_response) => {
           this.router.navigateByUrl(this.prevUrl!);
