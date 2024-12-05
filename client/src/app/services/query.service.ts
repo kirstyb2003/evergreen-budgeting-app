@@ -15,8 +15,8 @@ export class QueryService {
     return this.http.get(`${this.apiUrl}/categories/${transaction_type}`);
   }
 
-  logTransaction(transactionData: any, userID: String): Observable<any> {
-    return this.http.post(`${this.apiUrl}/transactions/${userID}`, transactionData).pipe(
+  logTransaction(transactionData: any, userID: String, dates: String[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/transactions/${userID}`, {transactionData, dates}).pipe(
       map(response => {
         return response;
       })

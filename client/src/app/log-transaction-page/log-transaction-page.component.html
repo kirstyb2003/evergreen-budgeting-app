@@ -90,6 +90,9 @@
             <input matInput [matDatepicker]="picker" formControlName="end_date" />
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="end_date.touched && end_date.hasError('required')">
+                The date for the last occurrence of this transaction is required.
+            </mat-error>
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit" class="submit_button">

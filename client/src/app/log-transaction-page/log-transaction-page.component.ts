@@ -87,12 +87,16 @@ export class LogTransactionPageComponent {
 
     this.transactionForm.get('repeat')?.valueChanges.subscribe((isRepeatChecked) => {
       const repeatScheduleControl = this.transactionForm.get('repeat_schedule');
+      const endDateControl = this.transactionForm.get('end_date');
       if (isRepeatChecked) {
         repeatScheduleControl?.setValidators(Validators.required);
+        endDateControl?.setValidators(Validators.required);
       } else {
         repeatScheduleControl?.clearValidators();
+        endDateControl?.clearValidators();
       }
       repeatScheduleControl?.updateValueAndValidity();
+      endDateControl?.updateValueAndValidity();
     });
   }
 
@@ -118,15 +122,25 @@ export class LogTransactionPageComponent {
     } else {
       const formValue = { ...this.transactionForm.value };
 
+      let dates: String[];
+
       const transactionDate = moment(this.transactionForm.value.transaction_date).endOf('day').format('YYYY-MM-DD');
-
-      const endDate = this.transactionForm.value.end_date ? moment(this.transactionForm.value.end_date).endOf('day').format('YYYY-MM-DD'): null;
-
-      // Set these values on the form object to be sent to the backend
       formValue.transaction_date = transactionDate;
-      formValue.end_date = endDate;
 
-      this.queryService.logTransaction(formValue, this.currentUser.user_id).subscribe({
+      if (formValue.repeat) {
+        const endDate = this.transactionForm.value.end_date ? moment(this.transactionForm.value.end_date).endOf('day').format('YYYY-MM-DD') : null;
+        formValue.end_date = endDate;
+
+        dates = this.generateRepeatedDates(formValue);
+      } else {
+        dates = [formValue.transaction_date];
+      }
+
+      console.log("Dates: ");
+      console.log(dates);
+
+
+      this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
         next: (_response) => {
           this.router.navigateByUrl(this.prevUrl!);
           this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
@@ -137,6 +151,40 @@ export class LogTransactionPageComponent {
         },
       });
     }
+  }
+
+  generateRepeatedDates(formData: any): String[] {
+    const startDate = moment(formData.transaction_date, 'YYYY-MM-DD');
+    const endDate = moment(formData.end_date, 'YYYY-MM-DD');
+    const repeatSchedule = formData.repeat_schedule;
+
+    const dates: String[] = [];
+
+    dates.push(startDate.format('YYYY-MM-DD'));
+
+    let currentDate = startDate.clone();
+
+    while (currentDate.isBefore(endDate)) {
+      switch (repeatSchedule) {
+        case 'daily':
+          currentDate.add(1, 'day');
+          break;
+        case 'weekly':
+          currentDate.add(1, 'week');
+          break;
+        case 'monthly':
+          currentDate.add(1, 'month');
+          break;
+        case 'yearly':
+          currentDate.add(1, 'year');
+          break;
+      }
+
+      if (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
+        dates.push(currentDate.format('YYYY-MM-DD'));
+      }
+    }
+    return dates;
   }
 
   get type() {
@@ -165,5 +213,9 @@ export class LogTransactionPageComponent {
 
   get repeat_schedule() {
     return this.transactionForm.get("repeat_schedule")!;
+  }
+
+  get end_date() {
+    return this.transactionForm.get('end_date')!;
   }
 }
