@@ -87,7 +87,7 @@
 
         <mat-form-field *ngIf="repeat.value" appearance="fill" class="full-width">
             <mat-label>Repeat End Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="end_date" />
+            <input matInput [matDatepicker]="picker" formControlName="end_date" required/>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             <mat-error *ngIf="end_date.touched && end_date.hasError('required')">

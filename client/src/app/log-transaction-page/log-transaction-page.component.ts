@@ -134,6 +134,8 @@ export class LogTransactionPageComponent {
         dates = this.generateRepeatedDates(formValue);
       } else {
         dates = [formValue.transaction_date];
+        formValue.repeat_schedule = null;
+        formValue.end_date = null;
       }
 
       this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
@@ -143,7 +145,7 @@ export class LogTransactionPageComponent {
         },
         error: (err) => {
           console.error('Error saving transaction', err);
-          this.popup.open('Please fill out all required fields!', 'Close', { duration: 3000 });
+          this.popup.open('Error savinf transaction. Please try again.', 'Close', { duration: 3000 });
         },
       });
     }
