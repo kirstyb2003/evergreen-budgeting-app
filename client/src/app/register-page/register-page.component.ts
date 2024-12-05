@@ -133,8 +133,7 @@ export class RegisterPageComponent implements OnInit{
       this.registerForm.markAllAsTouched();
     } else {
       this.authService.registerUser(this.registerForm.value).subscribe({
-        next: (response) => {
-          console.log('User registered successfully!', response);
+        next: (_response) => {
           this.router.navigate(['/login']);
           this.popup.open('Registration successful! Please log in.', 'Close', { duration: 3000 });
         },

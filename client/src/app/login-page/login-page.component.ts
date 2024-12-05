@@ -42,8 +42,7 @@ export class LoginPageComponent implements OnInit {
       this.loginForm.markAllAsTouched();
     } else {
       this.authService.loginUser(this.loginForm.value).subscribe({
-        next: (response) => {
-          console.log('User logged in successfully!', response);
+        next: (_response) => {
           this.router.navigate(['/home']);
         },
         error: (err) => {

@@ -46,7 +46,6 @@ export class LogTransactionPageComponent {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
       this.currentUser = user.user;
-      console.log(this.currentUser);
     });
 
     this.route.queryParams.subscribe(params => {
@@ -127,14 +126,8 @@ export class LogTransactionPageComponent {
       formValue.transaction_date = transactionDate;
       formValue.end_date = endDate;
 
-      console.log('Adjusted transaction date:', transactionDate);
-      console.log('Adjusted end date:', endDate);
-
-      console.log('Submitting form with adjusted dates:', formValue);
-
       this.queryService.logTransaction(formValue, this.currentUser.user_id).subscribe({
-        next: (response) => {
-          console.log('Transaction saved successfully!', response);
+        next: (_response) => {
           this.router.navigateByUrl(this.prevUrl!);
           this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
         },

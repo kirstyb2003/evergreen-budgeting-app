@@ -79,7 +79,7 @@ router.post('/transactions/:userID', allowCors(async (req, res) => {
     const result = await logTransaction(transactionData, userID);
     res.status(201).json({ message: 'Transaction logged successfully', transaction_id: result.transaction_id });
   } catch (error) {
-    console.error('Error logging transaction:', error);
+    console.error('Error saving transaction:', error);
     res.status(500).json({ error: 'Failed to log transaction' });
   }
 }));
