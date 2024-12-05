@@ -1,7 +1,19 @@
 const pool = require('../pool');
 
 const logTransaction = async (req, userID) => {
-  const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat, repeat_schedule = null, end_date = null, dates } = req;
+  let transactionData, dates;
+
+  // Check if the request body contains `transactionData` or if it's already flat
+  if (req.transactionData) {
+    // Payload is in the { transactionData: ..., dates: ... } structure
+    ({ transactionData, dates } = req);
+  } else {
+    // Payload is in the flat structure { type: ..., dates: ... }
+    transactionData = req;
+    dates = req.dates;
+  }
+
+  const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat, repeat_schedule = null, end_date = null } = transactionData;
 
   console.warn(category);
   console.warn(req);

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { json } from 'express';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,8 @@ export class QueryService {
   }
 
   logTransaction(transactionData: any, userID: String, dates: String[]): Observable<any> {
-    return this.http.post(`${this.apiUrl}/transactions/${userID}`, {transactionData: transactionData, dates: dates}).pipe(
+    const newStruct = {...transactionData, dates};
+    return this.http.post(`${this.apiUrl}/transactions/${userID}`, newStruct).pipe(
       map(response => {
         return response;
       })
