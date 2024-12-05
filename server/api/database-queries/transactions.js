@@ -1,13 +1,16 @@
 const pool = require('../pool');
 
 const logTransaction = async (req, userID) => {
-  console.warn(req.body);
-  const { transactionData, dates } = req.body;
-  const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat, repeat_schedule = null, end_date = null } = transactionData;
+  const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat, repeat_schedule = null, end_date = null, dates } = req;
+
+  console.warn(category);
+  console.warn(req);
 
   const categoryQuery = `SELECT category_id FROM category WHERE name = $1 LIMIT 1;`;
   const categoryResult = await pool.query(categoryQuery, [category]);
   const categoryId = categoryResult.rows[0].category_id;
+
+  console.warn(categoryResult);
 
   const transactionValues = dates.map(date => [userID, categoryId, type, name, new Date(date).toISOString().substring(0, 10), amount, shop || null, payment_method || null, repeat || false, repeat_schedule || null, end_date ? new Date(end_date).toISOString().substring(0, 10) : null]);
 
