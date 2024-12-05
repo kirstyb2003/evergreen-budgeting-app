@@ -1,6 +1,7 @@
 const pool = require('../pool');
 
 const logTransaction = async (req, userID) => {
+  console.log(req.body);
   const { transactionData, dates } = req.body;
   const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat, repeat_schedule = null, end_date = null } = transactionData;
 
