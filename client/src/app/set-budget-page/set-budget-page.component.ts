@@ -4,7 +4,6 @@ import { NgIf, NgFor } from '@angular/common';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule, MatError } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -49,11 +48,15 @@ export class SetBudgetPageComponent {
 
     this.budgetForm = new FormGroup({
       total: new FormControl('0'),
+      total_budget: new FormControl('0'),
       budgetItems: new FormArray([]),
       savingsItems: new FormArray([]),
     });
 
     this.fetchCategories();
+
+    this.budgetForm.get('total')?.valueChanges.subscribe(() => this.updateSavingsTotal());
+    this.budgetItems.valueChanges.subscribe(() => this.updateSavingsTotal());
   }
 
   fetchCategories() {
@@ -66,7 +69,6 @@ export class SetBudgetPageComponent {
     this.getCategoriesList('savings').subscribe(categories => {
       this.savingsList = categories;
       this.numOfSavings = this.savingsList.length;
-      this.addBudgetItem(this.savingsItems, this.numOfSavings);
     })
   }
 
@@ -79,7 +81,7 @@ export class SetBudgetPageComponent {
   }
 
   addBudgetItem(control: FormArray, num: number) {
-    if ( control.length < num) {
+    if (control.length < num) {
       control.push(this.createBudgetItem());
     }
   }
@@ -109,22 +111,86 @@ export class SetBudgetPageComponent {
     const selectedCategories = this.budgetItems.controls.map(
       (control, i) => i !== index ? control.get('category')?.value : null
     ).filter(value => value);
-  
+
     return this.categoriesList.filter(cat => !selectedCategories.includes(cat.name));
   }
 
   getAvailableSavings(index: number): { name: String }[] {
+    console.log(this.savingsItems);
     const selectedCategories = this.savingsItems.controls.map(
       (control, i) => i !== index ? control.get('category')?.value : null
     ).filter(value => value);
-  
+
     return this.savingsList.filter(cat => !selectedCategories.includes(cat.name));
   }
 
+  updateSavingsTotal() {
+    const totalBudget = parseFloat(this.budgetForm.get('total')?.value || '0');
+
+    if (totalBudget != 0) {
+      const totalExpenses = this.budgetItems.controls.reduce((sum, control) => {
+        return sum + parseFloat(control.get('amount')?.value || '0');
+      }, 0);
+
+      const savingsAmount = Math.max(0, totalBudget - totalExpenses);
+
+      const savingsItem = this.savingsItems.controls.find((item) => item.get('category')?.value === 'Miscellaneous');
+      if (savingsItem) {
+        savingsItem.get('amount')?.setValue(savingsAmount.toString(), { emitEvent: false });
+      } else {
+        this.savingsItems.push(new FormGroup({
+          category: new FormControl('Miscellaneous', Validators.required),
+          amount: new FormControl(savingsAmount, Validators.required),
+        }))
+      }
+    }
+
+  }
+
+  calculateTotalBudgeted(): void {
+    let total = 0;
+
+    this.budgetItems.controls.forEach((control) => {
+      total += parseFloat(control.get('amount')?.value || '0');
+    });
+
+    this.savingsItems.controls.forEach((control) => {
+      total += parseFloat(control.get('amount')?.value || '0');
+    });
+
+    this.budgetForm.get('total_budget')?.setValue(total.toString());
+    this.checkTotalBudgetWarning();
+  }
+
+  checkTotalBudgetWarning() {
+    const totalBudgeted = parseFloat(this.budgetForm.get('total_budget')?.value || '0');
+    const total = parseFloat(this.budgetForm.get('total')?.value || '0');
+
+    if (totalBudgeted > total && total !== 0) {
+        this.budgetForm.get('total_budget')?.setErrors({ warning: true }, { emitEvent: true });
+        this.budgetForm.get('total_budget')?.markAsTouched();
+    } else {
+        this.budgetForm.get('total_budget')?.setErrors(null, { emitEvent: true });
+    }
+}
+
+  updateTotalBudgeted() {
+    this.calculateTotalBudgeted();
+  }
+
+  isOnlyWarningError(): boolean {
+    const totalBudgetControl = this.budgetForm.get('total_budget');
+    const errors = totalBudgetControl?.errors;
+
+    return (errors! && Object.keys(errors).length === 1 && errors['warning'] !== undefined);
+}
+
   onSubmit() {
-    if (this.budgetForm.invalid) {
+    if (this.budgetForm.invalid && !this.isOnlyWarningError()) {
+      console.log('Invalid!!!!');
       this.budgetForm.markAllAsTouched();
     } else {
+      console.log('Valid!!!!!');
       const budgetItems = this.budgetForm.value.budgetItems.concat(this.budgetForm.value.savingsItems);
 
       let success = false;

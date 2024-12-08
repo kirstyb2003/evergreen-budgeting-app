@@ -2,21 +2,8 @@ $dark-green: #014700;
 $main-green: #007355;
 $light-green: #7EC636;
 
-.budget-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-
-    mat-form-field {
-        flex: 1;
-        margin: 0;
-    }
-}
-
 form {
     width: 80% !important;
-    margin: auto !important;
 }
 
 button {
@@ -45,7 +32,7 @@ button {
 }
 
 .title {
-    margin-bottom: 0 !important;
+    margin-bottom: 1rem !important;
 }
 
 hr.rounded {
@@ -64,4 +51,33 @@ hr.rounded {
 .total {
     margin-top: 1rem !important;
     margin-bottom: 1rem !important;
+}
+
+.budget-item {
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr 0.2fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 1rem;
+    grid-row-gap: 0px;
+}
+
+.cat {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.amount {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.del {
+    grid-area: 1 / 3 / 2 / 4;
+}
+
+@media (max-width: 932px) {
+    mat-error {
+        margin-top: -0.25rem !important;  // Ensure some space between error message and the next item
+        font-size: 10px;  // Adjust font size if needed for mobile
+        width: 5rem;
+        margin-left: -1rem
+    }
 }
