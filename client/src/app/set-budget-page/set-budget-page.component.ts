@@ -14,6 +14,7 @@ import { Observable, map, catchError, of } from 'rxjs';
 import { AuthenticationService } from '../services/authentication.service';
 import { QueryService } from '../services/query.service';
 import { MatIcon } from '@angular/material/icon';
+import { currencyMap } from '../data-structures/currency-codes';
 
 @Component({
   selector: 'app-set-budget-page',
@@ -24,6 +25,7 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class SetBudgetPageComponent {
   currentUser!: any;
+  currencySymbol!: String;
 
   budgetForm!: FormGroup;
 
@@ -40,6 +42,8 @@ export class SetBudgetPageComponent {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
       this.currentUser = user.user;
+      let currency = this.currentUser.default_currency;
+      this.currencySymbol = currencyMap[currency].symbol;
     });
 
     this.route.queryParams.subscribe(params => {
@@ -116,7 +120,6 @@ export class SetBudgetPageComponent {
   }
 
   getAvailableSavings(index: number): { name: String }[] {
-    console.log(this.savingsItems);
     const selectedCategories = this.savingsItems.controls.map(
       (control, i) => i !== index ? control.get('category')?.value : null
     ).filter(value => value);
@@ -158,32 +161,67 @@ export class SetBudgetPageComponent {
       total += parseFloat(control.get('amount')?.value || '0');
     });
 
-    this.budgetForm.get('total_budget')?.setValue(total.toString());
+    this.budgetForm.get('total_budget')?.setValue(this.currencySymbol + total.toFixed(2));
     this.checkTotalBudgetWarning();
   }
 
   checkTotalBudgetWarning() {
-    const totalBudgeted = parseFloat(this.budgetForm.get('total_budget')?.value || '0');
+    const totalBudgeted = parseFloat(this.budgetForm.get('total_budget')?.value.slice(1) || '0');
     const total = parseFloat(this.budgetForm.get('total')?.value || '0');
 
     if (totalBudgeted > total && total !== 0) {
-        this.budgetForm.get('total_budget')?.setErrors({ warning: true }, { emitEvent: true });
-        this.budgetForm.get('total_budget')?.markAsTouched();
+      this.budgetForm.get('total_budget')?.setErrors({ warning: true }, { emitEvent: true });
+      this.budgetForm.get('total_budget')?.markAsTouched();
     } else {
-        this.budgetForm.get('total_budget')?.setErrors(null, { emitEvent: true });
+      this.budgetForm.get('total_budget')?.setErrors(null, { emitEvent: true });
     }
-}
+  }
 
   updateTotalBudgeted() {
     this.calculateTotalBudgeted();
   }
 
   isOnlyWarningError(): boolean {
-    const totalBudgetControl = this.budgetForm.get('total_budget');
-    const errors = totalBudgetControl?.errors;
+    let errors: String[] = [];
+    Object.keys(this.budgetForm.controls).forEach(field => {
+      const control = this.budgetForm.get(field);
+      if (control && control.errors) {
+        Object.keys(control.errors).forEach(errorKey => {
+          errors.push(errorKey);
+        });
+      }
+    });
 
-    return (errors! && Object.keys(errors).length === 1 && errors['warning'] !== undefined);
-}
+    const budgetArray = this.budgetForm.get('budgetItems') as FormArray;
+    budgetArray.controls.forEach((budgetGroup, _index) => {
+      if (budgetGroup instanceof FormGroup) {
+        Object.keys(budgetGroup.controls).forEach(field => {
+          const control = budgetGroup.get(field);
+          if (control && control.errors) {
+            Object.keys(control.errors).forEach(errorKey => {
+              errors.push(errorKey);
+            });
+          }
+        });
+      }
+    });
+
+    const savingsArray = this.budgetForm.get('savingsItems') as FormArray;
+    savingsArray.controls.forEach((savingsGroup, _index) => {
+      if (savingsGroup instanceof FormGroup) {
+        Object.keys(savingsGroup.controls).forEach(field => {
+          const control = savingsGroup.get(field);
+          if (control && control.errors) {
+            Object.keys(control.errors).forEach(errorKey => {
+              errors.push(errorKey);
+            });
+          }
+        });
+      }
+    });
+
+    return (errors.length === 1 && errors[0] === 'warning');
+  }
 
   onSubmit() {
     if (this.budgetForm.invalid && !this.isOnlyWarningError()) {

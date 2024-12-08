@@ -11,7 +11,7 @@
 
         <mat-form-field appearance="fill" class="full-width">
             <mat-label>Total Budgeted</mat-label>
-            <input matInput type="number" formControlName="total_budget" readonly />
+            <input matInput type="text" formControlName="total_budget" readonly />
             <mat-error *ngIf="budgetForm.get('total_budget')?.hasError('warning')">
                 Warning: Total budgeted exceeds the amount you want to spend.
             </mat-error>
