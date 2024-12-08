@@ -24,4 +24,12 @@ export class QueryService {
       })
     );
   }
+
+  setBudget(budgetData: any, userID: String): Observable<any> {
+    return this.http.post(`${this.apiUrl}/budget/${userID}`, budgetData).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
 }

@@ -1,0 +1,83 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="content">
+    <h3 class="title">Budget</h3>
+    
+    <form [formGroup]="budgetForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill" class="full-width" class="total">
+            <mat-label>How much do you want to spend in the month?</mat-label>
+            <input matInput type="number" formControlName="total" />
+        </mat-form-field>
+        <h3 class="subheading">Expense Categories</h3>
+        <div formArrayName="budgetItems">
+            <div *ngFor="let item of budgetItems.controls; let i = index" [formGroupName]="i" class="budget-item">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Category</mat-label>
+                    <mat-select formControlName="category" required>
+                        <mat-option value="" disabled>Please select a category</mat-option>
+                        <ng-container *ngFor="let cat of getAvailableCategories(i)">
+                            <mat-option [value]="cat.name">{{ cat.name }}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                    <mat-error *ngIf="item.get('category')?.touched && item.get('category')?.hasError('required')">
+                        Category type is required.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Amount</mat-label>
+                    <input matInput type="number" formControlName="amount" required />
+                    <mat-error *ngIf="item.get('amount')?.touched && item.get('amount')?.hasError('required')">
+                        The payment amount is required.
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-icon-button color="warn" type="button" (click)="removeBudgetItem(budgetItems, i)" aria-label="Remove Item">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <button mat-icon-button *ngIf="numOfCategories > budgetItems.length" color="warn" type="button" (click)="addBudgetItem(budgetItems, numOfCategories)" aria-label="Remove Item" class="add_button">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <hr class="rounded">
+
+        <h3 class="subheading">Savings Categories</h3>
+
+        <div formArrayName="savingsItems">
+            <div *ngFor="let save of savingsItems.controls; let i = index" [formGroupName]="i" class="budget-item">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Category</mat-label>
+                    <mat-select formControlName="category" required>
+                        <mat-option value="" disabled>Please select a category</mat-option>
+                        <ng-container *ngFor="let cat of getAvailableSavings(i)">
+                            <mat-option [value]="cat.name">{{ cat.name }}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                    <mat-error *ngIf="save.get('category')?.touched && save.get('category')?.hasError('required')">
+                        Category type is required.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label>Amount</mat-label>
+                    <input matInput type="number" formControlName="amount" required />
+                </mat-form-field>
+
+                <button mat-icon-button color="warn" type="button" (click)="removeBudgetItem(savingsItems, i)" aria-label="Remove Item">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <button mat-icon-button *ngIf="numOfSavings > savingsItems.length" color="warn" type="button" (click)="addBudgetItem(savingsItems, numOfSavings)" aria-label="Remove Item" class="add_button">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <button mat-raised-button color="primary" type="submit" class="submit_button">
+            Save All
+        </button>
+    </form>
+</div>

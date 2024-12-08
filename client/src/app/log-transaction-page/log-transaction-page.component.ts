@@ -145,7 +145,7 @@ export class LogTransactionPageComponent {
         },
         error: (err) => {
           console.error('Error saving transaction', err);
-          this.popup.open('Error savinf transaction. Please try again.', 'Close', { duration: 3000 });
+          this.popup.open('Error saving transaction. Please try again.', 'Close', { duration: 3000 });
         },
       });
     }
