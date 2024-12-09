@@ -99,6 +99,7 @@ export class SetBudgetPageComponent {
 
   removeBudgetItem(control: FormArray, index: number) {
     control.removeAt(index);
+    this.calculateTotalBudgeted();
   }
 
   getCategoriesList(transaction_type: String): Observable<{ name: String }[]> {
@@ -177,10 +178,6 @@ export class SetBudgetPageComponent {
     }
   }
 
-  updateTotalBudgeted() {
-    this.calculateTotalBudgeted();
-  }
-
   isOnlyWarningError(): boolean {
     let errors: String[] = [];
     Object.keys(this.budgetForm.controls).forEach(field => {
@@ -225,31 +222,32 @@ export class SetBudgetPageComponent {
 
   onSubmit() {
     if (this.budgetForm.invalid && !this.isOnlyWarningError()) {
-      console.log('Invalid!!!!');
       this.budgetForm.markAllAsTouched();
     } else {
-      console.log('Valid!!!!!');
-      const budgetItems = this.budgetForm.value.budgetItems.concat(this.budgetForm.value.savingsItems);
+      const budgetItems = this.budgetItems.controls.map(control => ({
+        category: control.get('category')?.value,
+        amount: control.get('amount')?.value,
+        category_type: 'expense'
+      }));
 
-      let success = false;
+      const savingsItems = this.savingsItems.controls.map(control => ({
+        category: control.get('category')?.value,
+        amount: control.get('amount')?.value,
+        category_type: 'savings'
+      }));
 
-      budgetItems.forEach((item: { category: string; amount: string }) => {
-        this.queryService.setBudget(item, this.currentUser.user_id).subscribe({
-          next: (_response) => {
-            success = true;
-            this.popup.open('Budget succeessfully saved.', 'Close', { duration: 3000 });
-          },
-          error: (err) => {
-            console.error('Error saving budget', err);
-            this.popup.open('Error saving budget. Please try again.', 'Close', { duration: 3000 });
-          },
-        });
+      const allItems = budgetItems.concat(savingsItems);
+
+      this.queryService.setBudget(allItems, this.currentUser.user_id).subscribe({
+        next: (_response) => {
+          this.popup.open('Budget succeessfully saved.', 'Close', { duration: 3000 });
+          this.router.navigateByUrl(this.prevUrl!);
+        },
+        error: (err) => {
+          console.error('Error saving budget', err);
+          this.popup.open('Error saving budget. Please try again.', 'Close', { duration: 3000 });
+        },
       });
-
-      if (success) {
-        this.router.navigateByUrl(this.prevUrl!);
-      }
-
     }
   }
 

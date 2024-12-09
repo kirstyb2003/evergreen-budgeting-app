@@ -21,7 +21,7 @@ export const routes: Routes = [
     { path: 'log-transaction', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
     { path: 'log-transaction/:type', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
     { path: 'set-budget', component: SetBudgetPageComponent, canActivate: [AuthGuard] },
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
   ];
 
 @NgModule({

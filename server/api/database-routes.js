@@ -2,6 +2,7 @@ const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
 const { logTransaction } = require('./database-queries/transactions');
+const { setBudget } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
 const router = express.Router();
@@ -82,6 +83,20 @@ router.post('/transactions/:userID', allowCors(async (req, res) => {
     console.error('Error saving transaction:', error);
     res.status(500).json({ error: 'Failed to log transaction' });
   }
+}));
+
+router.post('/budget/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+  const budgetData = req.body;
+
+  try {
+    const result = await setBudget(budgetData, userID);
+    res.status(201).json({ message:'Budget saved successfully', inserted_rows: result });
+  } catch (err) {
+    console.error('Error saving budget: ', err);
+    res.status(500).json({ error: 'Failed to save budget' });
+  }
+
 }));
 
 module.exports = router;
