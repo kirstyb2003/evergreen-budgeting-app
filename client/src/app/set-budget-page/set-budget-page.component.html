@@ -56,7 +56,7 @@
 
         <div formArrayName="savingsItems">
             <div *ngFor="let save of savingsItems.controls; let i = index" [formGroupName]="i" class="budget-item">
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="full-width" class="cat">
                     <mat-label>Category</mat-label>
                     <mat-select formControlName="category" required>
                         <mat-option value="" disabled>Please select a category</mat-option>
@@ -69,13 +69,13 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field appearance="fill" class="full-width">
+                <mat-form-field appearance="fill" class="full-width" class="amount">
                     <mat-label>Amount</mat-label>
                     <input matInput type="number" formControlName="amount" (input)="calculateTotalBudgeted()" required />
                 </mat-form-field>
 
                 <button mat-icon-button color="warn" type="button" (click)="removeBudgetItem(savingsItems, i)"
-                    aria-label="Remove Item">
+                    aria-label="Remove Item" class="del">
                     <mat-icon>delete</mat-icon>
                 </button>
             </div>
