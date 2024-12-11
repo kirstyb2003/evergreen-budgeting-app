@@ -32,4 +32,16 @@ export class QueryService {
       })
     );
   }
+
+  getBudget(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/budget/${userID}`);
+  }
+
+  deleteBudgetItems(deleteCategories: {name: string, type: string}[], userID: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/budget/delete/${userID}`, deleteCategories).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
 }

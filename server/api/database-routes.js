@@ -2,7 +2,7 @@ const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
 const { logTransaction } = require('./database-queries/transactions');
-const { setBudget } = require('./database-queries/budget');
+const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
 const router = express.Router();
@@ -95,6 +95,32 @@ router.post('/budget/:userID', allowCors(async (req, res) => {
   } catch (err) {
     console.error('Error saving budget: ', err);
     res.status(500).json({ error: 'Failed to save budget' });
+  }
+
+}));
+
+router.get('/budget/:userID', async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const budgets = await getBudget(userID); 
+    res.json(budgets);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching budget');
+  }
+});
+
+router.post('/budget/delete/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+  const deleteCats = req.body;
+
+  try {
+    const result = await deleteCategories(deleteCats, userID);
+    res.status(201).json({ message:'Budget categories deleted successfully', inserted_rows: result });
+  } catch (err) {
+    console.error('Error deleting budget categories: ', err);
+    res.status(500).json({ error: 'Failed to delete budget categories' });
   }
 
 }));

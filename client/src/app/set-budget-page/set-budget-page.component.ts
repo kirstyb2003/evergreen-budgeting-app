@@ -37,6 +37,10 @@ export class SetBudgetPageComponent {
   numOfCategories: number = 0;
   numOfSavings: number = 0;
 
+  loadedInBudget: Boolean = false;
+  categoriesLoadedIn: {name: string, type: string}[] = [];
+  categoriesSubmitted: {name: string, type: string}[] = [];
+
   constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -58,6 +62,7 @@ export class SetBudgetPageComponent {
     });
 
     this.fetchCategories();
+    this.fetchBudget();
 
     this.budgetForm.get('total')?.valueChanges.subscribe(() => this.updateSavingsTotal());
     this.budgetItems.valueChanges.subscribe(() => this.updateSavingsTotal());
@@ -67,7 +72,7 @@ export class SetBudgetPageComponent {
     this.getCategoriesList('expense').subscribe(categories => {
       this.categoriesList = categories;
       this.numOfCategories = this.categoriesList.length;
-      this.addBudgetItem(this.budgetItems, this.numOfCategories);
+      // this.addBudgetItem(this.budgetItems, this.numOfCategories);
     });
 
     this.getCategoriesList('savings').subscribe(categories => {
@@ -76,12 +81,31 @@ export class SetBudgetPageComponent {
     })
   }
 
-  get budgetItems(): FormArray {
-    return this.budgetForm.get('budgetItems') as FormArray;
-  }
+  fetchBudget() {
+    this.queryService.getBudget(this.currentUser.user_id).subscribe(budget => {
+      budget.forEach((item: any) => {
+        const control = this.createBudgetItem();
+        control.patchValue({
+          category: item.name,
+          amount: item.amount,
+        });
 
-  get savingsItems(): FormArray {
-    return this.budgetForm.get('savingsItems') as FormArray;
+        if (item.category_type === 'expense') {
+          this.budgetItems.push(control);
+        } else if (item.category_type === 'savings') {
+          this.savingsItems.push(control);
+        }
+        
+        this.categoriesLoadedIn.push({name: item.name, type: item.category_type});
+      });
+
+      if (this.budgetItems.length == 0) {
+        this.addBudgetItem(this.budgetItems, this.numOfCategories);
+        this.loadedInBudget = true;
+      }
+
+      this.calculateTotalBudgeted();
+    });
   }
 
   addBudgetItem(control: FormArray, num: number) {
@@ -117,7 +141,8 @@ export class SetBudgetPageComponent {
       (control, i) => i !== index ? control.get('category')?.value : null
     ).filter(value => value);
 
-    return this.categoriesList.filter(cat => !selectedCategories.includes(cat.name));
+    return this.categoriesList.filter(cat =>
+      !selectedCategories.includes(cat.name));
   }
 
   getAvailableSavings(index: number): { name: String }[] {
@@ -126,6 +151,14 @@ export class SetBudgetPageComponent {
     ).filter(value => value);
 
     return this.savingsList.filter(cat => !selectedCategories.includes(cat.name));
+  }
+
+  getDeletedCategories(): {name: string, type: string}[] {
+    return this.categoriesLoadedIn.filter(loadedCat =>
+      !this.categoriesSubmitted.some(submittedCat =>
+        submittedCat.name === loadedCat.name && submittedCat.type === loadedCat.type
+      )
+    );
   }
 
   updateSavingsTotal() {
@@ -238,6 +271,10 @@ export class SetBudgetPageComponent {
 
       const allItems = budgetItems.concat(savingsItems);
 
+      allItems.forEach((cat) => {
+        this.categoriesSubmitted.push({name: cat.category, type: cat.category_type});
+      })
+
       this.queryService.setBudget(allItems, this.currentUser.user_id).subscribe({
         next: (_response) => {
           this.popup.open('Budget succeessfully saved.', 'Close', { duration: 3000 });
@@ -248,7 +285,28 @@ export class SetBudgetPageComponent {
           this.popup.open('Error saving budget. Please try again.', 'Close', { duration: 3000 });
         },
       });
+
+      const deleteCategories = this.getDeletedCategories();
+
+      this.queryService.deleteBudgetItems(deleteCategories, this.currentUser.user_id).subscribe({
+        next: (_response) => {
+          this.popup.open('Budget categories successfully deleted.', 'Close', { duration: 3000 });
+        }, error: (err) => {
+          console.error('Error deleting budget items', err);
+          this.popup.open('Error deleting budget items. Please try again.', 'Close', { duration: 3000 });
+        },
+      })
+
+      console.log(deleteCategories);
     }
+  }
+
+  get budgetItems(): FormArray {
+    return this.budgetForm.get('budgetItems') as FormArray;
+  }
+
+  get savingsItems(): FormArray {
+    return this.budgetForm.get('savingsItems') as FormArray;
   }
 
   get category() {

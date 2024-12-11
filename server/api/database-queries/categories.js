@@ -12,4 +12,10 @@ const getCategoryID = async(category_name, category_type) => {
   return result.rows[0];
 }
 
-module.exports = { getCategories, getCategoryID };
+const getCategoryDetails = async(category_id) => {
+  const query = `SELECT name, category_type WHERE category_id = $1`;
+  const result = await pool.query(query, [category_id]);
+  return result.rows[0];
+}
+
+module.exports = { getCategories, getCategoryID, getCategoryDetails };
