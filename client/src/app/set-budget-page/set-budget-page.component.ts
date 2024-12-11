@@ -100,7 +100,7 @@ export class SetBudgetPageComponent {
       });
 
       if (this.budgetItems.length == 0) {
-        this.addBudgetItem(this.budgetItems, this.numOfCategories);
+        this.addBudgetItem(this.budgetItems, 1);
         this.loadedInBudget = true;
       }
 
@@ -296,8 +296,6 @@ export class SetBudgetPageComponent {
           this.popup.open('Error deleting budget items. Please try again.', 'Close', { duration: 3000 });
         },
       })
-
-      console.log(deleteCategories);
     }
   }
 
