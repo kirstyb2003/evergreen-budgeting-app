@@ -15,8 +15,11 @@ const setBudget = async (budgetData, userID) => {
 
         const query = `INSERT INTO budget (user_id, category_id, amount)
         VALUES ($1, $2, $3)
-        RETURNING budget_id;`;
-        
+        ON CONFLICT (user_id, category_id)
+        DO UPDATE
+        SET amount = EXCLUDED.amount
+        RETURNING budget_id;`
+
         const result = await pool.query(query, [userID, catID.category_id, amount]);
         insertedBudgets.push(result.rows[0]);
     }
