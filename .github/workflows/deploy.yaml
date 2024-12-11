@@ -35,4 +35,4 @@ jobs:
         working-directory: ./server
         run: |
           npm install
-          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
+          vercel --prod

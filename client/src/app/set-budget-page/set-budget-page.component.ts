@@ -38,8 +38,8 @@ export class SetBudgetPageComponent {
   numOfSavings: number = 0;
 
   loadedInBudget: Boolean = false;
-  categoriesLoadedIn: {name: string, type: string}[] = [];
-  categoriesSubmitted: {name: string, type: string}[] = [];
+  categoriesLoadedIn: { name: string, type: string }[] = [];
+  categoriesSubmitted: { name: string, type: string }[] = [];
 
   constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 
@@ -95,8 +95,8 @@ export class SetBudgetPageComponent {
         } else if (item.category_type === 'savings') {
           this.savingsItems.push(control);
         }
-        
-        this.categoriesLoadedIn.push({name: item.name, type: item.category_type});
+
+        this.categoriesLoadedIn.push({ name: item.name, type: item.category_type });
       });
 
       if (this.budgetItems.length == 0) {
@@ -153,7 +153,7 @@ export class SetBudgetPageComponent {
     return this.savingsList.filter(cat => !selectedCategories.includes(cat.name));
   }
 
-  getDeletedCategories(): {name: string, type: string}[] {
+  getDeletedCategories(): { name: string, type: string }[] {
     return this.categoriesLoadedIn.filter(loadedCat =>
       !this.categoriesSubmitted.some(submittedCat =>
         submittedCat.name === loadedCat.name && submittedCat.type === loadedCat.type
@@ -272,7 +272,7 @@ export class SetBudgetPageComponent {
       const allItems = budgetItems.concat(savingsItems);
 
       allItems.forEach((cat) => {
-        this.categoriesSubmitted.push({name: cat.category, type: cat.category_type});
+        this.categoriesSubmitted.push({ name: cat.category, type: cat.category_type });
       })
 
       this.queryService.setBudget(allItems, this.currentUser.user_id).subscribe({
@@ -288,14 +288,18 @@ export class SetBudgetPageComponent {
 
       const deleteCategories = this.getDeletedCategories();
 
-      this.queryService.deleteBudgetItems(deleteCategories, this.currentUser.user_id).subscribe({
-        next: (_response) => {
-          this.popup.open('Budget categories successfully deleted.', 'Close', { duration: 3000 });
-        }, error: (err) => {
-          console.error('Error deleting budget items', err);
-          this.popup.open('Error deleting budget items. Please try again.', 'Close', { duration: 3000 });
-        },
-      })
+      if (deleteCategories.length > 0) {
+        this.queryService.deleteBudgetItems(deleteCategories, this.currentUser.user_id).subscribe({
+          next: (_response) => {
+            this.popup.open('Budget categories successfully deleted.', 'Close', { duration: 3000 });
+          }, error: (err) => {
+            console.error('Error deleting budget items', err);
+            this.popup.open('Error deleting budget items. Please try again.', 'Close', { duration: 3000 });
+          },
+        })
+      }
+
+
     }
   }
 
