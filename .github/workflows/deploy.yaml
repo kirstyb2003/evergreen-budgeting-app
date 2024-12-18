@@ -39,7 +39,4 @@ jobs:
           vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
       
             # Debugging Step: Verify Vercel CLI Version
-            
-      - name: Check Vercel CLI Version
-        run: vercel --version
 
