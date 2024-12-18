@@ -44,4 +44,12 @@ export class QueryService {
       })
     );
   }
+
+  setSavingsGoal(savingsInfo: any, userID: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/savings-goal/${userID}`, savingsInfo).pipe(
+      map(response => {
+        return response;
+      })
+    )
+  }
 }
