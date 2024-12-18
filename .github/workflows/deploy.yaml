@@ -35,4 +35,11 @@ jobs:
         working-directory: ./server
         run: |
           npm install
-          vercel --prod
+          npm install -g vercel
+          vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}
+      
+            # Debugging Step: Verify Vercel CLI Version
+            
+      - name: Check Vercel CLI Version
+        run: vercel --version
+
