@@ -20,14 +20,14 @@ import 'moment/locale/en-gb';
 import moment from 'moment';
 
 @Component({
-  selector: 'app-log-transaction-page',
+  selector: 'app-set-savings-goal-page',
   standalone: true,
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, provideMomentDateAdapter()],
   imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule],
-  templateUrl: './log-transaction-page.component.html',
+  templateUrl: './set-savings-goal-page.component.html',
   styleUrls: ['../form.component.scss']
 })
-export class LogTransactionPageComponent {
+export class SetSavingsGoalPageComponent {
   currentUser!: any;
 
   transactionType: string | null = null;
@@ -217,3 +217,4 @@ export class LogTransactionPageComponent {
     return this.transactionForm.get('end_date')!;
   }
 }
+

@@ -10,6 +10,7 @@ import { AuthGuard } from './services/auth.guard';
 import { GuestGuard } from './services/guest.guard';
 import { LogTransactionPageComponent } from './log-transaction-page/log-transaction-page.component';
 import { SetBudgetPageComponent } from './set-budget-page/set-budget-page.component';
+import { SetSavingsGoalPageComponent } from './set-savings-goal-page/set-savings-goal-page.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomePageComponent, canActivate: [AuthGuard] },
@@ -21,6 +22,7 @@ export const routes: Routes = [
     { path: 'log-transaction', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
     { path: 'log-transaction/:type', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
     { path: 'set-budget', component: SetBudgetPageComponent, canActivate: [AuthGuard] },
+    { path: 'set-savings-goal', component: SetSavingsGoalPageComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
   ];
 
