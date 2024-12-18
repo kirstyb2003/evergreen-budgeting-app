@@ -2,6 +2,7 @@ const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
 const { logTransaction } = require('./database-queries/transactions');
+const { setSavingsGoal } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
@@ -123,6 +124,19 @@ router.post('/budget/delete/:userID', allowCors(async (req, res) => {
     res.status(500).json({ error: 'Failed to delete budget categories' });
   }
 
+}));
+
+router.post('/savings-goal/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+  const goalData = req.body;
+
+  try {
+    const result = await setSavingsGoal(goalData, userID);
+    res.status(201).json({ message: 'Savings goal saved successfully', inserted_rows: result });
+  } catch (err) {
+    console.error('Error saving the savings goal: ', err);
+    res.status(500).json({ error: "Failed to save savings goal" });
+  }
 }));
 
 module.exports = router;
