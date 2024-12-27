@@ -7,12 +7,18 @@ const setSavingsGoal = async (req, userID) => {
         goal_date = new Date(goal_date).toISOString().substring(0, 10);
     }
 
-    const query = `INSERT INTO savings_goal (user_id, name, goal_amount, starting_savings, goal_due_date)
-        VALUES ($1, $2, $3, $4, $5)
+    const countQuery = `SELECT COUNT(*) AS goal_count
+    FROM savings_goal
+    WHERE user_id = $1;`;
+
+    const insertQuery = `INSERT INTO savings_goal (user_id, name, goal_amount, starting_savings, goal_due_date, ranking)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING goal_id;`
 
     try {
-        const result = await pool.query(query, [userID, name, target_amount, starting_amount, goal_date]);
+        const savingsCount = await pool.query(countQuery, [userID]);
+        const goalCount = parseInt(savingsCount.rows[0].goal_count, 10) || 0;
+        const result = await pool.query(insertQuery, [userID, name, target_amount, starting_amount, goal_date, goalCount + 1]);
         return result.rows;
     } catch (error) {
         console.error('Error saving goal:', error);
