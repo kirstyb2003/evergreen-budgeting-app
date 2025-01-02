@@ -34,4 +34,43 @@ const logTransaction = async (req, userID) => {
   }
 };
 
-module.exports = { logTransaction };
+const getTotalByType = async (userID, type) => {
+  const query = `
+    SELECT COALESCE(SUM(amount), 0) AS total
+    FROM transaction
+    WHERE user_id = $1 
+    AND type = $2
+    AND transaction_date <= CURRENT_DATE;
+  `;
+  const result = await pool.query(query, [userID, type]);
+  return parseFloat(result.rows[0].total) || 0.00;
+};
+
+const getStartingBalance = async (userID) => {
+  const query = `
+    SELECT COALESCE(starting_balance, 0) AS starting_balance
+    FROM users
+    WHERE user_id = $1;
+  `;
+  const result = await pool.query(query, [userID]);
+  return parseFloat(result.rows[0]?.starting_balance) || 0.00;
+};
+
+const getBalance = async (userID) => {
+  try {
+    const [income, expenses, savings, startingBalance] = await Promise.all([
+      getTotalByType(userID, 'income'),
+      getTotalByType(userID, 'expense'),
+      getTotalByType(userID, 'savings'),
+      getStartingBalance(userID),
+    ]);
+
+    const balance = (startingBalance + income - expenses - savings).toFixed(2);
+    return balance;
+  } catch (error) {
+    console.error('Error fetching balance:', error);
+    throw error;
+  }
+};
+
+module.exports = { logTransaction, getBalance, getTotalByType };

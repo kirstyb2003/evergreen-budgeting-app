@@ -1,0 +1,14 @@
+<div class="table-container">
+    <div class="custom-table">
+        <div class="table-row">
+            <div class="table-cell header-cell row-1">Bank Balance</div>
+            <div class="table-cell row-1" *ngIf="balance >= 0">{{ balance | currency:currSymbol:'symbol':'1.2-2' }}</div>
+            <div class="table-cell row-1" *ngIf="balance < 0">-{{ balance | currency:currSymbol:'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-cell header-cell">{{ cellHeader }}</div>
+            <div class="table-cell" *ngIf="total >= 0">{{ total | currency:currSymbol:'symbol':'1.2-2' }}</div>
+            <div class="table-cell" *ngIf="total < 0">-{{ total | currency:currSymbol:'symbol':'1.2-2' }}</div>
+        </div>
+    </div>
+</div>

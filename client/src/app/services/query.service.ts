@@ -52,4 +52,12 @@ export class QueryService {
       })
     )
   }
+
+  getBalance(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/balance/${userID}`);
+  }
+
+  getTotal(userID: string, type: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/balance/${userID}/${type}`);
+  }
 }

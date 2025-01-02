@@ -1,7 +1,7 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction } = require('./database-queries/transactions');
+const { logTransaction, getBalance, getTotalByType } = require('./database-queries/transactions');
 const { setSavingsGoal } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
@@ -92,7 +92,7 @@ router.post('/budget/:userID', allowCors(async (req, res) => {
 
   try {
     const result = await setBudget(budgetData, userID);
-    res.status(201).json({ message:'Budget saved successfully', inserted_rows: result });
+    res.status(201).json({ message: 'Budget saved successfully', inserted_rows: result });
   } catch (err) {
     console.error('Error saving budget: ', err);
     res.status(500).json({ error: 'Failed to save budget' });
@@ -104,7 +104,7 @@ router.get('/budget/:userID', async (req, res) => {
   const { userID } = req.params;
 
   try {
-    const budgets = await getBudget(userID); 
+    const budgets = await getBudget(userID);
     res.json(budgets);
   } catch (err) {
     console.error(err);
@@ -118,7 +118,7 @@ router.post('/budget/delete/:userID', allowCors(async (req, res) => {
 
   try {
     const result = await deleteCategories(deleteCats, userID);
-    res.status(201).json({ message:'Budget categories deleted successfully', inserted_rows: result });
+    res.status(201).json({ message: 'Budget categories deleted successfully', inserted_rows: result });
   } catch (err) {
     console.error('Error deleting budget categories: ', err);
     res.status(500).json({ error: 'Failed to delete budget categories' });
@@ -138,5 +138,30 @@ router.post('/savings-goal/:userID', allowCors(async (req, res) => {
     res.status(500).json({ error: "Failed to save savings goal" });
   }
 }));
+
+router.get('/balance/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const balance = await getBalance(userID);
+    res.json(balance);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching bank balance');
+  }
+}));
+
+router.get('/balance/:userID/:type', allowCors(async (req, res) => {
+  const { userID, type } = req.params;
+
+  try {
+    const total = await getTotalByType(userID, type);
+    res.json(total);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(`Error fetching total balance for ${type}s`);
+  }
+}));
+
 
 module.exports = router;

@@ -72,7 +72,6 @@ export class SetBudgetPageComponent {
     this.getCategoriesList('expense').subscribe(categories => {
       this.categoriesList = categories;
       this.numOfCategories = this.categoriesList.length;
-      // this.addBudgetItem(this.budgetItems, this.numOfCategories);
     });
 
     this.getCategoriesList('savings').subscribe(categories => {

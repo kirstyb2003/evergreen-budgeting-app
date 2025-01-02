@@ -1,0 +1,41 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    padding: 20px;
+}
+
+.custom-table {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border: 2px solid $dark-green;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.table-row {
+    display: contents;
+    border: 1px solid $dark-green;
+    border-radius: 10px;
+}
+
+.table-cell {
+    padding: 8px;
+    text-align: center;
+}
+
+.row-1 {
+    border-bottom: 2px solid $dark-green;
+}
+
+.header-cell {
+    color: $main-green;
+    font-weight: bold;
+    text-align: center;
+    border-right: 2px solid $dark-green;
+}
