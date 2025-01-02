@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { json } from 'express';
 
 @Injectable({
   providedIn: 'root',
@@ -59,5 +58,13 @@ export class QueryService {
 
   getTotal(userID: string, type: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/balance/${userID}/${type}`);
+  }
+
+  getPastTransactions(type: string, userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/past/${type}`);
+  }
+
+  getUpcomingTransactions(type: string, userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/upcoming/${type}`);
   }
 }

@@ -1,7 +1,7 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction, getBalance, getTotalByType } = require('./database-queries/transactions');
+const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions } = require('./database-queries/transactions');
 const { setSavingsGoal } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
@@ -159,7 +159,31 @@ router.get('/balance/:userID/:type', allowCors(async (req, res) => {
     res.json(total);
   } catch (err) {
     console.error(err);
-    res.status(500).send(`Error fetching total balance for ${type}s`);
+    res.status(500).send(`Error fetching total balance for ${type}`);
+  }
+}));
+
+router.get('/transactions/:userID/past/:type', allowCors(async (req, res) => {
+  const { userID, type } = req.params;
+
+  try {
+    const trans = await getPastTransactions(userID, type);
+    res.json(trans);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(`Error fetching past ${type} transactions`);
+  }
+}));
+
+router.get('/transactions/:userID/upcoming/:type', allowCors(async (req, res) => {
+  const { userID, type } = req.params;
+
+  try {
+    const trans = await getUpcomingTransactions(userID, type);
+    res.json(trans);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(`Error fetching upcoming ${type} transactions`);
   }
 }));
 

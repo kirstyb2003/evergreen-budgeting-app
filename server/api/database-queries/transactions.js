@@ -73,4 +73,38 @@ const getBalance = async (userID) => {
   }
 };
 
-module.exports = { logTransaction, getBalance, getTotalByType };
+const getPastTransactions = async (userID, type) => {
+  const query = `SELECT t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method
+  FROM transaction as t, category as c
+  WHERE c.category_id = t.category_id
+  AND t.user_id = $1
+  AND t.type = $2
+  AND transaction_date <= CURRENT_DATE;`;
+
+  try {
+    const result = await pool.query(query, [userID, type]);
+    return result.rows;
+  } catch (error) {
+    console.error(`Error retrieving past ${type} transactions:`, error);
+    throw error;
+  }
+};
+
+const getUpcomingTransactions = async (userID, type) => {
+  const query = `SELECT t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method
+  FROM transaction as t, category as c
+  WHERE c.category_id = t.category_id
+  AND t.user_id = $1
+  AND t.type = $2
+  AND transaction_date > CURRENT_DATE;`;
+
+  try {
+    const result = await pool.query(query, [userID, type]);
+    return result.rows;
+  } catch (error) {
+    console.error(`Error retrieving upcoming ${type} transactions:`, error);
+    throw error;
+  }
+};
+
+module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions };

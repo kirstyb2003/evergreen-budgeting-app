@@ -1,3 +1,6 @@
 <app-nav-bar></app-nav-bar>
 <app-bank-balance [pageType]="transactionType"></app-bank-balance>
-{{ transactionType }}
+<div class="tables-container">
+    <app-transaction-table class="upcoming-table" timeFrame="upcoming" [transactionType]="transactionType || ''" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-transaction-table>
+    <app-transaction-table class="past-table" timeFrame="past" [transactionType]="transactionType || ''" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-transaction-table>
+</div>

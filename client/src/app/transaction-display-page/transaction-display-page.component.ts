@@ -5,16 +5,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { QueryService } from '../services/query.service';
 import { BankBalanceComponent } from "../bank-balance/bank-balance.component";
+import { TransactionTableComponent } from "../transaction-table/transaction-table.component";
+import { currencyMap } from '../data-structures/currency-codes';
 
 @Component({
   selector: 'app-transaction-display-page',
   standalone: true,
-  imports: [NavBarComponent, BankBalanceComponent],
+  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent],
   templateUrl: './transaction-display-page.component.html',
   styleUrl: './transaction-display-page.component.scss'
 })
 export class TransactionDisplayPageComponent {
   currentUser!: any;
+  currencySymbol!: string;
 
   transactionType: string | null = null;
 
@@ -23,6 +26,8 @@ export class TransactionDisplayPageComponent {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
       this.currentUser = user.user;
+      let currency = this.currentUser.default_currency;
+      this.currencySymbol = currencyMap[currency].symbol;
     });
 
     this.route.paramMap.subscribe(params => {

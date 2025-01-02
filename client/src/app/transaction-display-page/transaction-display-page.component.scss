@@ -1,0 +1,16 @@
+.tables-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    padding: 0rem 1rem 0rem 1rem;
+}
+
+.upcoming-table {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.past-table {
+    grid-area: 1 / 2 / 2 / 3;
+}
