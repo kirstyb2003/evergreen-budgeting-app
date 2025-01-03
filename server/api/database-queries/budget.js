@@ -40,8 +40,6 @@ const getBudget = async (userID) => {
 const deleteCategories = async (deleteCats, userID) => {
     const deletedCats = [];
 
-    console.log(deleteCats);
-
     for (const entry of deleteCats) {
         const { name, type } = entry;
 

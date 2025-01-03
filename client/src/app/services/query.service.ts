@@ -71,4 +71,12 @@ export class QueryService {
   getSavingsGoals(userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/savings-goals/${userID}`);
   }
+
+  updateGoalsRanking(rankings: {goal_id: number, ranking: number}[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/savings-goals/update`, rankings).pipe(
+      map(response => {
+        return response;
+      })
+    )
+  }
 }

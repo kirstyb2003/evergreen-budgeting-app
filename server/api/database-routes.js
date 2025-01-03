@@ -2,7 +2,7 @@ const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
 const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions } = require('./database-queries/transactions');
-const { setSavingsGoal, getSavingsGoals } = require('./database-queries/savings_goal');
+const { setSavingsGoal, getSavingsGoals, updateGoalRankings } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
@@ -199,5 +199,16 @@ router.get('/savings-goals/:userID', allowCors(async (req, res) => {
   }
 }))
 
+router.post('/savings-goals/update', allowCors(async (req, res) => {
+  const goalData = req.body;
+
+  try {
+    const result = await updateGoalRankings(goalData);
+    res.status(201).json({ message: 'Goal rankings saved successfully', inserted_rows: result });
+  } catch (err) {
+    console.error('Error saving goal rankings: ', err);
+    res.status(500).json({ error: "Failed to save goal rankings" });
+  }
+}));
 
 module.exports = router;

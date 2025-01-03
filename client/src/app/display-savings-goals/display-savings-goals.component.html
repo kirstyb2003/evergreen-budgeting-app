@@ -1,9 +1,21 @@
-<h2>Savings Goals</h2>
+<div class="text-area">
+    <h2>Savings Goals</h2><br>
+    <p>Click and drag the goals to reorder them.</p>
+</div>
 
-<div cdkDropList class="order-savings-goals" (cdkDropListDropped)="drop($event)">
-    @for (goal of savingsGoals; track goal.goal_id) {
-    <div class="goal-info" cdkDrag>
-        <h3>{{ goal.ranking }}. {{goal.name}}</h3>
+
+<div class="goal-rankings">
+    <div cdkDropList class="order-savings-goals" (cdkDropListDropped)="drop($event)">
+        @for (goal of savingsGoals; track goal.goal_id) {
+        <div class="goal-info" cdkDrag>
+            <h3>{{ goal.ranking }}. {{goal.name}}</h3>
+        </div>
+        }
     </div>
-    }
+    <div class="update-button-area">
+        <button mat-raised-button color="primary" type="submit" class="update-button" (click)="onRankingUpdate()">
+            Submit New Ranking
+        </button>
+    </div>
+
 </div>

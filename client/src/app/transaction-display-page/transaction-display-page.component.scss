@@ -19,6 +19,23 @@ $light-green: #7EC636;
     grid-area: 1 / 2 / 2 / 3;
 }
 
+.goals-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    padding: 0rem 1rem 0rem 1rem;
+}
+
+.ranking-list {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.watering-cans {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
 h1 {
     color: $main-green;
     text-align: center;

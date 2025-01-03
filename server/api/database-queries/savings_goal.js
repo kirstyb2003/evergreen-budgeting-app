@@ -26,14 +26,13 @@ const setSavingsGoal = async (req, userID) => {
     }
 };
 
-const getSavingsGoals = async(userID) => {
+const getSavingsGoals = async (userID) => {
     const query = `SELECT goal_id, name, goal_amount, starting_savings, goal_due_date, ranking
     FROM savings_goal
     WHERE user_id = $1;`;
 
     try {
         const result = await pool.query(query, [userID]);
-        console.log(result.rows);
         return result.rows;
     } catch (err) {
         console.error('Error retrieving savings goals', err);
@@ -41,4 +40,31 @@ const getSavingsGoals = async(userID) => {
     }
 };
 
-module.exports = { setSavingsGoal, getSavingsGoals };
+const updateGoalRankings = async (req) => {
+    if (req.length === 0) {
+        return;
+    }
+
+    const values = req
+        .map((_goal, index) => `(CAST($${index * 2 + 1} AS INTEGER), CAST($${index * 2 + 2} AS INTEGER))`)
+        .join(', ');
+
+
+    const params = req.flatMap(goal => [goal.goal_id, goal.ranking]);
+
+    const query = `
+        UPDATE savings_goal AS sg
+        SET ranking = updates.ranking
+        FROM (VALUES ${values}) AS updates(goal_id, ranking)
+        WHERE sg.goal_id = updates.goal_id AND sg.ranking != updates.ranking;`;
+
+    try {
+        const result = await pool.query(query, params);
+        return result.rows;
+    } catch (error) {
+        console.error('Error saving goals ordering:', error);
+        throw error;
+    }
+}
+
+module.exports = { setSavingsGoal, getSavingsGoals, updateGoalRankings };

@@ -2,7 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
 import { formatDate } from '../transaction-table/transaction-table.component';
-import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 type SAVINGS_GOAL_STRUCTURE = {
   goal_id: number,
@@ -16,7 +18,7 @@ type SAVINGS_GOAL_STRUCTURE = {
 @Component({
   selector: 'app-display-savings-goals',
   standalone: true,
-  imports: [CdkDropList, CdkDrag],
+  imports: [CdkDropList, CdkDrag, MatButtonModule],
   templateUrl: './display-savings-goals.component.html',
   styleUrl: './display-savings-goals.component.scss'
 })
@@ -25,7 +27,9 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 
   savingsGoals: SAVINGS_GOAL_STRUCTURE[] = [];
 
-  constructor(private queryService: QueryService) { }
+  touched: boolean = false;
+
+  constructor(private queryService: QueryService, private popup: MatSnackBar) { }
 
   ngOnInit(): void {
     this.getSavingsGoals().subscribe(goals => {
@@ -56,6 +60,37 @@ export class DisplaySavingsGoalsComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    if (!this.touched) {
+      this.touched = true;
+    }
     moveItemInArray(this.savingsGoals, event.previousIndex, event.currentIndex);
+    this.updateRanks();
+  }
+
+  updateRanks() {
+    this.savingsGoals.forEach((goal, index) => {
+      goal.ranking = index + 1;
+    });
+  }
+
+  onRankingUpdate() {
+    if (this.touched) {
+      const idAndRanking = this.savingsGoals.map(goal => ({
+        goal_id: goal.goal_id,
+        ranking: goal.ranking
+      }));
+
+      this.queryService.updateGoalsRanking(idAndRanking).subscribe({
+        next: (_response) => {
+          this.popup.open('Goals ordering succeessfully saved.', 'Close', { duration: 3000 });
+        },
+        error: (err) => {
+          console.error('Error saving goals ordering', err);
+          this.popup.open('Error saving goals ordering. Please try again.', 'Close', { duration: 3000 });
+        },
+      });
+    } else {
+      this.popup.open('Please reorder your goals before submitting.', 'Close', { duration: 3000 });
+    }
   }
 }
