@@ -1,3 +1,7 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
 .tables-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -13,4 +17,9 @@
 
 .past-table {
     grid-area: 1 / 2 / 2 / 3;
+}
+
+h1 {
+    color: $main-green;
+    text-align: center;
 }

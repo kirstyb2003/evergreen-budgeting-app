@@ -26,4 +26,19 @@ const setSavingsGoal = async (req, userID) => {
     }
 };
 
-module.exports = { setSavingsGoal };
+const getSavingsGoals = async(userID) => {
+    const query = `SELECT goal_id, name, goal_amount, starting_savings, goal_due_date, ranking
+    FROM savings_goal
+    WHERE user_id = $1;`;
+
+    try {
+        const result = await pool.query(query, [userID]);
+        console.log(result.rows);
+        return result.rows;
+    } catch (err) {
+        console.error('Error retrieving savings goals', err);
+        throw err;
+    }
+};
+
+module.exports = { setSavingsGoal, getSavingsGoals };

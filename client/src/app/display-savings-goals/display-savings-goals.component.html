@@ -1,0 +1,9 @@
+<h2>Savings Goals</h2>
+
+<div cdkDropList class="order-savings-goals" (cdkDropListDropped)="drop($event)">
+    @for (goal of savingsGoals; track goal.goal_id) {
+    <div class="goal-info" cdkDrag>
+        <h3>{{ goal.ranking }}. {{goal.name}}</h3>
+    </div>
+    }
+</div>

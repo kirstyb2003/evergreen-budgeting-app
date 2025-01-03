@@ -7,11 +7,13 @@ import { QueryService } from '../services/query.service';
 import { BankBalanceComponent } from "../bank-balance/bank-balance.component";
 import { TransactionTableComponent } from "../transaction-table/transaction-table.component";
 import { currencyMap } from '../data-structures/currency-codes';
+import { DisplaySavingsGoalsComponent } from "../display-savings-goals/display-savings-goals.component";
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-transaction-display-page',
   standalone: true,
-  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent],
+  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent, DisplaySavingsGoalsComponent, NgIf],
   templateUrl: './transaction-display-page.component.html',
   styleUrl: './transaction-display-page.component.scss'
 })
@@ -20,6 +22,7 @@ export class TransactionDisplayPageComponent {
   currencySymbol!: string;
 
   transactionType: string | null = null;
+  transactionTypeText: string = '';
 
   constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 
@@ -32,6 +35,12 @@ export class TransactionDisplayPageComponent {
 
     this.route.paramMap.subscribe(params => {
       this.transactionType = params.get('type');
+      
+      if (this.transactionType === "expense") {
+        this.transactionTypeText = "Expenses";
+      } else {
+        this.transactionTypeText = this.transactionType!.charAt(0).toUpperCase() + this.transactionType!.slice(1);;
+      }
     });
   }
 }

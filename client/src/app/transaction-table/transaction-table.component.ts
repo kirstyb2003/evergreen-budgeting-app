@@ -18,7 +18,7 @@ type ROW_DATA_STRUCTURE = {
   payment_type?: string
 }
 
-function formatDate(dateString: string): string {
+export function formatDate(dateString: string): string {
   if (!dateString) return '';
 
   const date = new Date(dateString);
@@ -99,7 +99,7 @@ export class TransactionTableComponent implements OnInit {
   colDefs!: ColDef[];
   rowData!: ROW_DATA_STRUCTURE[];
 
-  constructor(private router: Router, private queryService: QueryService, private route: ActivatedRoute) { }
+  constructor(private queryService: QueryService) { }
 
   ngOnInit() {
     if (this.transactionType == 'expense') {
@@ -145,7 +145,7 @@ export class TransactionTableComponent implements OnInit {
     return this.queryService.getPastTransactions(this.transactionType, this.userID).pipe(
       map(response => response),
       catchError(error => {
-        console.error('Error retrieving categories', error);
+        console.error('Error retrieving past transactions', error);
         return of([]);
       })
     );
@@ -155,7 +155,7 @@ export class TransactionTableComponent implements OnInit {
     return this.queryService.getUpcomingTransactions(this.transactionType, this.userID).pipe(
       map(response => response),
       catchError(error => {
-        console.error('Error retrieving categories', error);
+        console.error('Error retrieving upcoming transactions', error);
         return of([]);
       })
     );

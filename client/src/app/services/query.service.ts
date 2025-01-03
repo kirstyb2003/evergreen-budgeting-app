@@ -67,4 +67,8 @@ export class QueryService {
   getUpcomingTransactions(type: string, userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/transactions/${userID}/upcoming/${type}`);
   }
+
+  getSavingsGoals(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/savings-goals/${userID}`);
+  }
 }

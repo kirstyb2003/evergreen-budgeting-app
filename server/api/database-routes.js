@@ -2,7 +2,7 @@ const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
 const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions } = require('./database-queries/transactions');
-const { setSavingsGoal } = require('./database-queries/savings_goal');
+const { setSavingsGoal, getSavingsGoals } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
@@ -186,6 +186,18 @@ router.get('/transactions/:userID/upcoming/:type', allowCors(async (req, res) =>
     res.status(500).send(`Error fetching upcoming ${type} transactions`);
   }
 }));
+
+router.get('/savings-goals/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const goals = await getSavingsGoals(userID);
+    res.json(goals);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching savings goals');
+  }
+}))
 
 
 module.exports = router;

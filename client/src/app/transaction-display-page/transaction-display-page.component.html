@@ -1,6 +1,8 @@
 <app-nav-bar></app-nav-bar>
+<h1>{{ transactionTypeText }}</h1>
 <app-bank-balance [pageType]="transactionType"></app-bank-balance>
 <div class="tables-container">
     <app-transaction-table class="upcoming-table" timeFrame="upcoming" [transactionType]="transactionType || ''" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-transaction-table>
     <app-transaction-table class="past-table" timeFrame="past" [transactionType]="transactionType || ''" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-transaction-table>
 </div>
+<app-display-savings-goals *ngIf="transactionType === 'savings'" [userID]="currentUser.user_id"></app-display-savings-goals>
