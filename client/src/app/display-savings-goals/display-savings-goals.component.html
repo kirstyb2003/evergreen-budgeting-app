@@ -23,7 +23,7 @@
                     </button>
                 </div>
                 <div class="target">Target: {{ formatMoney(goal.goal_amount) }}</div>
-                <div class="date">Due Date: {{ goal.goal_due_date }}</div>
+                <div class="date" *ngIf="goal.goal_due_date">Due Date: {{ goal.goal_due_date }}</div>
                 <div class="saved">Total Saved: {{ formatMoney(goal.currently_saved || 0.00) }}</div>
                 <div class="left">Amount Left to Save: {{ formatMoney(goal.goal_amount - (goal.currently_saved || 0.00)) }}</div>
             </div>

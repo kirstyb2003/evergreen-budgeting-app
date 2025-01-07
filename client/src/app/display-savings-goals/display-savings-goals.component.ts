@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { NgIf } from '@angular/common';
 
 type SAVINGS_GOAL_STRUCTURE = {
   goal_id: number,
@@ -22,7 +23,7 @@ type SAVINGS_GOAL_STRUCTURE = {
 @Component({
   selector: 'app-display-savings-goals',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, MatButtonModule, RouterLink, MatIcon, MatDialogModule],
+  imports: [CdkDropList, CdkDrag, MatButtonModule, RouterLink, MatIcon, MatDialogModule, NgIf],
   templateUrl: './display-savings-goals.component.html',
   styleUrl: './display-savings-goals.component.scss'
 })
