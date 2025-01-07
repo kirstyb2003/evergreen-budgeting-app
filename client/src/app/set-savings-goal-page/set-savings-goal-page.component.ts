@@ -87,6 +87,8 @@ export class SetSavingsGoalPageComponent {
       if (this.savingsForm.value.goal_date) {
         const savingsDate = moment(this.savingsForm.value.goal_date).endOf('day').format('YYYY-MM-DD');
         formValue.goal_date = savingsDate;
+      } else {
+        formValue.goal_date = null;
       }
 
       if (this.goalID) {
