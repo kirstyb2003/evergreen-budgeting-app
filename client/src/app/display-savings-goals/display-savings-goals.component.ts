@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit , ChangeDetectionStrategy, inject, Inject} from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
 import { formatDate } from '../transaction-table/transaction-table.component';
 import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { Router, RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 type SAVINGS_GOAL_STRUCTURE = {
   goal_id: number,
@@ -12,29 +15,43 @@ type SAVINGS_GOAL_STRUCTURE = {
   goal_amount: number,
   starting_savings: number,
   goal_due_date: string,
-  ranking: number
+  ranking: number,
+  currently_saved?: number,
 }
 
 @Component({
   selector: 'app-display-savings-goals',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, MatButtonModule],
+  imports: [CdkDropList, CdkDrag, MatButtonModule, RouterLink, MatIcon, MatDialogModule],
   templateUrl: './display-savings-goals.component.html',
   styleUrl: './display-savings-goals.component.scss'
 })
 export class DisplaySavingsGoalsComponent implements OnInit {
   @Input({ required: true }) userID!: string;
+  @Input({ required: true }) amountSaved!: number;
+  @Input({ required: true }) currencySymbol!: string;
 
   savingsGoals: SAVINGS_GOAL_STRUCTURE[] = [];
 
   touched: boolean = false;
 
-  constructor(private queryService: QueryService, private popup: MatSnackBar) { }
+  currentUrl!: String;
+
+  readonly dialog = inject(MatDialog);
+
+  constructor(private router: Router, private queryService: QueryService, private popup: MatSnackBar) {
+    this.currentUrl = this.router.url;
+  }
 
   ngOnInit(): void {
+    this.setupGoals();
+  }
+
+  setupGoals() {
     this.getSavingsGoals().subscribe(goals => {
       let formattedGoals = this.changeDatesToStrings(goals);
       this.savingsGoals = this.orderGoals(formattedGoals);
+      this.calculateTotals();
     });
   }
 
@@ -65,6 +82,7 @@ export class DisplaySavingsGoalsComponent implements OnInit {
     }
     moveItemInArray(this.savingsGoals, event.previousIndex, event.currentIndex);
     this.updateRanks();
+    this.calculateTotals();
   }
 
   updateRanks() {
@@ -93,4 +111,76 @@ export class DisplaySavingsGoalsComponent implements OnInit {
       this.popup.open('Please reorder your goals before submitting.', 'Close', { duration: 3000 });
     }
   }
+
+  calculateTotals() {
+    let remainingSavings = this.amountSaved;
+
+    this.savingsGoals = this.savingsGoals.map(goal => {
+      const startingSavings = Number(goal.starting_savings);
+      const goalAmount = Number(goal.goal_amount);
+      const maxContribution = goalAmount - startingSavings;
+      let contribution = 0.00;
+
+      if (remainingSavings > 0) {
+        if (remainingSavings >= maxContribution) {
+          contribution = maxContribution + startingSavings;
+          remainingSavings -= maxContribution;
+        } else {
+          contribution = remainingSavings + startingSavings;
+          remainingSavings = 0;
+        }
+      } else {
+        contribution = startingSavings;
+      }
+
+      return {
+        ...goal,
+        currently_saved: contribution
+      };
+    });
+  }
+
+  formatMoney(amount: number): string {
+    return `${this.currencySymbol}${Number(amount).toFixed(2)}`;
+  }
+
+  openDeleteDialog(goal: SAVINGS_GOAL_STRUCTURE) {
+    const dialogRef = this.dialog.open(DialogDeleteGoal, {
+      data: { name: goal.name },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.removeSavingsGoal(goal.goal_id);
+      }
+    });
+  }
+
+  removeSavingsGoal(id: number) {
+    this.queryService.deleteSavingsGoal(id, this.userID).subscribe({
+      next: (_response) => {
+        this.popup.open('Goal successfully deleted', 'Close', { duration: 3000 });
+        this.setupGoals();
+      },
+      error: (err) => {
+        console.error('Error deleting savings goal.', err);
+        this.popup.open('Error deleting savings goal. Please try again.', 'Close', { duration: 3000 });
+      },
+    });
+  }
+
+  editSavingsGoal(id: number) {
+
+  }
+}
+
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: 'delete-confirmation-dialog.html',
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DialogDeleteGoal {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string }) {}
 }

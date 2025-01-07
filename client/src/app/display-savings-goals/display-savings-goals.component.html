@@ -1,6 +1,6 @@
 <div class="text-area">
     <h2>Savings Goals</h2><br>
-    <p>Click and drag the goals to reorder them.</p>
+    Click and drag the goals to reorder them.
 </div>
 
 
@@ -8,14 +8,42 @@
     <div cdkDropList class="order-savings-goals" (cdkDropListDropped)="drop($event)">
         @for (goal of savingsGoals; track goal.goal_id) {
         <div class="goal-info" cdkDrag>
-            <h3>{{ goal.ranking }}. {{goal.name}}</h3>
+            <div class="goal-container">
+                <div class="title">
+                    <h3>{{ goal.ranking }}. {{goal.name}}</h3>
+                </div>
+                <div class="del-edit-buttons">
+                    <button mat-icon-button color="warn" type="button" (click)="openDeleteDialog(goal)"
+                        aria-label="Remove Item" class="del">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" type="button" [routerLink]="['/set-savings-goal', goal.goal_id]" [queryParams]="{ prev: currentUrl }"
+                        aria-label="Edit Item" class="edit">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </div>
+                <div class="target">Target: {{ formatMoney(goal.goal_amount) }}</div>
+                <div class="date">Due Date: {{ goal.goal_due_date }}</div>
+                <div class="saved">Total Saved: {{ formatMoney(goal.currently_saved || 0.00) }}</div>
+                <div class="left">Amount Left to Save: {{ formatMoney(goal.goal_amount - (goal.currently_saved || 0.00)) }}</div>
+            </div>
+
+             
+            
+            
+
         </div>
         }
     </div>
     <div class="update-button-area">
-        <button mat-raised-button color="primary" type="submit" class="update-button" (click)="onRankingUpdate()">
+        <button mat-raised-button color="primary" type="submit" class="button" (click)="onRankingUpdate()">
             Submit New Ranking
         </button>
     </div>
-
+    <div class="add-new-goal-area">
+        <button mat-raised-button color="primary" type="submit" class="button" routerLink="/set-savings-goal"
+            [queryParams]="{ prev: currentUrl }">
+            Add New Savings Goal
+        </button>
+    </div>
 </div>

@@ -52,6 +52,14 @@ export class QueryService {
     )
   }
 
+  updateSavingsGoal(goalID: string, savingsInfo: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/savings-goal/update/${goalID}`, savingsInfo).pipe(
+      map(response => {
+        return response;
+      })
+    )
+  }
+
   getBalance(userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/balance/${userID}`);
   }
@@ -78,5 +86,17 @@ export class QueryService {
         return response;
       })
     )
+  }
+
+  deleteSavingsGoal(id: number, userID: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/savings-goals/delete/${id}`, {userID}).pipe(
+      map(response => {
+        return response;
+      })
+    )
+  }
+
+  getSavingsGoal(goalID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/savings-goal/${goalID}`);
   }
 }

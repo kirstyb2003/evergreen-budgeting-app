@@ -67,4 +67,66 @@ const updateGoalRankings = async (req) => {
     }
 }
 
-module.exports = { setSavingsGoal, getSavingsGoals, updateGoalRankings };
+const deleteGoal = async (goalID, userID) => {
+    const deleteQuery = `DELETE FROM savings_goal WHERE goal_id = $1`;
+    const reRankQuery = `
+        WITH ranked_goals AS (
+            SELECT goal_id, RANK() OVER (ORDER BY ranking) AS new_ranking
+            FROM savings_goal
+            WHERE user_id = $1
+        )
+        UPDATE savings_goal sg
+        SET ranking = rg.new_ranking
+        FROM ranked_goals rg
+        WHERE sg.goal_id = rg.goal_id;
+    `;
+
+    try {
+        await pool.query('BEGIN');
+        await pool.query(deleteQuery, [goalID]);
+        await pool.query(reRankQuery, [userID]);
+        await pool.query('COMMIT');
+        return { success: true };
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error('Error deleting goal:', error);
+        throw error;
+    }
+};
+
+const getSavingsGoal = async (goalID) => {
+    const query = `SELECT name, goal_amount, starting_savings, goal_due_date
+    FROM savings_goal
+    WHERE goal_id = $1;`;
+
+    try {
+        const result = await pool.query(query, [goalID]);
+        return result.rows[0];
+    } catch (err) {
+        console.error('Error retrieving savings goals', err);
+        throw err;
+    }
+};
+
+const updateSavingsGoal = async (goalData, goalID) => {
+    let { name, target_amount, goal_date = null, starting_amount } = goalData;
+
+    const query = `
+        UPDATE public.savings_goal
+        SET 
+            goal_amount = $1,
+            starting_savings = $2,
+            goal_due_date = $3,
+            name = $4
+        WHERE goal_id = $5;`;
+
+    try {
+        const result = await pool.query(query, [target_amount, starting_amount, goal_date, name, goalID]);
+        return result.rows;
+    } catch (err) {
+        console.error('Error retrieving savings goals', err);
+        throw err;
+    }
+}
+
+module.exports = { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal };

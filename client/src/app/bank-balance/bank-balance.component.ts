@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { currencyMap } from '../data-structures/currency-codes';
 import { AuthenticationService } from '../services/authentication.service';
@@ -15,12 +15,13 @@ let cellHeaderMap = new Map<string, string>([
 @Component({
   selector: 'app-bank-balance',
   standalone: true,
-  imports: [NgIf, CurrencyPipe],
+  imports: [CurrencyPipe],
   templateUrl: './bank-balance.component.html',
   styleUrl: './bank-balance.component.scss'
 })
 export class BankBalanceComponent implements OnInit {
   @Input({ required: true }) pageType!: string | null;
+  @Output() calculatexTotal = new EventEmitter<number>();
 
   balance: number = 0.00;
   total: number = 0.00;
@@ -53,6 +54,7 @@ export class BankBalanceComponent implements OnInit {
 
     this.getTotal().subscribe(total => {
       this.total = total;
+      this.calculatexTotal.emit(total);
     });
 
   }

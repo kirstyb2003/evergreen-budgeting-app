@@ -2,7 +2,7 @@ const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
 const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions } = require('./database-queries/transactions');
-const { setSavingsGoal, getSavingsGoals, updateGoalRankings } = require('./database-queries/savings_goal');
+const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
@@ -210,5 +210,44 @@ router.post('/savings-goals/update', allowCors(async (req, res) => {
     res.status(500).json({ error: "Failed to save goal rankings" });
   }
 }));
+
+router.post('/savings-goals/delete/:goalID', allowCors(async (req, res) => {
+  const { goalID } = req.params;
+  const { userID } = req.body;
+
+  try {
+    const result = await deleteGoal(goalID, userID);
+    res.status(201).json({ message: 'Deleted goal successfully.', inserted_rows: result });
+  } catch (err) {
+    console.error('Error deleting goal.', err);
+    res.status(500).json({ error: "Failed to delete the savings goal." });
+  }
+}))
+
+router.get('/savings-goal/:id', allowCors(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const goal = await getSavingsGoal(id);
+    res.json(goal);
+  }  catch (err) {
+    console.error(err);
+    res.status(500).send(`Error fetching goal ${id}`);
+  }
+}));
+
+router.post('/savings-goal/update/:goalID', allowCors(async (req, res) => {
+  const { goalID } = req.params;
+  const goalData = req.body;
+
+  try {
+    const result = await updateSavingsGoal(goalData, goalID);
+    res.status(201).json({ message: 'Savings goal saved successfully', inserted_rows: result });
+  } catch (err) {
+    console.error('Error saving the savings goal: ', err);
+    res.status(500).json({ error: "Failed to save savings goal" });
+  }
+}))
+
 
 module.exports = router;

@@ -24,6 +24,8 @@ export class TransactionDisplayPageComponent {
   transactionType: string | null = null;
   transactionTypeText: string = '';
 
+  total!: number;
+
   constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -43,4 +45,9 @@ export class TransactionDisplayPageComponent {
       }
     });
   }
+
+  receiveTotal(total: number) {
+    this.total = total;
+  }
+
 }

@@ -33,6 +33,8 @@ export class SetSavingsGoalPageComponent {
 
   prevUrl: string | null = null;
 
+  goalID: string | null = null;
+
   constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -45,6 +47,15 @@ export class SetSavingsGoalPageComponent {
     });
 
     this.initForm();
+
+    this.route.paramMap.subscribe(params => {
+      this.goalID = params.get('id');
+      if (this.goalID) {
+        this.fetchGoal();
+      }
+    });
+
+
   }
 
   initForm() {
@@ -53,6 +64,17 @@ export class SetSavingsGoalPageComponent {
       target_amount: new FormControl('', Validators.required),
       goal_date: new FormControl(''),
       starting_amount: new FormControl('0', Validators.required),
+    });
+  }
+
+  fetchGoal() {
+    this.queryService.getSavingsGoal(this.goalID!).subscribe(goal => {
+      this.savingsForm.patchValue({
+        name: goal.name,
+        target_amount: goal.goal_amount,
+        goal_date: moment(goal.goal_due_date).toDate(),
+        starting_amount: goal.starting_savings,
+      });
     });
   }
 
@@ -67,16 +89,30 @@ export class SetSavingsGoalPageComponent {
         formValue.goal_date = savingsDate;
       }
 
-      this.queryService.setSavingsGoal(formValue, this.currentUser.user_id).subscribe({
-        next: (_response) => {
-          this.router.navigateByUrl(this.prevUrl!);
-          this.popup.open('Savings goal succeessfully saved.', 'Close', { duration: 3000 });
-        },
-        error: (err) => {
-          console.error('Error saving goal', err);
-          this.popup.open('Error saving goal. Please try again.', 'Close', { duration: 3000 });
-        },
-      });
+      if (this.goalID) {
+        this.queryService.updateSavingsGoal(this.goalID, formValue).subscribe({
+          next: (_response) => {
+            this.router.navigateByUrl(this.prevUrl!);
+            this.popup.open('Savings goal succeessfully updated.', 'Close', { duration: 3000 });
+          },
+          error: (err) => {
+            console.error('Error updating goal', err);
+            this.popup.open('Error updating goal. Please try again.', 'Close', { duration: 3000 });
+          },
+        });
+      } else {
+        this.queryService.setSavingsGoal(formValue, this.currentUser.user_id).subscribe({
+          next: (_response) => {
+            this.router.navigateByUrl(this.prevUrl!);
+            this.popup.open('Savings goal succeessfully saved.', 'Close', { duration: 3000 });
+          },
+          error: (err) => {
+            console.error('Error saving goal', err);
+            this.popup.open('Error saving goal. Please try again.', 'Close', { duration: 3000 });
+          },
+        });
+      }
+
     }
   }
 

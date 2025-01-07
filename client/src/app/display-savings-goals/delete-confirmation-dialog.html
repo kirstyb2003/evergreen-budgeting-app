@@ -1,0 +1,8 @@
+<h3 mat-dialog-title>Delete Savings Goal</h3>
+<mat-dialog-content class="mat-typography">
+  Are you sure you want to delete the savings goal "{{ data.name }}"?
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Delete Goal</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>
