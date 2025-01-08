@@ -7,7 +7,7 @@
     <app-transaction-table class="past-table" timeFrame="past" [transactionType]="transactionType || ''"
         [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-transaction-table>
 </div>
-<div class="goals-container" *ngIf="transactionType === 'savings' && total">
+<div class="goals-container" *ngIf="transactionType === 'savings' && total !== undefined">
     <app-display-savings-goals class="ranking-list"
         [userID]="currentUser.user_id" [amountSaved]="total" [currencySymbol]="currencySymbol"></app-display-savings-goals>
 </div>

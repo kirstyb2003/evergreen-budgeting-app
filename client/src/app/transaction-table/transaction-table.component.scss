@@ -33,7 +33,7 @@ $light-green: #7EC636;
     grid-row-gap: 0px;
     width: 55%;
     margin-top: 0.5rem;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
     border: 2px solid $dark-green;
     border-radius: 8px;
     background-color: #e0e4d7;
@@ -49,4 +49,5 @@ $light-green: #7EC636;
     border: 1px solid $dark-green;
     border-radius: 4px;
     font-size: 16px;
+    width: 100%;
 }

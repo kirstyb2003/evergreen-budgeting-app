@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { QueryService } from '../services/query.service';
 import { BankBalanceComponent } from "../bank-balance/bank-balance.component";
@@ -9,11 +9,12 @@ import { TransactionTableComponent } from "../transaction-table/transaction-tabl
 import { currencyMap } from '../data-structures/currency-codes';
 import { DisplaySavingsGoalsComponent } from "../display-savings-goals/display-savings-goals.component";
 import { NgIf } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-transaction-display-page',
   standalone: true,
-  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent, DisplaySavingsGoalsComponent, NgIf],
+  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent, DisplaySavingsGoalsComponent, NgIf, MatButtonModule, RouterLink],
   templateUrl: './transaction-display-page.component.html',
   styleUrl: './transaction-display-page.component.scss'
 })
@@ -26,7 +27,11 @@ export class TransactionDisplayPageComponent {
 
   total!: number;
 
-  constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
+  currentUrl: string;
+
+  constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) {
+    this.currentUrl = this.router.url;
+  }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
@@ -37,7 +42,7 @@ export class TransactionDisplayPageComponent {
 
     this.route.paramMap.subscribe(params => {
       this.transactionType = params.get('type');
-      
+
       if (this.transactionType === "expense") {
         this.transactionTypeText = "Expenses";
       } else {

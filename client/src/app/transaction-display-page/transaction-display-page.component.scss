@@ -40,3 +40,33 @@ h1 {
     color: $main-green;
     text-align: center;
 }
+
+@media (max-width: 768px) {
+    .tables-container,
+    .goals-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        padding: 0.5rem;
+    }
+
+    .upcoming-table {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .past-table {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .ranking-list {
+        grid-area: 3 / 1 / 4 / 2;
+    }
+
+    .watering-cans {
+        grid-area: 4 / 1 / 5 / 2;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
