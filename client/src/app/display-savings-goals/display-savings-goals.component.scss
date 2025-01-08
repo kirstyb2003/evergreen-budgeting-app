@@ -2,6 +2,8 @@ $dark-green: #014700;
 $main-green: #007355;
 $light-green: #7EC636;
 
+@use '@angular/material' as mat;
+
 .order-savings-goals {
     width: 500px;
     max-width: 100%;
@@ -67,9 +69,9 @@ h2 {
 }
 
 .text-area {
-    display: flex; 
+    display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     justify-content: center;
     text-align: center;
     margin-bottom: 0.5rem;
@@ -99,9 +101,9 @@ p {
 .goal-rankings {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
+    margin-bottom: 2rem;
 }
 
 .order-savings-goals {
@@ -120,10 +122,11 @@ p {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 10px;
     grid-row-gap: 10px;
     width: 100%;
     position: relative;
+
+    @include mat.progress-bar-overrides((active-indicator-color: $light-green,));
 }
 
 .title {
@@ -165,4 +168,10 @@ p {
 
 .left {
     grid-area: 3 / 2 / 4 / 3;
+}
+
+@media (max-width: 768px) {
+    .order-savings-goals {
+        width: 90% !important;
+    }
 }

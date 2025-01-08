@@ -11,6 +11,7 @@
             <div class="goal-container">
                 <div class="title">
                     <h3>{{ goal.ranking }}. {{goal.name}}</h3>
+                    <mat-progress-bar mode="determinate" [value]="((goal.currently_saved!)/goal.goal_amount)*100"></mat-progress-bar>
                 </div>
                 <div class="del-edit-buttons">
                     <button mat-icon-button color="warn" type="button" (click)="openDeleteDialog(goal)"
@@ -38,7 +39,7 @@
     <div class="add-new-goal-area">
         <button mat-raised-button color="primary" type="submit" class="button" routerLink="/set-savings-goal"
             [queryParams]="{ prev: currentUrl }">
-            Add New Savings Goal
+            Add Savings Goal
         </button>
     </div>
 </div>
