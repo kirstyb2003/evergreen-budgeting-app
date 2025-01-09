@@ -1,4 +1,4 @@
-import { Component, Input, OnInit , ChangeDetectionStrategy, inject, Inject} from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, inject, Inject } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
 import { formatDate } from '../transaction-table/transaction-table.component';
@@ -7,9 +7,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NgIf } from '@angular/common';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 type SAVINGS_GOAL_STRUCTURE = {
   goal_id: number,
@@ -143,8 +143,9 @@ export class DisplaySavingsGoalsComponent implements OnInit {
   }
 
   formatMoney(amount: number): string {
-    return `${this.currencySymbol}${Number(amount).toFixed(2)}`;
+    return `${this.currencySymbol}${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
+
 
   openDeleteDialog(goal: SAVINGS_GOAL_STRUCTURE) {
     const dialogRef = this.dialog.open(DialogDeleteGoal, {
@@ -184,5 +185,5 @@ export class DisplaySavingsGoalsComponent implements OnInit {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDeleteGoal {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string }) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string }) { }
 }
