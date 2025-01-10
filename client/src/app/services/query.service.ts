@@ -9,14 +9,14 @@ import { environment } from '../../environments/environment';
 export class QueryService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getCategories(transaction_type: String): Observable<any> {
     return this.http.get(`${this.apiUrl}/categories/${transaction_type}`);
   }
 
   logTransaction(transactionData: any, userID: String, dates: String[]): Observable<any> {
-    const newStruct = {...transactionData, dates};
+    const newStruct = { ...transactionData, dates };
     return this.http.post(`${this.apiUrl}/transactions/${userID}`, newStruct).pipe(
       map(response => {
         return response;
@@ -36,7 +36,7 @@ export class QueryService {
     return this.http.get(`${this.apiUrl}/budget/${userID}`);
   }
 
-  deleteBudgetItems(deleteCategories: {name: string, type: string}[], userID: string): Observable<any> {
+  deleteBudgetItems(deleteCategories: { name: string, type: string }[], userID: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/budget/delete/${userID}`, deleteCategories).pipe(
       map(response => {
         return response;
@@ -76,11 +76,15 @@ export class QueryService {
     return this.http.get(`${this.apiUrl}/transactions/${userID}/upcoming/${type}`);
   }
 
+  getTransaction(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transaction/${id}`);
+  }
+
   getSavingsGoals(userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/savings-goals/${userID}`);
   }
 
-  updateGoalsRanking(rankings: {goal_id: number, ranking: number}[]): Observable<any> {
+  updateGoalsRanking(rankings: { goal_id: number, ranking: number }[]): Observable<any> {
     return this.http.post(`${this.apiUrl}/savings-goals/update`, rankings).pipe(
       map(response => {
         return response;
@@ -89,7 +93,7 @@ export class QueryService {
   }
 
   deleteSavingsGoal(id: number, userID: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/savings-goals/delete/${id}`, {userID}).pipe(
+    return this.http.post(`${this.apiUrl}/savings-goals/delete/${id}`, { userID }).pipe(
       map(response => {
         return response;
       })
@@ -98,5 +102,13 @@ export class QueryService {
 
   getSavingsGoal(goalID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/savings-goal/${goalID}`);
+  }
+
+  deleteTransaction(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/transaction/delete/${id}`, {}).pipe(
+      map(response => {
+        return response;
+      })
+    )
   }
 }

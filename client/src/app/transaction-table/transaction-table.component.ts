@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, GridOptions, GridReadyEvent, IDateFilterParams, SortDirection } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, themeAlpine } from 'ag-grid-community';
-import { catchError, filter, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
+import { TableActionComponent } from '../table-action/table-action.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -92,6 +91,9 @@ export class TransactionTableComponent implements OnInit {
       floatingFilter: true,
     },
     theme: themeAlpine,
+    context: {
+      reloadData: this.getRowData.bind(this),
+    }
   };
 
   private gridApi!: GridApi;
@@ -108,6 +110,27 @@ export class TransactionTableComponent implements OnInit {
       this.title = this.timeFrame + " " + this.transactionType;
     }
 
+    this.getRowData();
+
+    this.colDefs = [
+      {
+        headerName: "",
+        cellRenderer: TableActionComponent,
+        sortable: false,
+        filter: false,
+        width: 150,
+      },
+      { field: "name" },
+      { field: "category" },
+      { field: "amount", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol) },
+      { field: "transaction_date", headerName: "Transaction Date", valueFormatter: (params) => formatDate(params.value), sort: this.dateOrder, filter: 'agDateColumnFilter', filterParams: filterParams },
+      { field: "shop" },
+      { field: "payment_method", headerName: "Payment Method" },
+
+    ]
+  }
+
+  getRowData() {
     if (this.timeFrame == "past") {
       this.dateOrder = "desc";
       this.getPastTransactions().subscribe(transactions => {
@@ -118,15 +141,6 @@ export class TransactionTableComponent implements OnInit {
         this.rowData = transactions;
       });
     }
-
-    this.colDefs = [
-      { field: "name" },
-      { field: "category" },
-      { field: "amount", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol) },
-      { field: "transaction_date", headerName: "Transaction Date", valueFormatter: (params) => formatDate(params.value), sort: this.dateOrder, filter: 'agDateColumnFilter', filterParams: filterParams },
-      { field: "shop" },
-      { field: "payment_method", headerName: "Payment Method" },
-    ]
   }
 
   onFilterTextBoxChanged() {

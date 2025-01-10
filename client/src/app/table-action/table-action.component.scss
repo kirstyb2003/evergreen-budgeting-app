@@ -1,0 +1,30 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+.button {
+    background-color: $light-green !important;
+    color: white !important;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    display: flex;
+    width: 65%;
+    margin: 1rem auto;
+    align-content: center;
+}
+
+.button:hover {
+    background-color: white !important;
+    color: $light-green !important;
+}
+
+.del-edit-buttons button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.del-edit-buttons mat-icon {
+    font-size: 20px;
+    color: $main-green;
+}

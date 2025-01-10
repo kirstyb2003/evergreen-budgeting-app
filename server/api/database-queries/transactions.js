@@ -29,7 +29,7 @@ const logTransaction = async (req, userID) => {
     const result = await pool.query(insertQuery, flatValues);
     return result.rows;
   } catch (error) {
-    console.error('Error inserting transactions:', error);
+    console.error('Error inserting transactions: ', error);
     throw error;
   }
 };
@@ -68,13 +68,13 @@ const getBalance = async (userID) => {
     const balance = (startingBalance + income - expenses - savings).toFixed(2);
     return balance;
   } catch (error) {
-    console.error('Error fetching balance:', error);
+    console.error('Error fetching balance: ', error);
     throw error;
   }
 };
 
 const getPastTransactions = async (userID, type) => {
-  const query = `SELECT t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method
+  const query = `SELECT t.transaction_id, t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method
   FROM transaction as t, category as c
   WHERE c.category_id = t.category_id
   AND t.user_id = $1
@@ -85,13 +85,13 @@ const getPastTransactions = async (userID, type) => {
     const result = await pool.query(query, [userID, type]);
     return result.rows;
   } catch (error) {
-    console.error(`Error retrieving past ${type} transactions:`, error);
+    console.error(`Error retrieving past ${type} transactions: `, error);
     throw error;
   }
 };
 
 const getUpcomingTransactions = async (userID, type) => {
-  const query = `SELECT t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method
+  const query = `SELECT t.transaction_id, t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method
   FROM transaction as t, category as c
   WHERE c.category_id = t.category_id
   AND t.user_id = $1
@@ -102,9 +102,36 @@ const getUpcomingTransactions = async (userID, type) => {
     const result = await pool.query(query, [userID, type]);
     return result.rows;
   } catch (error) {
-    console.error(`Error retrieving upcoming ${type} transactions:`, error);
+    console.error(`Error retrieving upcoming ${type} transactions: `, error);
     throw error;
   }
 };
 
-module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions };
+const deleteTransaction = async (id) => {
+  const query = `DELETE FROM transaction WHERE transaction_id = $1`;
+
+  try {
+    const result = await pool.query(query, [id]);
+    return result.rows;
+  } catch (error) {
+    console.error(`Error deleting transaction ${id}: `, error);
+    throw error;
+  }
+};
+
+const getTransaction = async (id) => {
+  const query = `SELECT t.name, c.name AS category, t.type, t.transaction_date, t.amount, t.shop, t.payment_method, t.repeat, t.repeat_schedule, t.end_date
+  FROM transaction AS t, category AS c
+  WHERE t.category_id = c.category_id
+  AND transaction_id = $1;`;
+
+  try {
+      const result = await pool.query(query, [id]);
+      return result.rows[0];
+  } catch (err) {
+      console.error('Error retrieving savings goals', err);
+      throw err;
+  }
+};
+
+module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction };

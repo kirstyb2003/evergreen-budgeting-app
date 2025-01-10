@@ -1,7 +1,7 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions } = require('./database-queries/transactions');
+const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction } = require('./database-queries/transactions');
 const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
@@ -248,6 +248,30 @@ router.post('/savings-goal/update/:goalID', allowCors(async (req, res) => {
     res.status(500).json({ error: "Failed to save savings goal" });
   }
 }))
+
+router.post('/transaction/delete/:id', allowCors(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await deleteTransaction(id);
+    res.status(201).json({ message: 'Deleted transaction successfully.', inserted_rows: result });
+  } catch (err) {
+    console.error('Error deleting transaction.', err);
+    res.status(500).json({ error: "Failed to delete the transaction." });
+  }
+}))
+
+router.get('/transaction/:id', allowCors(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const trans = await getTransaction(id);
+    res.json(trans);
+  }  catch (err) {
+    console.error(err);
+    res.status(500).send(`Error fetching transaction ${id}`);
+  }
+}));
 
 
 module.exports = router;

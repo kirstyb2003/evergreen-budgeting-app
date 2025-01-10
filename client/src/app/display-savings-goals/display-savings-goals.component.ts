@@ -149,7 +149,7 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 
   openDeleteDialog(goal: SAVINGS_GOAL_STRUCTURE) {
     const dialogRef = this.dialog.open(DialogDeleteGoal, {
-      data: { name: goal.name },
+      data: { name: goal.name, title: "Savings Goal", type: "savings goal", buttonText: "Goal" },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -171,19 +171,15 @@ export class DisplaySavingsGoalsComponent implements OnInit {
       },
     });
   }
-
-  editSavingsGoal(id: number) {
-
-  }
 }
 
 @Component({
-  selector: 'dialog-content-example-dialog',
+  selector: 'dialog-delete-goal',
   templateUrl: 'delete-confirmation-dialog.html',
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDeleteGoal {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string }) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, title: string, type: string, buttonText: string }) { }
 }

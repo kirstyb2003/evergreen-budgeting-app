@@ -31,6 +31,7 @@ export class LogTransactionPageComponent {
   currentUser!: any;
 
   transactionType: string | null = null;
+  transID: string | null = null;
   typeList: String[] = ["expense", "income", "savings"];
   methodList: String[] = ["credit", "debit", "cheque", "cash"];
   repeatSchedList: String[] = ["daily", "weekly", "monthly", "yearly"];
@@ -54,9 +55,16 @@ export class LogTransactionPageComponent {
 
     this.route.paramMap.subscribe(params => {
       this.transactionType = params.get('type');
+      this.transID = params.get('id');
+
       this.initForm();
-      if (this.transactionType) {
+
+      if (this.transactionType && !this.transID) {
         this.fetchCategories();
+      }
+
+      if (this.transID) {
+        this.fetchTransaction();
       }
     });
   }
@@ -106,114 +114,133 @@ export class LogTransactionPageComponent {
     });
   }
 
-  getCategoriesList(transaction_type: String): Observable<{ name: String }[]> {
-    return this.queryService.getCategories(transaction_type).pipe(
-      map(response => response),
-      catchError(error => {
-        console.error('Error retrieving categories', error);
-        return of([]);
-      })
-    );
-  }
-
-  onSubmit() {
-    if (this.transactionForm.invalid) {
-      this.transactionForm.markAllAsTouched();
-    } else {
-      const formValue = { ...this.transactionForm.value };
-
-      let dates: String[];
-
-      const transactionDate = moment(this.transactionForm.value.transaction_date).endOf('day').format('YYYY-MM-DD');
-      formValue.transaction_date = transactionDate;
-
-      if (formValue.repeat) {
-        const endDate = this.transactionForm.value.end_date ? moment(this.transactionForm.value.end_date).endOf('day').format('YYYY-MM-DD') : null;
-        formValue.end_date = endDate;
-
-        dates = this.generateRepeatedDates(formValue);
-      } else {
-        dates = [formValue.transaction_date];
-        formValue.repeat_schedule = null;
-        formValue.end_date = null;
-      }
-
-      this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
-        next: (_response) => {
-          this.router.navigateByUrl(this.prevUrl!);
-          this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
-        },
-        error: (err) => {
-          console.error('Error saving transaction', err);
-          this.popup.open('Error saving transaction. Please try again.', 'Close', { duration: 3000 });
-        },
+  fetchTransaction() {
+    this.queryService.getTransaction(this.transID!).subscribe(trans => {
+      this.transactionForm.patchValue({
+        name: trans.name,
+        category: trans.category,
+        type: trans.type,
+        transaction_date: trans.transaction_date,
+        amount: trans.amount,
+        shop: trans.shop,
+        payment_method: trans.payment_method,
+        repeat: trans.repeat,
+        repeat_schedule: trans.repeat_schedule,
+        end_date: trans.end_date,
       });
-    }
+    });
+
+    this.fetchCategories();
   }
 
-  generateRepeatedDates(formData: any): String[] {
-    const startDate = moment(formData.transaction_date, 'YYYY-MM-DD');
-    const endDate = moment(formData.end_date, 'YYYY-MM-DD');
-    const repeatSchedule = formData.repeat_schedule;
+getCategoriesList(transaction_type: String): Observable < { name: String }[] > {
+  return this.queryService.getCategories(transaction_type).pipe(
+    map(response => response),
+    catchError(error => {
+      console.error('Error retrieving categories', error);
+      return of([]);
+    })
+  );
+}
 
-    const dates: String[] = [];
+onSubmit() {
+  if (this.transactionForm.invalid) {
+    this.transactionForm.markAllAsTouched();
+  } else {
+    const formValue = { ...this.transactionForm.value };
 
-    dates.push(startDate.format('YYYY-MM-DD'));
+    let dates: String[];
 
-    let currentDate = startDate.clone();
+    const transactionDate = moment(this.transactionForm.value.transaction_date).endOf('day').format('YYYY-MM-DD');
+    formValue.transaction_date = transactionDate;
 
-    while (currentDate.isBefore(endDate)) {
-      switch (repeatSchedule) {
-        case 'daily':
-          currentDate.add(1, 'day');
-          break;
-        case 'weekly':
-          currentDate.add(1, 'week');
-          break;
-        case 'monthly':
-          currentDate.add(1, 'month');
-          break;
-        case 'yearly':
-          currentDate.add(1, 'year');
-          break;
-      }
+    if (formValue.repeat) {
+      const endDate = this.transactionForm.value.end_date ? moment(this.transactionForm.value.end_date).endOf('day').format('YYYY-MM-DD') : null;
+      formValue.end_date = endDate;
 
-      if (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
-        dates.push(currentDate.format('YYYY-MM-DD'));
-      }
+      dates = this.generateRepeatedDates(formValue);
+    } else {
+      dates = [formValue.transaction_date];
+      formValue.repeat_schedule = null;
+      formValue.end_date = null;
     }
-    return dates;
+
+    this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
+      next: (_response) => {
+        this.router.navigateByUrl(this.prevUrl!);
+        this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
+      },
+      error: (err) => {
+        console.error('Error saving transaction', err);
+        this.popup.open('Error saving transaction. Please try again.', 'Close', { duration: 3000 });
+      },
+    });
   }
+}
+
+generateRepeatedDates(formData: any): String[] {
+  const startDate = moment(formData.transaction_date, 'YYYY-MM-DD');
+  const endDate = moment(formData.end_date, 'YYYY-MM-DD');
+  const repeatSchedule = formData.repeat_schedule;
+
+  const dates: String[] = [];
+
+  dates.push(startDate.format('YYYY-MM-DD'));
+
+  let currentDate = startDate.clone();
+
+  while (currentDate.isBefore(endDate)) {
+    switch (repeatSchedule) {
+      case 'daily':
+        currentDate.add(1, 'day');
+        break;
+      case 'weekly':
+        currentDate.add(1, 'week');
+        break;
+      case 'monthly':
+        currentDate.add(1, 'month');
+        break;
+      case 'yearly':
+        currentDate.add(1, 'year');
+        break;
+    }
+
+    if (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
+      dates.push(currentDate.format('YYYY-MM-DD'));
+    }
+  }
+  return dates;
+}
 
   get type() {
-    return this.transactionForm.get("type")!;
-  }
+  return this.transactionForm.get("type")!;
+}
 
   get category() {
-    return this.transactionForm.get("category")!;
-  }
+  return this.transactionForm.get("category")!;
+}
 
   get name() {
-    return this.transactionForm.get("name")!;
-  }
+  return this.transactionForm.get("name")!;
+}
 
   get transaction_date() {
-    return this.transactionForm.get("transaction_date")!;
-  }
+  return this.transactionForm.get("transaction_date")!;
+}
 
   get amount() {
-    return this.transactionForm.get("amount")!;
-  }
+  return this.transactionForm.get("amount")!;
+}
 
   get repeat() {
-    return this.transactionForm.get("repeat")!;
-  }
+  return this.transactionForm.get("repeat")!;
+}
 
   get repeat_schedule() {
-    return this.transactionForm.get("repeat_schedule")!;
-  }
+  return this.transactionForm.get("repeat_schedule")!;
+}
 
   get end_date() {
-    return this.transactionForm.get('end_date')!;
-  }
+  return this.transactionForm.get('end_date')!;
+}
 }
