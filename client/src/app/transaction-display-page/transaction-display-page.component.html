@@ -1,5 +1,11 @@
 <app-nav-bar></app-nav-bar>
-<h1>{{ transactionTypeText }}</h1>
+<div class="title">
+    <h1 class="text">{{ transactionTypeText }}</h1>
+    <button mat-raised-button color="primary" type="submit" class="button" [routerLink]="['/log-transaction', transactionType]" [queryParams]="{ prev: currentUrl }">
+        Log New {{ this.transactionType!.charAt(0).toUpperCase() + this.transactionType!.slice(1) }}
+    </button>
+</div>
+
 <app-bank-balance (calculatexTotal)="receiveTotal($event)" [pageType]="transactionType"></app-bank-balance>
 <div class="tables-container">
     <app-transaction-table class="upcoming-table" timeFrame="upcoming" [transactionType]="transactionType || ''"

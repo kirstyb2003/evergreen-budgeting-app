@@ -11,22 +11,25 @@
             <div class="goal-container">
                 <div class="title">
                     <h3>{{ goal.ranking }}. {{goal.name}}</h3>
-                    
+
                 </div>
                 <div class="del-edit-buttons">
                     <button mat-icon-button color="warn" type="button" (click)="openDeleteDialog(goal)"
                         aria-label="Remove Item" class="del">
                         <mat-icon>delete</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" type="button" [routerLink]="['/set-savings-goal', goal.goal_id]" [queryParams]="{ prev: currentUrl }"
+                    <button mat-icon-button color="warn" type="button"
+                        [routerLink]="['/set-savings-goal', goal.goal_id]" [queryParams]="{ prev: currentUrl }"
                         aria-label="Edit Item" class="edit">
                         <mat-icon>edit</mat-icon>
                     </button>
                 </div>
-                <div class="target">{{ ((goal.currently_saved!/goal.goal_amount)*100).toFixed(0) }}% of {{ formatMoney(goal.goal_amount) }}</div>
+                <div class="target">{{ ((goal.currently_saved!/goal.goal_amount)*100).toFixed(0) }}% of {{
+                    formatMoney(goal.goal_amount) }}</div>
                 <div class="left">{{ formatMoney(goal.goal_amount - (goal.currently_saved || 0.00)) }} to go</div>
                 <div class="progress-bar">
-                    <mat-progress-bar mode="determinate" [value]="((goal.currently_saved!)/goal.goal_amount)*100"></mat-progress-bar>
+                    <mat-progress-bar mode="determinate"
+                        [value]="((goal.currently_saved!)/goal.goal_amount)*100"></mat-progress-bar>
                 </div>
                 <div class="saved">{{ formatMoney(goal.currently_saved || 0.00) }}</div>
                 <div class="date" *ngIf="goal.goal_due_date">Target Date: {{ goal.goal_due_date }}</div>
@@ -34,17 +37,20 @@
         </div>
         }
     </div>
-    <div class="update-button-area">
-        <button mat-raised-button color="primary" type="submit" class="button" (click)="onRankingUpdate()">
-            Submit New Ranking
-        </button>
+    <div class="buttons">
+        <div class="update-button-area">
+            <button mat-raised-button color="primary" type="submit" class="button" (click)="onRankingUpdate()">
+                Submit New Ranking
+            </button>
+        </div>
+        <div class="add-new-goal-area">
+            <button mat-raised-button color="primary" type="submit" class="button" routerLink="/set-savings-goal"
+                [queryParams]="{ prev: currentUrl }">
+                Add Savings Goal
+            </button>
+        </div>
     </div>
-    <div class="add-new-goal-area">
-        <button mat-raised-button color="primary" type="submit" class="button" routerLink="/set-savings-goal"
-            [queryParams]="{ prev: currentUrl }">
-            Add Savings Goal
-        </button>
-    </div>
+
 </div>
 <div *ngIf="savingsGoals.length === 0">
     <div class="add-new-goal-area">

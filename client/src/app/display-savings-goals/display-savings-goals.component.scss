@@ -100,22 +100,39 @@ p {
 
 .goal-rankings {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     margin-bottom: 2rem;
 }
 
 .order-savings-goals {
-    grid-area: 1 / 1 / 2 / 3;
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.buttons {
+    grid-area: 2 / 1 / 3 / 2;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    width: 500px;
+    max-width: 100%;
+
+    
+    margin: 0 auto;
+    align-content: center;
 }
 
 .update-button-area {
-    grid-area: 2 / 1 / 3 / 2;
+    grid-area: 1 / 1 / 2 / 2;
 }
 
 .add-new-goal-area {
-    grid-area: 2 / 2 / 3 / 3;
+    grid-area: 1 / 2 / 2 / 3;
 }
 
 .goal-container {

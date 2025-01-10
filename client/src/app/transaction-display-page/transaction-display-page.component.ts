@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { QueryService } from '../services/query.service';
 import { BankBalanceComponent } from "../bank-balance/bank-balance.component";
@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-transaction-display-page',
   standalone: true,
-  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent, DisplaySavingsGoalsComponent, NgIf, MatButtonModule],
+  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent, DisplaySavingsGoalsComponent, NgIf, MatButtonModule, RouterLink],
   templateUrl: './transaction-display-page.component.html',
   styleUrl: './transaction-display-page.component.scss'
 })
@@ -46,7 +46,7 @@ export class TransactionDisplayPageComponent {
       if (this.transactionType === "expense") {
         this.transactionTypeText = "Expenses";
       } else {
-        this.transactionTypeText = this.transactionType!.charAt(0).toUpperCase() + this.transactionType!.slice(1);;
+        this.transactionTypeText = this.transactionType!.charAt(0).toUpperCase() + this.transactionType!.slice(1);
       }
     });
   }
