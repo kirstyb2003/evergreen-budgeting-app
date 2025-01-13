@@ -112,7 +112,7 @@ const updateSavingsGoal = async (goalData, goalID) => {
     let { name, target_amount, goal_date = null, starting_amount } = goalData;
 
     const query = `
-        UPDATE public.savings_goal
+        UPDATE savings_goal
         SET 
             goal_amount = $1,
             starting_savings = $2,

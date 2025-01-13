@@ -1,8 +1,18 @@
 <h3 mat-dialog-title>Delete {{ data.title }}</h3>
 <mat-dialog-content class="mat-typography">
-  Are you sure you want to delete the {{ data.type }} "{{ data.name }}"?
+  <p>Are you sure you want to delete the {{ data.type }} "{{ data.name }}"?</p>
+
+  <div class="repeated" *ngIf="data.repeat">
+    <p>This transaction is repeated. Please choose an option:</p>
+    <mat-radio-group [(ngModel)]="selectedOption" class="delete-options">
+      <mat-radio-button value="single">Delete only this occurrence</mat-radio-button>
+      <mat-radio-button value="all">Delete all occurrences</mat-radio-button>
+      <mat-radio-button value="after">Delete all occurrences after this transaction's date</mat-radio-button>
+    </mat-radio-group>
+  </div>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Delete {{ data.buttonText }}</button>
-    <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="selectedOption" cdkFocusInitial>Delete {{ data.buttonText }}</button>
+  <button mat-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>

@@ -1,7 +1,7 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction } = require('./database-queries/transactions');
+const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction } = require('./database-queries/transactions');
 const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
@@ -270,6 +270,19 @@ router.get('/transaction/:id', allowCors(async (req, res) => {
   }  catch (err) {
     console.error(err);
     res.status(500).send(`Error fetching transaction ${id}`);
+  }
+}));
+
+router.post('/transactions/update/:transID', allowCors(async (req, res) => {
+  const { transID } = req.params;
+  const transactionData = req.body;
+
+  try {
+    const result = await updateTransaction(transactionData, transID);
+    res.status(201).json({ message: 'Transaction updated successfully', transaction_id: result.transaction_id });
+  } catch (error) {
+    console.error('Error updating transaction:', error);
+    res.status(500).json({ error: 'Failed to update transaction' });
   }
 }));
 

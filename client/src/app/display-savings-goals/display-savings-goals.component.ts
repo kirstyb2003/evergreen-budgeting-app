@@ -10,6 +10,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NgIf } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {MatRadioModule} from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 
 type SAVINGS_GOAL_STRUCTURE = {
   goal_id: number,
@@ -149,10 +151,11 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 
   openDeleteDialog(goal: SAVINGS_GOAL_STRUCTURE) {
     const dialogRef = this.dialog.open(DialogDeleteGoal, {
-      data: { name: goal.name, title: "Savings Goal", type: "savings goal", buttonText: "Goal" },
+      data: { name: goal.name, title: "Savings Goal", type: "savings goal", buttonText: "Goal", repeat: false },
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      
       if (result) {
         this.removeSavingsGoal(goal.goal_id);
       }
@@ -176,10 +179,13 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 @Component({
   selector: 'dialog-delete-goal',
   templateUrl: 'delete-confirmation-dialog.html',
+  styleUrl: 'delete-confirmation-dialog.scss',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, NgIf, MatRadioModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDeleteGoal {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, title: string, type: string, buttonText: string }) { }
+  selectedOption: 'single' | 'all' | 'after' = 'single';
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, title: string, type: string, buttonText: string, repeat: boolean }) { }
 }

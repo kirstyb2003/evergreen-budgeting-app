@@ -165,16 +165,29 @@ onSubmit() {
       formValue.end_date = null;
     }
 
-    this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
-      next: (_response) => {
-        this.router.navigateByUrl(this.prevUrl!);
-        this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
-      },
-      error: (err) => {
-        console.error('Error saving transaction', err);
-        this.popup.open('Error saving transaction. Please try again.', 'Close', { duration: 3000 });
-      },
-    });
+    if (this.transID) {
+      this.queryService.updateTransaction(formValue, this.transID, dates).subscribe({
+        next: (_response) => {
+          this.router.navigateByUrl(this.prevUrl!);
+          this.popup.open('Savings goal succeessfully updated.', 'Close', { duration: 3000 });
+        },
+        error: (err) => {
+          console.error('Error updating goal', err);
+          this.popup.open('Error updating goal. Please try again.', 'Close', { duration: 3000 });
+        },
+      });
+    } else {
+      this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
+        next: (_response) => {
+          this.router.navigateByUrl(this.prevUrl!);
+          this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
+        },
+        error: (err) => {
+          console.error('Error saving transaction', err);
+          this.popup.open('Error saving transaction. Please try again.', 'Close', { duration: 3000 });
+        },
+      });
+    }
   }
 }
 

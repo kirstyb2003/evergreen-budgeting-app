@@ -7,6 +7,9 @@ import type { ICellRendererAngularComp } from 'ag-grid-angular';
 import type { ICellRendererParams } from 'ag-grid-community';
 import { QueryService } from '../services/query.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgIf } from '@angular/common';
+import {MatRadioModule} from '@angular/material/radio';
+import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-table-action',
@@ -47,17 +50,22 @@ export class TableActionComponent implements ICellRendererAngularComp {
 
   openDeleteDialog() {
     const dialogRef = this.dialog.open(DialogDeleteTrans, {
-      data: { name: this.name, title: "Transaction", type: "transaction", buttonText: "Transaction"  },
+      data: { name: this.name, title: "Transaction", type: "transaction", buttonText: "Transaction", repeat: this.repeated },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.deleteTransaction();
+        if (this.repeated) {
+          this.deleteTransaction(result);
+        } else {
+          this.deleteTransaction(null)
+        }
+        
       }
     });
   }
 
-  deleteTransaction() {
+  deleteTransaction(repeatDelete: string | null) {
     this.queryService.deleteTransaction(this.transID).subscribe({
       next: (_response) => {
         this.popup.open('Transaction successfully deleted', 'Close', { duration: 3000 });
@@ -74,12 +82,15 @@ export class TableActionComponent implements ICellRendererAngularComp {
 @Component({
   selector: 'dialog-delete-transaction',
   templateUrl: '../display-savings-goals/delete-confirmation-dialog.html',
+  styleUrl: '../display-savings-goals/delete-confirmation-dialog.scss',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, NgIf, MatRadioModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDeleteTrans {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, title: string, type: string, buttonText: string }) { }
+  selectedOption: 'single' | 'all' | 'after' = 'single';
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, title: string, type: string, buttonText: string, repeat: boolean }) { }
 }
 
 
