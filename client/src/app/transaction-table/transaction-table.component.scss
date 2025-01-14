@@ -91,3 +91,7 @@ $light-green: #7EC636;
         padding: 0.5rem;
     }
 }
+
+::ng-deep .pinned-total-row {
+    background-color: #cccccc !important;
+}

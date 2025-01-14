@@ -1,8 +1,11 @@
-<button mat-icon-button color="warn" type="button" (click)="openDeleteDialog()" aria-label="Remove Item"
+<button *ngIf="actions !== 'Total:'" mat-icon-button color="warn" type="button" (click)="openDeleteDialog()" aria-label="Remove Item"
     class="del-edit-buttons">
     <mat-icon>delete</mat-icon>
 </button>
-<button mat-icon-button color="warn" type="button" [routerLink]="['/log-transaction', category, transID]"
+<button *ngIf="actions !== 'Total:'" mat-icon-button color="warn" type="button" [routerLink]="['/log-transaction', category, transID]"
     [queryParams]="{ prev: currentUrl }" aria-label="Edit Item" class="del-edit-buttons">
     <mat-icon>edit</mat-icon>
 </button>
+<div *ngIf="actions === 'Total:'" style="text-align: center;">
+    <b>Total Amount:</b>
+</div>

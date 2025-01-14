@@ -80,6 +80,13 @@ export class TransactionTableComponent implements OnInit {
   title: string = '';
   dateOrder: SortDirection = 'asc';
 
+  total: any[] = [
+    {
+      actions: "Total:",
+      amount: 0.00
+    },
+  ];
+
   gridOptions: GridOptions = {
     pagination: true,
     paginationPageSize: 20,
@@ -93,6 +100,12 @@ export class TransactionTableComponent implements OnInit {
     theme: themeAlpine,
     context: {
       reloadData: this.getRowData.bind(this),
+    },
+    getRowClass: (params) => {
+      if (params.node.rowPinned) {
+        return 'pinned-total-row';
+      }
+      return '';  
     }
   };
 
@@ -115,6 +128,7 @@ export class TransactionTableComponent implements OnInit {
     this.colDefs = [
       {
         headerName: "",
+        field: "actions",
         cellRenderer: TableActionComponent,
         sortable: false,
         filter: false,
@@ -135,10 +149,14 @@ export class TransactionTableComponent implements OnInit {
       this.dateOrder = "desc";
       this.getPastTransactions().subscribe(transactions => {
         this.rowData = transactions;
+
+        this.calculateTotal();
       });
     } else {
       this.getUpcomingTransactions().subscribe(transactions => {
         this.rowData = transactions;
+
+        this.calculateTotal();
       });
     }
   }
@@ -173,6 +191,20 @@ export class TransactionTableComponent implements OnInit {
         return of([]);
       })
     );
+  }
+
+  calculateTotal() {
+    const totalAmount = this.rowData.reduce((sum, row) => {
+      const amount = Number(row.amount);
+      return sum + (isNaN(amount) ? 0 : amount);
+    }, 0);
+
+    this.total = [
+      {
+        actions: "Total:",
+        amount: totalAmount.toFixed(2),
+      },
+    ];
   }
 
   onGridReady(params: GridReadyEvent) {

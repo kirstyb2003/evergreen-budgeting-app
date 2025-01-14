@@ -2,7 +2,7 @@
     <div class="table-title">
         {{ title }}
     </div>
-    <ag-grid-angular style="width: 100%;" [rowData]="rowData" [columnDefs]="colDefs" [gridOptions]="gridOptions"
+    <ag-grid-angular style="width: 100%;" [rowData]="rowData" [columnDefs]="colDefs" [gridOptions]="gridOptions" [pinnedBottomRowData]="total"
         (gridReady)="onGridReady($event)" />
     <div class="search-bar">
         <span class="label">Search all fields:</span>

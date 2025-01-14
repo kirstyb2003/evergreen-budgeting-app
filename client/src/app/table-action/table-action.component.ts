@@ -14,7 +14,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 @Component({
   selector: 'app-table-action',
   standalone: true,
-  imports: [MatButtonModule, MatIcon, RouterLink, MatDialogModule],
+  imports: [MatButtonModule, MatIcon, RouterLink, MatDialogModule, NgIf],
   templateUrl: './table-action.component.html',
   styleUrl: './table-action.component.scss'
 })
@@ -25,6 +25,7 @@ export class TableActionComponent implements ICellRendererAngularComp {
   category!: string;
   name!: string;
   repeated!: boolean;
+  actions!: any;
 
   reloadData!: () => void;
 
@@ -39,6 +40,7 @@ export class TableActionComponent implements ICellRendererAngularComp {
     this.category = params.data.category;
     this.name = params.data.name;
     this.repeated = params.data.repeat;
+    this.actions = params.data.actions;
 
     if (params.context && params.context.reloadData) {
       this.reloadData = params.context.reloadData;
