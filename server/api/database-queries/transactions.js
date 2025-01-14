@@ -114,11 +114,47 @@ const getUpcomingTransactions = async (userID, type) => {
   }
 };
 
-const deleteTransaction = async (id) => {
-  const query = `DELETE FROM transaction WHERE transaction_id = $1`;
+const deleteTransaction = async (id, deleteType, date = null) => {
+  let query;
+  let params = [];
+
+  switch (deleteType || 'single') {
+    case 'single':
+      query = `DELETE FROM transaction WHERE transaction_id = $1;`;
+      params = [id];
+      break;
+    case 'all':
+      query = `
+        DELETE FROM transaction
+        WHERE repeat = true
+        AND repeat_group_id IN (
+          SELECT repeat_group_id
+          FROM transaction
+          WHERE transaction_id = $1
+        );
+      `;
+      params = [id];
+      break;
+    case 'after':
+      if (!date) throw new Error('Date is required for "after" deleteType');
+      query = `
+        DELETE FROM transaction
+        WHERE repeat = true
+        AND transaction_date >= $1
+        AND repeat_group_id IN (
+          SELECT repeat_group_id
+          FROM transaction
+          WHERE transaction_id = $2
+        );
+      `;
+      params = [date, id];
+      break;
+    default:
+      throw new Error('Invalid deleteType');
+  }
 
   try {
-    const result = await pool.query(query, [id]);
+    const result = await pool.query(query, params);
     return result.rows;
   } catch (error) {
     console.error(`Error deleting transaction ${id}: `, error);

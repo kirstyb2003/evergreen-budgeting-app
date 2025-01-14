@@ -104,8 +104,9 @@ export class QueryService {
     return this.http.get(`${this.apiUrl}/savings-goal/${goalID}`);
   }
 
-  deleteTransaction(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/transaction/delete/${id}`, {}).pipe(
+  deleteTransaction(id: number, repeatDelete: 'single' | 'all' | 'after' | null, date: string): Observable<any> {
+    const payload = { repeatDelete, date };
+    return this.http.post(`${this.apiUrl}/transaction/delete/${id}`, payload).pipe(
       map(response => {
         return response;
       })

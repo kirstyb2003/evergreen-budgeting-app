@@ -251,13 +251,14 @@ router.post('/savings-goal/update/:goalID', allowCors(async (req, res) => {
 
 router.post('/transaction/delete/:id', allowCors(async (req, res) => {
   const { id } = req.params;
+  const { repeatDelete, date } = req.body;
 
   try {
-    const result = await deleteTransaction(id);
-    res.status(201).json({ message: 'Deleted transaction successfully.', inserted_rows: result });
+    const result = await deleteTransaction(id, repeatDelete, date);
+    res.status(201).json({ message: 'Deleted transaction(s) successfully.', inserted_rows: result });
   } catch (err) {
-    console.error('Error deleting transaction.', err);
-    res.status(500).json({ error: "Failed to delete the transaction." });
+    console.error('Error deleting transaction(s).', err);
+    res.status(500).json({ error: "Failed to delete the transaction(s)." });
   }
 }))
 

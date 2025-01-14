@@ -26,6 +26,7 @@ export class TableActionComponent implements ICellRendererAngularComp {
   name!: string;
   repeated!: boolean;
   actions!: any;
+  date!: string;
 
   reloadData!: () => void;
 
@@ -41,6 +42,7 @@ export class TableActionComponent implements ICellRendererAngularComp {
     this.name = params.data.name;
     this.repeated = params.data.repeat;
     this.actions = params.data.actions;
+    this.date = params.data.transaction_date;
 
     if (params.context && params.context.reloadData) {
       this.reloadData = params.context.reloadData;
@@ -67,8 +69,8 @@ export class TableActionComponent implements ICellRendererAngularComp {
     });
   }
 
-  deleteTransaction(repeatDelete: string | null) {
-    this.queryService.deleteTransaction(this.transID).subscribe({
+  deleteTransaction(repeatDelete: 'single' | 'all' | 'after' | null) {
+    this.queryService.deleteTransaction(this.transID, repeatDelete, this.date).subscribe({
       next: (_response) => {
         this.popup.open('Transaction successfully deleted', 'Close', { duration: 3000 });
         this.reloadData();
