@@ -81,7 +81,7 @@ const getBalance = async (userID) => {
 };
 
 const getPastTransactions = async (userID, type) => {
-  const query = `SELECT t.transaction_id, t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method, t.repeat, t.repeat_schedule, t.end_date
+  const query = `SELECT t.transaction_id, t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method, t.repeat, t.repeat_schedule, t.end_date, t.type
   FROM transaction as t, category as c
   WHERE c.category_id = t.category_id
   AND t.user_id = $1
@@ -98,7 +98,7 @@ const getPastTransactions = async (userID, type) => {
 };
 
 const getUpcomingTransactions = async (userID, type) => {
-  const query = `SELECT t.transaction_id, t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method, t.repeat, t.repeat_schedule, t.end_date
+  const query = `SELECT t.transaction_id, t.name, c.name as category, t.amount, t.transaction_date, t.shop, t.payment_method, t.repeat, t.repeat_schedule, t.end_date, t.type
   FROM transaction as t, category as c
   WHERE c.category_id = t.category_id
   AND t.user_id = $1
@@ -177,8 +177,17 @@ const getTransaction = async (id) => {
   }
 };
 
-const updateTransaction = async (req, transID) => {
-  const {type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat = false, repeat_schedule = null, end_date = null} = req;
+const updateTransaction = async (req, transID, updateOption) => {
+  let transactionData, date;
+
+  if (req.transactionData) {
+    ({ transactionData, date } = req);
+  } else {
+    transactionData = req;
+    date = req.date;
+  }
+
+  const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat = false, repeat_schedule = null, end_date = null } = transactionData;
 
   const categoryQuery = `SELECT category_id FROM category WHERE name = $1 LIMIT 1;`;
   const categoryResult = await pool.query(categoryQuery, [category]);
@@ -188,24 +197,67 @@ const updateTransaction = async (req, transID) => {
     throw new Error(`Category "${category}" not found`);
   }
 
-  const updateQuery = `
-    UPDATE transaction
-    SET 
-      category_id = $1,
-      type = $2,
-      name = $3,
-      transaction_date = $4,
-      amount = $5,
-      shop = $6,
-      payment_method = $7,
-      repeat = $8,
-      repeat_schedule = $9,
-      end_date = $10
-    WHERE transaction_id = $11;
-  `;
+  let query;
+  let params = [];
+
+  switch (updateOption || 'single') {
+    case 'single':
+      query = `
+        UPDATE transaction
+        SET 
+          category_id = $1,
+          type = $2,
+          name = $3,
+          transaction_date = $4,
+          amount = $5,
+          shop = $6,
+          payment_method = $7,
+          repeat = $8,
+          repeat_schedule = $9,
+          end_date = $10
+        WHERE transaction_id = $11;
+      `;
+      params = [categoryId, type, name, transaction_date, amount, shop, payment_method, repeat, repeat_schedule, end_date, transID];
+      break;
+    case 'all':
+      query = `
+        UPDATE transaction
+        SET 
+          category_id = $1,
+          type = $2,
+          name = $3,
+          amount = $4,
+          shop = $5,
+          payment_method = $6
+        WHERE repeat_group_id = (
+          SELECT repeat_group_id FROM transaction WHERE transaction_id = $7
+        );
+      `;
+      params = [categoryId, type, name, amount, shop, payment_method, transID];
+      break;
+    case 'after':
+      query = `
+        UPDATE transaction
+        SET 
+          category_id = $1,
+          type = $2,
+          name = $3,
+          amount = $4,
+          shop = $5,
+          payment_method = $6
+        WHERE repeat_group_id = (
+          SELECT repeat_group_id FROM transaction WHERE transaction_id = $7
+        )
+        AND transaction_date >= $8;
+      `;
+      params = [categoryId, type, name, amount, shop, payment_method, transID, date];
+      break;
+    default:
+      throw new Error('Invalid deleteType');
+  }
 
   try {
-    const result = await pool.query(updateQuery, [ categoryId, type, name, transaction_date, amount, shop, payment_method, repeat, repeat_schedule, end_date, transID]);
+    const result = await pool.query(query, params);
     return result.rows;
   } catch (err) {
     console.error('Error updating transaction', err);

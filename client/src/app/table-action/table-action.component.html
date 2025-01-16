@@ -2,7 +2,7 @@
     class="del-edit-buttons">
     <mat-icon>delete</mat-icon>
 </button>
-<button *ngIf="actions !== 'Total:'" mat-icon-button color="warn" type="button" [routerLink]="['/log-transaction', category, transID]"
+<button *ngIf="actions !== 'Total:'" mat-icon-button color="warn" type="button" [routerLink]="['/log-transaction', categoryType, transID]"
     [queryParams]="{ prev: currentUrl }" aria-label="Edit Item" class="del-edit-buttons">
     <mat-icon>edit</mat-icon>
 </button>

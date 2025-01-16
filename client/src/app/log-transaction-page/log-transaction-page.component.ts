@@ -18,12 +18,13 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import 'moment/locale/en-gb';
 import moment from 'moment';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-log-transaction-page',
   standalone: true,
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, provideMomentDateAdapter()],
-  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule],
+  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule, MatRadioModule],
   templateUrl: './log-transaction-page.component.html',
   styleUrls: ['../form.component.scss']
 })
@@ -81,6 +82,7 @@ export class LogTransactionPageComponent {
       repeat: new FormControl(false),
       repeat_schedule: new FormControl(''),
       end_date: new FormControl(''),
+      updateOption: new FormControl('single', Validators.required),
     });
 
     this.transactionForm.get('type')?.valueChanges.subscribe(type => {
@@ -147,7 +149,7 @@ onSubmit() {
   if (this.transactionForm.invalid) {
     this.transactionForm.markAllAsTouched();
   } else {
-    const formValue = { ...this.transactionForm.value };
+    const { updateOption, ...formValue } = this.transactionForm.value;
 
     let dates: String[];
 
@@ -166,14 +168,22 @@ onSubmit() {
     }
 
     if (this.transID) {
-      this.queryService.updateTransaction(formValue, this.transID, dates).subscribe({
+      let updateOptionSend: "single" | "all" | "after" | null;
+      
+      if (!formValue.repeat) {
+        updateOptionSend = null;
+      } else {
+        updateOptionSend = updateOption;
+      }
+
+      this.queryService.updateTransaction(formValue, this.transID, formValue.transaction_date, updateOptionSend).subscribe({
         next: (_response) => {
           this.router.navigateByUrl(this.prevUrl!);
-          this.popup.open('Savings goal succeessfully updated.', 'Close', { duration: 3000 });
+          this.popup.open('Transaction succeessfully updated.', 'Close', { duration: 3000 });
         },
         error: (err) => {
-          console.error('Error updating goal', err);
-          this.popup.open('Error updating goal. Please try again.', 'Close', { duration: 3000 });
+          console.error('Error updating transaction', err);
+          this.popup.open('Error updating transaction. Please try again.', 'Close', { duration: 3000 });
         },
       });
     } else {

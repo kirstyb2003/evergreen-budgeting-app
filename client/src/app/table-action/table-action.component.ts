@@ -22,7 +22,7 @@ export class TableActionComponent implements ICellRendererAngularComp {
   currentUrl!: String;
 
   transID!: number;
-  category!: string;
+  categoryType!: string;
   name!: string;
   repeated!: boolean;
   actions!: any;
@@ -38,7 +38,7 @@ export class TableActionComponent implements ICellRendererAngularComp {
 
   agInit(params: ICellRendererParams): void {
     this.transID = params.data.transaction_id;
-    this.category = params.data.category;
+    this.categoryType = params.data.type;
     this.name = params.data.name;
     this.repeated = params.data.repeat;
     this.actions = params.data.actions;

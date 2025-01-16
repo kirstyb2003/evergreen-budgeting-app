@@ -113,9 +113,9 @@ export class QueryService {
     )
   }
 
-  updateTransaction(transactionData: any, transID: String, dates: String[]): Observable<any> {
-    const newStruct = { ...transactionData, dates };
-    return this.http.post(`${this.apiUrl}/transactions/update/${transID}`, newStruct).pipe(
+  updateTransaction(transactionData: any, transID: String, date: string, updateOption: 'single' | 'all' | 'after' | null): Observable<any> {
+    const newStruct = { ...transactionData, date };
+    return this.http.post(`${this.apiUrl}/transactions/update/${updateOption}/${transID}`, newStruct).pipe(
       map(response => {
         return response;
       })

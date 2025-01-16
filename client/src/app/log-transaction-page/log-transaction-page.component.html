@@ -9,7 +9,7 @@
                 <mat-option value="" disabled>Please select a transaction type</mat-option>
                 <ng-container *ngFor="let t of typeList">
                     <mat-option [value]="t">{{ t }}</mat-option>
-                  </ng-container>
+                </ng-container>
             </mat-select>
             <mat-error *ngIf="type.touched && type.hasError('required')">
                 Transaction type is required.
@@ -22,7 +22,7 @@
                 <mat-option value="" disabled>Please select a category</mat-option>
                 <ng-container *ngFor="let cat of categoriesList">
                     <mat-option [value]="cat.name">{{ cat.name }}</mat-option>
-                  </ng-container>
+                </ng-container>
             </mat-select>
             <mat-error *ngIf="category.touched && category.hasError('required')">
                 Category type is required.
@@ -66,34 +66,47 @@
                 <mat-option value="" disabled>Please select a payment method</mat-option>
                 <ng-container *ngFor="let m of methodList">
                     <mat-option [value]="m">{{ m }}</mat-option>
-                  </ng-container>
+                </ng-container>
             </mat-select>
         </mat-form-field>
 
-        <mat-checkbox formControlName="repeat">Repeat Transaction?</mat-checkbox>
+        <mat-checkbox *ngIf="!transID" formControlName="repeat">Repeat Transaction?</mat-checkbox>
 
-        <mat-form-field *ngIf="repeat.value" appearance="fill" class="full-width">
+        <mat-form-field *ngIf="repeat.value && !transID" appearance="fill" class="full-width">
             <mat-label>Repeat Schedule</mat-label>
             <mat-select formControlName="repeat_schedule" required>
                 <mat-option value="" disabled>Please select how often to repeat the transaction</mat-option>
                 <ng-container *ngFor="let r of repeatSchedList">
                     <mat-option [value]="r">{{ r }}</mat-option>
-                  </ng-container>
+                </ng-container>
             </mat-select>
             <mat-error *ngIf="repeat_schedule.touched && repeat_schedule.hasError('required')">
                 How often this transaction should be repeated is required.
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field *ngIf="repeat.value" appearance="fill" class="full-width">
+        <mat-form-field *ngIf="repeat.value && !transID" appearance="fill" class="full-width">
             <mat-label>Repeat End Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="end_date" required/>
+            <input matInput [matDatepicker]="picker" formControlName="end_date" required />
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             <mat-error *ngIf="end_date.touched && end_date.hasError('required')">
                 The date for the last occurrence of this transaction is required.
             </mat-error>
         </mat-form-field>
+
+        <div *ngIf="transID && repeat.value" class="update-options">
+            <h4>Update Options</h4>
+            <p>This transaction is repeated. Please choose an option:</p>
+            <mat-radio-group formControlName="updateOption">
+                <mat-radio-button value="single">Update only this occurrence</mat-radio-button>
+                <mat-radio-button value="all">Update all occurrences</mat-radio-button>
+                <mat-radio-button value="after">Update all occurrences after this transaction's date</mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="transactionForm.get('updateOption')?.hasError('required')">
+                Please select how you want to apply this update.
+            </mat-error>
+        </div>
 
         <button mat-raised-button color="primary" type="submit" class="submit_button">
             Save

@@ -274,12 +274,12 @@ router.get('/transaction/:id', allowCors(async (req, res) => {
   }
 }));
 
-router.post('/transactions/update/:transID', allowCors(async (req, res) => {
-  const { transID } = req.params;
+router.post('/transactions/update/:updateOption/:transID', allowCors(async (req, res) => {
+  const { updateOption, transID } = req.params;
   const transactionData = req.body;
 
   try {
-    const result = await updateTransaction(transactionData, transID);
+    const result = await updateTransaction(transactionData, transID, updateOption);
     res.status(201).json({ message: 'Transaction updated successfully', transaction_id: result.transaction_id });
   } catch (error) {
     console.error('Error updating transaction:', error);
