@@ -40,7 +40,6 @@ export class AuthenticationService {
   }
 
   isLoggedIn(): boolean {
-    // Changes value into a boolean type
     return !!this.currentUserSubject.value;
   }
 }

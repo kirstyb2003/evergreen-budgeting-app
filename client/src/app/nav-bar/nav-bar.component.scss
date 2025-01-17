@@ -1,18 +1,6 @@
 $dark-green: #014700;
 $main-green: #007355;
-
-.nav-bar-icons {
-    width: 2rem;
-    height: 2rem;
-    display: block; 
-    margin: auto;
-    cursor: pointer;
-}
-
-.nav-bar-icons:hover {
-    border: 0.2rem solid $dark-green;
-    border-radius: 5px;
-}
+$light-green: #7EC636;
 
 h1 {
     font-family: "papyrus";
@@ -35,7 +23,8 @@ mat-icon {
     display: none;
 }
 
-.nav-area-web, .nav-area-phone {
+.nav-area-web,
+.nav-area-phone {
     justify-content: center;
     align-items: center;
     border-bottom: 0.25rem solid $dark-green;
@@ -45,46 +34,127 @@ mat-icon {
 
 .content {
     display: grid;
-    grid-template-columns: repeat(2, 1fr) 2fr repeat(2, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-template-rows: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     width: 100%
 }
-    
-.home { grid-area: 1 / 2 / 2 / 3;
-}
-.profile { grid-area: 1 / 3 / 2 / 4;  }
 
-.logo { 
+.menu-options {
+    margin: auto;
+
+    &.active {
+        button {
+            color: $light-green;
+        }
+
+        mat-icon {
+            color: $light-green !important;
+        }
+    }
+
+    button {
+        text-align: center;
+        color: $dark-green;
+        font-weight: bold;
+        cursor: pointer;
+        margin: auto;
+        font-size: 20px;
+        padding: 1rem;
+        border-radius: 10px
+    }
+
+    button:hover {
+        color: $light-green;
+
+        mat-icon {
+            color: $light-green !important;
+        }
+    }
+
+    mat-icon {
+        color: $dark-green !important;
+    }
+}
+
+.menu-options:hover {
+    color: $light-green;
+}
+
+.logo {
     grid-area: 1 / 1 / 2 / 2;
     width: 6rem;
     height: 6rem;
-    display: block; 
+    display: block;
     margin: auto;
+    cursor: pointer;
 }
 
-.settings { grid-area: 1 / 4 / 2 / 5; }
-.reports { grid-area: 1 / 5 / 2 / 6; }
+.home {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.transactions {
+    grid-area: 1 / 3 / 2 / 4;
+}
+
+.budget {
+    grid-area: 1 / 4 / 2 / 5;
+}
+
+.reports {
+    grid-area: 1 / 5 / 2 / 6;
+}
+
+.logout {
+    grid-area: 1 / 6 / 2 / 7;
+}
+
+.transactions {
+    position: relative;
+
+    &:hover {
+        color: $light-green;
+    }
+}
+
+.open-menu {
+    text-align: center;
+    width: 150px;
+}
+
 
 .content-phone {
     display: grid;
-    grid-template-columns: repeat(2, 1fr) 3fr 1fr;
+    grid-template-columns: 0.25fr 1fr 0.25fr;
     grid-template-rows: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     width: 100%
 }
 
-.menu-area { grid-area: 1 / 1 / 2 / 2; display: block; margin: auto }
-.home-phone { grid-area: 1 / 2 / 2 / 3; }
-.reports-phone { grid-area: 1 / 4 / 2 / 5; }
+.menu-area {
+    grid-area: 1 / 1 / 2 / 2;
+    display: block;
+    margin: auto
+}
+
+.logo-phone {
+    grid-area: 1 / 2 / 2 / 3;
+    width: 6rem;
+    height: 6rem;
+    display: block;
+    margin: auto;
+    cursor: pointer;
+}
+
 
 @media (max-width: 932px) {
     .nav-area-web {
         display: none;
     }
-    
+
     .nav-area-phone {
         display: flex;
     }
