@@ -9,7 +9,8 @@ import { CurrencyPipe, NgIf } from '@angular/common';
 let cellHeaderMap = new Map<string, string>([
   ["expense", "Total Amount Spent"],
   ["income", "Total Income"],
-  ["savings", "Total Saved"]
+  ["savings", "Total Saved"],
+  ["budget", "Amount Spent"]
 ]);
 
 @Component({
@@ -21,7 +22,7 @@ let cellHeaderMap = new Map<string, string>([
 })
 export class BankBalanceComponent implements OnInit {
   @Input({ required: true }) pageType!: string | null;
-  @Output() calculatexTotal = new EventEmitter<number>();
+  @Output() calculateTotal = new EventEmitter<number>();
 
   balance: number = 0.00;
   total: number = 0.00;
@@ -29,6 +30,7 @@ export class BankBalanceComponent implements OnInit {
   currentUser: any;
 
   cellHeader: string = "Total";
+  balanceHeader: string = "Bank Balance:";
   currSymbol!: string;
 
   constructor(private authService: AuthenticationService, private router: Router, private queryService: QueryService, private route: ActivatedRoute) { }
@@ -44,18 +46,35 @@ export class BankBalanceComponent implements OnInit {
       this.pageType = "income";
     }
 
+    if (this.pageType === 'budget') {
+      this.balanceHeader = "Total Monthly Budget";
+    }
+
     if (cellHeaderMap.has(this.pageType)) {
       this.cellHeader = cellHeaderMap.get(this.pageType)!;
     }
 
-    this.getBankBalance().subscribe(balance => {
-      this.balance = balance;
-    });
+    if (this.pageType === "budget") {
+      this.getMonthlyBudget().subscribe(budget => {
+        this.balance = budget;
+      });
 
-    this.getTotal().subscribe(total => {
-      this.total = total;
-      this.calculatexTotal.emit(total);
-    });
+      this.getMonthlySpend().subscribe(total => {
+        this.total = total;
+        this.calculateTotal.emit(total);
+      });
+    } else {
+      this.getBankBalance().subscribe(balance => {
+        this.balance = balance;
+      });
+
+      this.getTotal().subscribe(total => {
+        this.total = total;
+        this.calculateTotal.emit(total);
+      });
+    }
+
+
 
   }
 
@@ -74,6 +93,26 @@ export class BankBalanceComponent implements OnInit {
       map(response => response),
       catchError(error => {
         console.error(`Error retrieving total ${this.pageType}s`, error);
+        return of(0);
+      })
+    );
+  }
+
+  getMonthlyBudget(): Observable<number> {
+    return this.queryService.getMonthlyBudget(this.currentUser.user_id).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error('Error retrieving monthly budget total', error);
+        return of(0);
+      })
+    );
+  }
+
+  getMonthlySpend(): Observable<number> {
+    return this.queryService.getMonthlySpend(this.currentUser.user_id).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error('Error retrieving bank balance', error);
         return of(0);
       })
     );

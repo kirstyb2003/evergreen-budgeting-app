@@ -1,9 +1,9 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction } = require('./database-queries/transactions');
+const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend } = require('./database-queries/transactions');
 const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal } = require('./database-queries/savings_goal');
-const { setBudget, getBudget, deleteCategories } = require('./database-queries/budget');
+const { setBudget, getBudget, deleteCategories, getMonthlyBudget } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
 const router = express.Router();
@@ -284,6 +284,30 @@ router.post('/transactions/update/:updateOption/:transID', allowCors(async (req,
   } catch (error) {
     console.error('Error updating transaction:', error);
     res.status(500).json({ error: 'Failed to update transaction' });
+  }
+}));
+
+router.get('/budget/total/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const total = await getMonthlyBudget(userID);
+    res.json(total);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching monthly budget total');
+  }
+}));
+
+router.get('/spent/month/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const total = await getMonthlySpend(userID);
+    res.json(total);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching monthly budget total');
   }
 }));
 

@@ -265,4 +265,22 @@ const updateTransaction = async (req, transID, updateOption) => {
   }
 };
 
-module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction };
+const getMonthlySpend = async (userID) => {
+  const query = `
+    SELECT 
+      SUM(CASE 
+        WHEN t.type = 'income' THEN -t.amount
+        WHEN t.type IN ('expense', 'savings') THEN t.amount
+        ELSE 0
+      END) AS total
+    FROM transaction t
+    WHERE t.user_id = $1
+      AND t.transaction_date >= DATE_TRUNC('month', CURRENT_DATE)
+      AND t.transaction_date < (DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month');
+  `;
+
+  const result = await pool.query(query, [userID]);
+  return parseFloat(result.rows[0]?.total) || 0.00;
+};
+
+module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend };

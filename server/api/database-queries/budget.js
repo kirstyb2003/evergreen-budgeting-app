@@ -58,4 +58,13 @@ const deleteCategories = async (deleteCats, userID) => {
     return deletedCats;
 };
 
-module.exports = { setBudget, getBudget, deleteCategories };
+const getMonthlyBudget = async (userID) => {
+    const query = `SELECT SUM(b.amount) AS total 
+        FROM budget b
+        WHERE b.user_id = $1;`;
+
+    const result = await pool.query(query, [userID]);
+    return parseFloat(result.rows[0]?.total) || 0.00;
+};
+
+module.exports = { setBudget, getBudget, deleteCategories, getMonthlyBudget };

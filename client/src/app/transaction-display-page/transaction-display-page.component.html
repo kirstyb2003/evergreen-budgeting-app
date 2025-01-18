@@ -6,7 +6,7 @@
     </button>
 </div>
 
-<app-bank-balance (calculatexTotal)="receiveTotal($event)" [pageType]="transactionType"></app-bank-balance>
+<app-bank-balance (calculateTotal)="receiveTotal($event)" [pageType]="transactionType"></app-bank-balance>
 <div class="tables-container">
     <app-transaction-table class="upcoming-table" timeFrame="upcoming" [transactionType]="transactionType || ''"
         [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-transaction-table>

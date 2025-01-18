@@ -121,4 +121,12 @@ export class QueryService {
       })
     );
   }
+
+  getMonthlyBudget(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/budget/total/${userID}`);
+  }
+
+  getMonthlySpend(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/spent/month/${userID}`);
+  }
 }
