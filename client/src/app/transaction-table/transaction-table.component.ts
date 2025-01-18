@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, GridOptions, GridReadyEvent, IDateFilterParams, SortDirection } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, themeAlpine } from 'ag-grid-community';
@@ -71,7 +71,7 @@ const filterParams: IDateFilterParams = {
   templateUrl: './transaction-table.component.html',
   styleUrl: './transaction-table.component.scss'
 })
-export class TransactionTableComponent implements OnInit {
+export class TransactionTableComponent implements OnInit, OnChanges {
   @Input({ required: true }) timeFrame: string = '';
   @Input({ required: true }) transactionType: string = '';
   @Input({ required: true }) userID!: string;
@@ -117,6 +117,16 @@ export class TransactionTableComponent implements OnInit {
   constructor(private queryService: QueryService) { }
 
   ngOnInit() {
+    this.setupComponent();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+      this.transactionType = changes['transactionType'].currentValue;
+
+      this.setupComponent();
+  }
+
+  setupComponent() {
     if (this.transactionType == 'expense') {
       this.title = this.timeFrame + ' expenses';
     } else {

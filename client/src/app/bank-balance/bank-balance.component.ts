@@ -30,7 +30,7 @@ export class BankBalanceComponent implements OnInit {
   currentUser: any;
 
   cellHeader: string = "Total";
-  balanceHeader: string = "Bank Balance:";
+  balanceHeader: string = "Bank Balance";
   currSymbol!: string;
 
   constructor(private authService: AuthenticationService, private router: Router, private queryService: QueryService, private route: ActivatedRoute) { }
