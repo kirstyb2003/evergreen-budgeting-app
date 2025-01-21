@@ -1,0 +1,16 @@
+<div class="table-container">
+    <div class="table-title">
+        <div class="title" routerLink="/budget">Monthly Budget Overview</div>
+        <div class="edit">
+            <button mat-icon-button routerLink="/set-budget" [queryParams]="{ prev: currentUrl }">
+                <mat-icon>edit</mat-icon>
+            </button>
+        </div>
+    </div>
+    <ag-grid-angular style="width: 100%" [rowData]="rowData" [columnDefs]="colDefs" [gridOptions]="gridOptions"
+        [pinnedBottomRowData]="total" (gridReady)="onGridReady($event)" />
+    <div class="search-bar">
+        <span class="label">Search all fields:</span>
+        <input class="search" id="search" type="text" placeholder="Search..." (input)="onFilterTextBoxChanged()" />
+    </div>
+</div>

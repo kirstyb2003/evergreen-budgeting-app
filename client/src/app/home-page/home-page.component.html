@@ -1,5 +1,17 @@
 <app-nav-bar></app-nav-bar>
-<h3>Welcome {{ currentUser.username }}!!</h3>
+<h1 class="text">Welcome {{ currentUser.username }}!</h1>
+
+<div class="budget-table-container">
+    <app-budget-table class="budget-table" [currentUrl]="currentUrl" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-budget-table>
+</div>
+
+<div class="trans-tables-container">
+    <app-transaction-table class="income-table" timeFrame="upcoming" transactionType="income"
+        [userID]="currentUser.user_id" [currencySymbol]="currencySymbol" [pageSize]="5"></app-transaction-table>
+    <app-transaction-table class="expense-table" timeFrame="upcoming" transactionType="expense"
+        [userID]="currentUser.user_id" [currencySymbol]="currencySymbol" [pageSize]="5"></app-transaction-table>
+</div>
+
 
 <a routerLink="/login">Login</a><br>
 <a routerLink="/register">Register</a><br>

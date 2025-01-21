@@ -30,10 +30,14 @@ export function formatDate(dateString: string): string {
   return `${day}/${month}/${year}`;
 }
 
-function formatMoney(moneyString: string, currencySymbol: string): string {
-  if (!moneyString) return currencySymbol + '0.00';
+export function formatMoney(moneyString: string, currencySymbol: string): string {
+  const amount = parseFloat(moneyString);
 
-  return currencySymbol + moneyString;
+  if (isNaN(amount)) return `${currencySymbol}0.00`;
+
+  const formattedAmount = Math.abs(amount).toFixed(2);
+
+  return amount < 0 ? `-${currencySymbol}${formattedAmount}` : `${currencySymbol}${formattedAmount}`;
 }
 
 const filterParams: IDateFilterParams = {
@@ -76,6 +80,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   @Input({ required: true }) transactionType: string = '';
   @Input({ required: true }) userID!: string;
   @Input({ required: true }) currencySymbol!: string;
+  @Input() pageSize?: number;
 
   title: string = '';
   dateOrder: SortDirection = 'asc';
@@ -89,7 +94,8 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
   gridOptions: GridOptions = {
     pagination: true,
-    paginationPageSize: 20,
+    paginationPageSize: 10,
+    paginationPageSizeSelector: [5, 10, 20, 50, 100],
     domLayout: 'autoHeight',
     defaultColDef: {
       sortable: true,
@@ -133,6 +139,10 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       this.title = this.timeFrame + " " + this.transactionType;
     }
 
+    if (this.pageSize) {
+      this.gridOptions.paginationPageSize = this.pageSize;
+    }
+
     this.getRowData();
 
     this.colDefs = [
@@ -173,7 +183,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
 
   onFilterTextBoxChanged() {
     if (this.gridApi) {
-      const filterText = (document.getElementById(this.timeFrame) as HTMLInputElement).value;
+      const filterText = (document.getElementById(this.timeFrame + "-" + this.transactionType) as HTMLInputElement).value;
       this.gridApi.setGridOption(
         "quickFilterText",
         filterText,

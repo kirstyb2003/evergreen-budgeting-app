@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router, RouterLink} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
-import { QueryService } from '../services/query.service';
 import { BankBalanceComponent } from "../bank-balance/bank-balance.component";
 import { TransactionTableComponent } from "../transaction-table/transaction-table.component";
 import { currencyMap } from '../data-structures/currency-codes';
@@ -18,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './transaction-display-page.component.html',
   styleUrl: './transaction-display-page.component.scss'
 })
-export class TransactionDisplayPageComponent {
+export class TransactionDisplayPageComponent implements OnInit {
   currentUser!: any;
   currencySymbol!: string;
 
@@ -29,8 +27,14 @@ export class TransactionDisplayPageComponent {
 
   currentUrl: string;
 
-  constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) {
+  constructor(private authService: AuthenticationService, private router: Router, private route: ActivatedRoute) {
     this.currentUrl = this.router.url;
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl = event.url;
+      }
+    });
   }
 
   ngOnInit(): void {

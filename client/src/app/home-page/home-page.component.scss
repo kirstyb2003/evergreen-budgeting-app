@@ -1,5 +1,45 @@
-a {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+h1 {
+    color: $main-green;
+    text-align: center;
+    padding: 10px;
+}
+
+.trans-tables-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    padding: 0rem 1rem 0rem 1rem;
+    max-width: 100%;
+}
+
+.income-table {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.expense-table {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.budget-table-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    padding: 0rem 1rem 0rem 1rem;
+    max-width: 100%;
+}
+
+.budget-table {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.expense-table {
+    grid-area: 1 / 2 / 2 / 3;
 }
