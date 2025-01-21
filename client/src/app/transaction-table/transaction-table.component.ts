@@ -5,6 +5,10 @@ import { AllCommunityModule, ModuleRegistry, themeAlpine } from 'ag-grid-communi
 import { catchError, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
 import { TableActionComponent } from '../table-action/table-action.component';
+import { NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -71,7 +75,7 @@ const filterParams: IDateFilterParams = {
 @Component({
   selector: 'app-transaction-table',
   standalone: true,
-  imports: [AgGridAngular],
+  imports: [AgGridAngular, NgIf, RouterLink, MatIconModule, MatButtonModule],
   templateUrl: './transaction-table.component.html',
   styleUrl: './transaction-table.component.scss'
 })
@@ -81,6 +85,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   @Input({ required: true }) userID!: string;
   @Input({ required: true }) currencySymbol!: string;
   @Input() pageSize?: number;
+  @Input({ required: true }) currentUrl!: string;
 
   title: string = '';
   dateOrder: SortDirection = 'asc';

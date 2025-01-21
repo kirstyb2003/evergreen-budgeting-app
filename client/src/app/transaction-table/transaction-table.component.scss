@@ -11,6 +11,19 @@ $light-green: #7EC636;
     box-sizing: border-box;
 }
 
+.home {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: underline;
+}
+
+.title {
+    margin: auto;
+    cursor: pointer;
+}
+
 .table-title {
     background-color: #e0e4d7;
     color: $main-green;
@@ -64,6 +77,43 @@ $light-green: #7EC636;
     border-radius: 4px;
     font-size: 16px;
     width: 100%;
+}
+
+.edit {
+    margin: auto;
+    position: absolute;  
+    right: 0px;                 
+    top: 50%;                    
+    transform: translateY(-50%);
+    padding: 10px 20px;
+
+    button {
+        text-align: center;
+        color: $main-green;
+        font-weight: bold;
+        cursor: pointer;
+        margin: auto;
+        font-size: 17px;
+        padding: 0.5rem;
+        border-radius: 10px;
+    }
+
+    button:hover {
+        color: $light-green;
+
+        mat-icon {
+            color: $light-green !important;
+        }
+    }
+
+    mat-icon {
+        color: $main-green !important;
+        font-size: 2fr;
+    }
+}
+
+.edit {
+    color: $light-green;
 }
 
 @media (max-width: 768px) {

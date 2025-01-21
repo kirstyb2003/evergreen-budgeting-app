@@ -7,9 +7,9 @@
 
 <div class="trans-tables-container">
     <app-transaction-table class="income-table" timeFrame="upcoming" transactionType="income"
-        [userID]="currentUser.user_id" [currencySymbol]="currencySymbol" [pageSize]="5"></app-transaction-table>
+        [userID]="currentUser.user_id" [currencySymbol]="currencySymbol" [pageSize]="5" [currentUrl]="currentUrl"></app-transaction-table>
     <app-transaction-table class="expense-table" timeFrame="upcoming" transactionType="expense"
-        [userID]="currentUser.user_id" [currencySymbol]="currencySymbol" [pageSize]="5"></app-transaction-table>
+        [userID]="currentUser.user_id" [currencySymbol]="currencySymbol" [pageSize]="5" [currentUrl]="currentUrl"></app-transaction-table>
 </div>
 
 
