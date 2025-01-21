@@ -283,4 +283,22 @@ const getMonthlySpend = async (userID) => {
   return parseFloat(result.rows[0]?.total) || 0.00;
 };
 
-module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend };
+const getMonthlySpendByCategory = async (userID, cat) => {
+
+  const categoryQuery = `SELECT category_id FROM category WHERE name = $1 LIMIT 1;`;
+  const categoryResult = await pool.query(categoryQuery, [cat]);
+  const categoryId = categoryResult.rows[0]?.category_id;
+
+  const query = `SELECT SUM(amount) as total
+  FROM transaction
+  WHERE category_id = $1
+  AND user_id = $2
+  AND transaction_date >= DATE_TRUNC('month', CURRENT_DATE)
+  AND transaction_date < (DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month');`
+
+  const result = await pool.query(query, [categoryId, userID]);
+  return parseFloat(result.rows[0]?.total) || 0.00;
+
+}
+
+module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory };

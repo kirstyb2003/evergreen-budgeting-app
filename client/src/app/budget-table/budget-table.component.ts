@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, themeAlpine } from 'ag-grid-community';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
 import { formatMoney } from '../transaction-table/transaction-table.component';
 import { RouterLink } from '@angular/router';
@@ -60,6 +60,10 @@ export class BudgetTableComponent implements OnInit {
       }
       return '';
     },
+    rowClassRules: {
+      'negative-balance': (params) => { return params.data.left < 0; },
+      'positive-balance': (params) => { return params.data.left >= 0; },
+    }
   };
 
   private gridApi!: GridApi;
@@ -83,17 +87,29 @@ export class BudgetTableComponent implements OnInit {
     this.colDefs = [
       { field: "name", headerName: "Category", flex: 1.5 },
       { field: "amount", headerName: "Limit", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1  },
-      { field: "spent", headerName: "Amount Spent", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1  },
-      { field: "left", headerName: "Amount Left", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1  },
+      { field: "spent", headerName: "Amount Spent", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1 },
+      { field: "left", headerName: "Amount Left", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1, sort: "asc" },
     ]
   }
 
   getRowData() {
     this.getBudget().subscribe(budget => {
-      console.log(budget)
-      this.rowData = budget;
-
-      this.calculateTotal();
+      const populateBudget = budget.map(async (row) => {
+        const amountSpent = await firstValueFrom(this.getSpentAmount(row.name));
+        const spent = Number(amountSpent) || 0;
+        const left = (row.amount || 0) - spent;
+  
+        return {
+          ...row,
+          spent,
+          left: left.toFixed(2),
+        };
+      });
+      Promise.all(populateBudget).then(budget => {
+        this.rowData = budget;
+  
+        this.calculateTotal();
+      });
     });
   }
 
@@ -113,22 +129,44 @@ export class BudgetTableComponent implements OnInit {
     return this.queryService.getBudget(this.userID).pipe(
       map(response => response),
       catchError(error => {
-        console.error('Error retrieving past transactions', error);
+        console.error('Error retrieving budget', error);
         return of([]);
       })
     );
   }
 
+  getSpentAmount(category: string): Observable<number> {
+    return this.queryService.getSpentAmount(this.userID, category).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error(`Error retrieving the spent amount for category '${category}'`, error);
+        return of(0);
+      })
+    );
+  }
+
   calculateTotal() {
-    const totalAmount = this.rowData.reduce((sum, row) => {
+    const budgetTotal = this.rowData.reduce((sum, row) => {
+      const amount = Number(row.amount);
+      return sum + (isNaN(amount) ? 0 : amount);
+    }, 0);
+
+    const totalSpent = this.rowData.reduce((sum, row) => {
       const amount = Number(row.spent);
+      return sum + (isNaN(amount) ? 0 : amount);
+    }, 0);
+
+    const totalLeft = this.rowData.reduce((sum, row) => {
+      const amount = Number(row.left);
       return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
 
     this.total = [
       {
         name: "Total:",
-        amount: totalAmount.toFixed(2),
+        amount: budgetTotal.toFixed(2),
+        spent: totalSpent.toFixed(2),
+        left: totalLeft.toFixed(2),
       },
     ];
   }

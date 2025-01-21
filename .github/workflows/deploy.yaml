@@ -19,8 +19,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # Ensure this matches the version you use locally
-
+          node-version: 18
+          
       # Step 3: Deploy Frontend (Firebase)
       - name: Deploy Angular App to Firebase
         working-directory: ./client

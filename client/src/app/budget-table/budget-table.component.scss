@@ -26,11 +26,14 @@ $light-green: #7EC636;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: underline;
+    
 }
 
 
 .title {
     margin: auto;
+    cursor: pointer;
 }
 
 .ag-theme-alpine {
@@ -142,4 +145,8 @@ $light-green: #7EC636;
 ::ng-deep .pinned-total-row {
     background-color: #cccccc !important;
     font-weight: bold;
+}
+
+::ng-deep .negative-balance {
+    color: red !important;
 }

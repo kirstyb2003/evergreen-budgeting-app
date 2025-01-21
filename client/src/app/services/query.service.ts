@@ -129,4 +129,8 @@ export class QueryService {
   getMonthlySpend(userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/spent/month/${userID}`);
   }
+
+  getSpentAmount(userID: string, category: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/spent/${userID}/${category}`, );
+  }
 }

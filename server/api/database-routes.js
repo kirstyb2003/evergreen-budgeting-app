@@ -1,7 +1,7 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend } = require('./database-queries/transactions');
+const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory } = require('./database-queries/transactions');
 const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories, getMonthlyBudget } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
@@ -308,6 +308,18 @@ router.get('/spent/month/:userID', allowCors(async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Error fetching monthly budget total');
+  }
+}));
+
+router.get('/transactions/spent/:userID/:category', allowCors(async (req, res) => {
+  const { userID, category } = req.params;
+
+  try {
+    const total = await getMonthlySpendByCategory(userID, category);
+    res.json(total);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching category spending total');
   }
 }));
 
