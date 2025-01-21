@@ -4,7 +4,7 @@ import type { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-commu
 import { AllCommunityModule, ModuleRegistry, themeAlpine } from 'ag-grid-community';
 import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
-import { formatMoney } from '../transaction-table/transaction-table.component';
+import { formatMoney, numComparator } from '../transaction-table/transaction-table.component';
 import { RouterLink } from '@angular/router';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -86,9 +86,9 @@ export class BudgetTableComponent implements OnInit {
 
     this.colDefs = [
       { field: "name", headerName: "Category", flex: 1.5 },
-      { field: "amount", headerName: "Limit", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1  },
-      { field: "spent", headerName: "Amount Spent", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1 },
-      { field: "left", headerName: "Amount Left", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1, sort: "asc" },
+      { field: "amount", headerName: "Limit", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1, comparator: (value1, value2) => numComparator(value1, value2, this.currencySymbol)  },
+      { field: "spent", headerName: "Amount Spent", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1, comparator: (value1, value2) => numComparator(value1, value2, this.currencySymbol) },
+      { field: "left", headerName: "Amount Left", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1, comparator: (value1, value2) => numComparator(value1, value2, this.currencySymbol), sort: "asc" },
     ]
   }
 

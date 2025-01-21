@@ -71,6 +71,33 @@ const filterParams: IDateFilterParams = {
   inRangeFloatingFilterDateFormat: "Do MMM YYYY",
 };
 
+export function numComparator(num1: string, num2: string, currencySymbol: string) {
+  const n1 = reverseFormatMoney(num1, currencySymbol);
+  const n2 = reverseFormatMoney(num2, currencySymbol);
+
+  if (isNaN(n1) && isNaN(n2)) {
+    return 0;
+  }
+  if (isNaN(n1)) {
+    return -1;
+  }
+  if (isNaN(n2)) {
+    return 1;
+  }
+
+  return n1 - n2;
+}
+
+export function reverseFormatMoney(formattedMoney: string, currencySymbol: string): number {
+  if (!formattedMoney) return NaN;
+  
+  const cleanString = formattedMoney.replace(currencySymbol, "").replace(",", "").trim();
+  
+  const amount = parseFloat(cleanString);
+
+  return isNaN(amount) ? NaN : amount;
+}
+
 
 @Component({
   selector: 'app-transaction-table',
@@ -161,7 +188,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       },
       { field: "name" },
       { field: "category" },
-      { field: "amount", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol) },
+      { field: "amount", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), comparator: (value1, value2) => numComparator(value1, value2, this.currencySymbol) },
       { field: "transaction_date", headerName: "Transaction Date", valueFormatter: (params) => formatDate(params.value), sort: this.dateOrder, filter: 'agDateColumnFilter', filterParams: filterParams },
       { field: "shop" },
       { field: "payment_method", headerName: "Payment Method" },
