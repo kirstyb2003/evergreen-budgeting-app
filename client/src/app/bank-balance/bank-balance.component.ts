@@ -4,7 +4,7 @@ import { currencyMap } from '../data-structures/currency-codes';
 import { AuthenticationService } from '../services/authentication.service';
 import { QueryService } from '../services/query.service';
 import { catchError, map, Observable, of } from 'rxjs';
-import { CurrencyPipe, NgIf } from '@angular/common';
+import { CurrencyPipe, NgClass, NgIf, NgStyle } from '@angular/common';
 
 let cellHeaderMap = new Map<string, string>([
   ["expense", "Total Amount Spent"],
@@ -16,7 +16,7 @@ let cellHeaderMap = new Map<string, string>([
 @Component({
   selector: 'app-bank-balance',
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, NgStyle],
   templateUrl: './bank-balance.component.html',
   styleUrl: './bank-balance.component.scss'
 })
@@ -117,4 +117,12 @@ export class BankBalanceComponent implements OnInit {
       })
     );
   }
+
+  getStyle(): { [key: string]: string | number } {
+    if (this.pageType === 'budget' && this.total > this.balance) {
+      return { color: 'red', 'font-weight': 'bold' };
+    }
+    return { color: 'black', 'font-weight': 400 };
+  }
+  
 }
