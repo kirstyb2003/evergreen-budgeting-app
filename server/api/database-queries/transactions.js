@@ -206,7 +206,6 @@ const updateTransaction = async (req, transID, updateOption) => {
 
   switch (updateOption) {
     case 'single':
-      console.log('entered 1')
       query = `
         UPDATE transaction
         SET 

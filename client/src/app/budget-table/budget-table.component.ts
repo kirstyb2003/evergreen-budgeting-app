@@ -96,7 +96,6 @@ export class BudgetTableComponent implements OnInit {
 
   getRowData() {
     this.getBudget().subscribe(budget => {
-      console.log(budget)
       const populateBudget = budget.map(async (row) => {
         const amountSpent = await firstValueFrom(this.getSpentAmount(row.name));
         const spent = Number(amountSpent) || 0;
