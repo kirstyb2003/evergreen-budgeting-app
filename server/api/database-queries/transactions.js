@@ -200,8 +200,13 @@ const updateTransaction = async (req, transID, updateOption) => {
   let query;
   let params = [];
 
-  switch (updateOption || 'single') {
+  if (!updateOption || updateOption === 'null') {
+    updateOption = 'single';
+  }
+
+  switch (updateOption) {
     case 'single':
+      console.log('entered 1')
       query = `
         UPDATE transaction
         SET 
@@ -253,7 +258,7 @@ const updateTransaction = async (req, transID, updateOption) => {
       params = [categoryId, type, name, amount, shop, payment_method, transID, date];
       break;
     default:
-      throw new Error('Invalid deleteType');
+      throw new Error('Invalid updateType');
   }
 
   try {

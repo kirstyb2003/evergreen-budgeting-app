@@ -14,6 +14,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 type ROW_DATA_STRUCTURE = {
   name: string,
+  category_type: string,
   amount: number,
   spent?: number,
   left?: string,
@@ -85,6 +86,7 @@ export class BudgetTableComponent implements OnInit {
     this.getRowData();
 
     this.colDefs = [
+      { field: "category_type", headerName: "Type", flex: 1 },
       { field: "name", headerName: "Category", flex: 1.5 },
       { field: "amount", headerName: "Limit", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1, comparator: (value1, value2) => numComparator(value1, value2, this.currencySymbol)  },
       { field: "spent", headerName: "Amount Spent", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), flex: 1, comparator: (value1, value2) => numComparator(value1, value2, this.currencySymbol) },
@@ -94,6 +96,7 @@ export class BudgetTableComponent implements OnInit {
 
   getRowData() {
     this.getBudget().subscribe(budget => {
+      console.log(budget)
       const populateBudget = budget.map(async (row) => {
         const amountSpent = await firstValueFrom(this.getSpentAmount(row.name));
         const spent = Number(amountSpent) || 0;
