@@ -1,2 +1,25 @@
 <app-nav-bar></app-nav-bar>
-Reports!!
+<div class="title">
+    <h1 class="text">Reports & Charts</h1>
+    <div class="time-period">
+        <mat-form-field appearance="fill" class="full-width" class="drop-down">
+            <mat-label>Reporting Period</mat-label>
+            <mat-select [formControl]="timePeriodControl" class="select-box">
+                <mat-option value="" disabled>Please select a reporting period</mat-option>
+                <mat-option value="weekly">Week</mat-option>
+                <mat-option value="monthly">Month</mat-option>
+                <mat-option value="yearly">Year</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+<div class="pie">
+    <app-pie-chart [currentUser]="currentUser.user_id" [timePeriod]="timePeriod"></app-pie-chart>
+</div>
+
+
+<div class="line-and-bar">
+    <app-line-graph class="line"></app-line-graph>
+    <app-bar-chart class="bar"></app-bar-chart>
+</div>
