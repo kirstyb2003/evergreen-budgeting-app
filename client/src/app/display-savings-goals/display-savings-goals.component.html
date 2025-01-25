@@ -24,7 +24,7 @@
                         <mat-icon>edit</mat-icon>
                     </button>
                 </div>
-                <div class="target">{{ ((goal.currently_saved!/goal.goal_amount)*100).toFixed(0) }}% of {{
+                <div class="target">{{ goal.goal_amount === 0 ? 0 : ((goal.currently_saved!/goal.goal_amount)*100).toFixed(0) }}% of {{
                     formatMoney(goal.goal_amount) }}</div>
                 <div class="left">{{ formatMoney(goal.goal_amount - (goal.currently_saved || 0.00)) }} to go</div>
                 <div class="progress-bar">

@@ -16,7 +16,7 @@
                         <mat-icon>flag</mat-icon>
                     </button>
                 </div>
-                <div class="target">{{ ((currently_saved!/goal_amount)*100).toFixed(0) }}% of {{
+                <div class="target">{{ goal_amount === 0 ? 0 : ((currently_saved!/goal_amount)*100).toFixed(0) }}% of {{
                     formatMoney(goal_amount) }}</div>
                 <div class="left">{{ formatMoney(goal_amount - (currently_saved || 0.00)) }} to go</div>
                 <div class="progress-bar">
