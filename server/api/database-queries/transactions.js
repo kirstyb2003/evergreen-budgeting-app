@@ -303,6 +303,34 @@ const getMonthlySpendByCategory = async (userID, cat) => {
   const result = await pool.query(query, [categoryId, userID]);
   return parseFloat(result.rows[0]?.total) || 0.00;
 
+};
+
+const getTotalOutgoings = async (userID) => {
+
+  const query = `SELECT SUM(amount) as total
+  FROM transaction
+  WHERE type in ('expense', 'savings')
+  AND user_id = $1
+  AND transaction_date >= DATE_TRUNC('month', CURRENT_DATE)
+  AND transaction_date < (DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month');`
+
+  const result = await pool.query(query, [userID]);
+  return parseFloat(result.rows[0]?.total) || 0.00;
+
+};
+
+const getTotalIncome = async (userID) => {
+
+  const query = `SELECT SUM(amount) as total
+  FROM transaction
+  WHERE type = 'income'
+  AND user_id = $1
+  AND transaction_date >= DATE_TRUNC('month', CURRENT_DATE)
+  AND transaction_date < (DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month');`
+
+  const result = await pool.query(query, [userID]);
+  return parseFloat(result.rows[0]?.total) || 0.00;
+
 }
 
-module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory };
+module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome };

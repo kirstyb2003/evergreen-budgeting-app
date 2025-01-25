@@ -6,7 +6,7 @@ import { catchError, firstValueFrom, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
 import { formatMoney, numComparator } from '../transaction-table/transaction-table.component';
 import { RouterLink } from '@angular/router';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 

@@ -1,0 +1,122 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+@use '@angular/material' as mat;
+
+h2 {
+    color: $main-green;
+    text-decoration: underline;
+    cursor: pointer;
+    text-align: center;
+}
+
+.order-savings-goals {
+    width: 500px;
+    max-width: 100%;
+    border: solid 2px $dark-green;
+    border-radius: 8px;
+    min-height: 60px;
+    display: block;
+    margin: auto;
+    align-content: center;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.goal-info {
+    padding: 10px 20px;
+    border-bottom: solid 1px #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background: white;
+    font-size: 14px;
+    position: relative;
+}
+
+.goal-info h3 {
+    color: $light-green;
+}
+
+.goal-rankings {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    margin-bottom: 2rem;
+}
+
+.order-savings-goals {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.goal-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 50px 20px 20px 20px;
+    grid-row-gap: 5px;
+    width: 100%;
+    position: relative;
+
+    @include mat.progress-bar-overrides((active-indicator-color: $light-green, ));
+}
+
+.progress-bar {
+    grid-area: 3 / 1 / 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.title {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.add-button {
+    grid-area: 1 / 2 / 2 / 3;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 10;
+}
+
+.add-button button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.add-button mat-icon {
+    font-size: 25px;
+    color: $main-green;
+}
+
+.left {
+    grid-area: 2 / 2 / 3 / 3;
+    text-align: right;
+}
+
+.saved {
+    grid-area: 4 / 1 / 5 / 2;
+}
+
+.target {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+@media (max-width: 768px) {
+    .order-savings-goals {
+        width: 90% !important;
+    }
+
+    button {
+        font-size: 0.75rem;
+    }
+}

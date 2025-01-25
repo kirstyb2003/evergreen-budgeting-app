@@ -1,0 +1,30 @@
+<h2 [routerLink]="['/transactions', 'savings']">Savings</h2>
+<div class="goal-rankings">
+    <div  class="order-savings-goals">
+        <div class="goal-info">
+            <div class="goal-container">
+                <div class="title">
+                    <h3>Savings Progress</h3>
+                </div>
+                <div class="add-button">
+                    <button mat-icon-button color="warn" type="button" [routerLink]="['/log-transaction', 'savings']" [queryParams]="{ prev: currentUrl }"
+                        aria-label="Add Savings Transaction" class="add" matTooltip="Add a savings transaction">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" type="button" routerLink="/set-savings-goal" [queryParams]="{ prev: currentUrl }"
+                        aria-label="Add Goal" class="add" matTooltip="Add a savings goal">
+                        <mat-icon>flag</mat-icon>
+                    </button>
+                </div>
+                <div class="target">{{ ((currently_saved!/goal_amount)*100).toFixed(0) }}% of {{
+                    formatMoney(goal_amount) }}</div>
+                <div class="left">{{ formatMoney(goal_amount - (currently_saved || 0.00)) }} to go</div>
+                <div class="progress-bar">
+                    <mat-progress-bar mode="determinate"
+                        [value]="((currently_saved!)/goal_amount)*100"></mat-progress-bar>
+                </div>
+                <div class="saved">{{ formatMoney(currently_saved || 0.00) }} saved</div>
+            </div>
+        </div>
+    </div>
+</div>

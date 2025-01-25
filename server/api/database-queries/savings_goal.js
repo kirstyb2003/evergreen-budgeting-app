@@ -129,4 +129,14 @@ const updateSavingsGoal = async (goalData, goalID) => {
     }
 }
 
-module.exports = { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal };
+const getTotalGoalAmount = async (userID) => {
+    const query = `SELECT SUM(goal_amount) AS total_goal, SUM(starting_savings) AS total_starting
+    FROM savings_goal
+    WHERE user_id = $1;`
+
+    const result = await pool.query(query, [userID]);
+    return { total_goal: parseFloat(result.rows[0]?.total_goal) || 0.00, total_starting: parseFloat(result.rows[0]?.total_starting) || 0.00};
+
+};
+
+module.exports = { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal, getTotalGoalAmount };

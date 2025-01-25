@@ -1,8 +1,8 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory } = require('./database-queries/transactions');
-const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal } = require('./database-queries/savings_goal');
+const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome } = require('./database-queries/transactions');
+const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal, getTotalGoalAmount } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories, getMonthlyBudget } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
@@ -322,6 +322,43 @@ router.get('/transactions/spent/:userID/:category', allowCors(async (req, res) =
     res.status(500).send('Error fetching category spending total');
   }
 }));
+
+router.get('/transactions/outgoings/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const total = await getTotalOutgoings(userID);
+    res.json(total);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching total outgoings');
+  }
+}));
+
+router.get('/transactions/total-income/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const total = await getTotalIncome(userID);
+    res.json(total);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching total outgoings');
+  }
+}));
+
+router.get('/savings-goals/total-goal/:userID', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const total = await getTotalGoalAmount(userID);
+    res.json(total);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching total outgoings');
+  }
+
+}))
 
 
 module.exports = router;

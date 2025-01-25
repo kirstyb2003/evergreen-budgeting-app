@@ -68,6 +68,10 @@ export class QueryService {
     return this.http.get(`${this.apiUrl}/balance/${userID}/${type}`);
   }
 
+  getTotalGoalAmount(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/savings-goals/total-goal/${userID}`);
+  }
+
   getPastTransactions(type: string, userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/transactions/${userID}/past/${type}`);
   }
@@ -131,6 +135,14 @@ export class QueryService {
   }
 
   getSpentAmount(userID: string, category: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/transactions/spent/${userID}/${category}`, );
+    return this.http.get(`${this.apiUrl}/transactions/spent/${userID}/${category}` );
+  }
+
+  getOutgoingsAmount(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/outgoings/${userID}`);
+  }
+
+  getIncomeAmount(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/total-income/${userID}`);
   }
 }

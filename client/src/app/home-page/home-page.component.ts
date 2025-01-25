@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { TransactionTableComponent } from "../transaction-table/transaction-table.component";
 import { currencyMap } from '../data-structures/currency-codes';
 import { BudgetTableComponent } from "../budget-table/budget-table.component";
+import { NetIncomeTableComponent } from "../net-income-table/net-income-table.component";
+import { SavingsAreaComponent } from "../savings-area/savings-area.component";
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [NavBarComponent, RouterLink, TransactionTableComponent, BudgetTableComponent],
+  imports: [NavBarComponent, TransactionTableComponent, BudgetTableComponent, NetIncomeTableComponent, SavingsAreaComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
 })

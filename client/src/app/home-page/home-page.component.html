@@ -3,6 +3,8 @@
 
 <div class="budget-table-container">
     <app-budget-table class="budget-table" [currentUrl]="currentUrl" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-budget-table>
+    <app-net-income-table class="net-table" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-net-income-table>
+    <app-savings-area class="savings-area" [userID]="currentUser.user_id" [currencySymbol]="currencySymbol"></app-savings-area>
 </div>
 
 <div class="trans-tables-container">
@@ -11,20 +13,3 @@
     <app-transaction-table class="expense-table" timeFrame="upcoming" transactionType="expense"
         [userID]="currentUser.user_id" [currencySymbol]="currencySymbol" [pageSize]="5" [currentUrl]="currentUrl"></app-transaction-table>
 </div>
-
-
-<a routerLink="/login">Login</a><br>
-<a routerLink="/register">Register</a><br>
-<a (click)="logout()">Log out</a>
-<br><br>
-<a [routerLink]="['/log-transaction', 'expense']" [queryParams]="{ prev: currentUrl }">Log Expense</a><br>
-<a [routerLink]="['/log-transaction', 'income']" [queryParams]="{ prev: currentUrl }">Log Income</a><br>
-<a [routerLink]="['/log-transaction', 'savings']" [queryParams]="{ prev: currentUrl }">Log Savings</a><br>
-<a [routerLink]="['/log-transaction']" [queryParams]="{ prev: currentUrl }">Log (No Type)</a><br>
-<br>
-<a routerLink="/set-budget" [queryParams]="{ prev: currentUrl }">Set a Budget</a><br>
-<a routerLink="/set-savings-goal" [queryParams]="{ prev: currentUrl }">Set a Savings Goal</a><br><br>
-
-<a [routerLink]="['/transactions', 'expense']" [queryParams]="{ prev: currentUrl }">Expenses</a><br>
-<a [routerLink]="['/transactions', 'income']" [queryParams]="{ prev: currentUrl }">Incomes</a><br>
-<a [routerLink]="['/transactions', 'savings']" [queryParams]="{ prev: currentUrl }">Savings</a><br>

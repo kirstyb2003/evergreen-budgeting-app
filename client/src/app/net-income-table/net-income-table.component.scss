@@ -1,0 +1,79 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+.table-container {
+    margin: auto;
+    padding: 1rem;
+    align-content: center;
+    height: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.table-title {
+    background-color: #e0e4d7;
+    color: $main-green;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px 0;
+    border: 2px solid $dark-green;
+    font-family: 'Arial', sans-serif;
+    text-transform: uppercase;
+    white-space: normal;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.title {
+    margin: auto;
+}
+
+.ag-theme-alpine {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.ag-theme-alpine .ag-header-cell,
+.ag-theme-alpine .ag-cell {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+    padding: 4px;
+}
+
+.ag-header-cell {
+    display: none;
+}
+
+
+@media (max-width: 768px) {
+    .table-title {
+        font-size: 1.2rem;
+    }
+
+    .ag-theme-alpine .ag-header-cell,
+    .ag-theme-alpine .ag-cell {
+        font-size: 0.8rem;
+        padding: 2px;
+    }
+
+    .table-container {
+        padding: 0.5rem;
+    }
+}
+
+::ng-deep .pinned-total-row {
+    background-color: #cccccc !important;
+    font-weight: bold;
+}
+
+::ng-deep .negative-balance {
+    color: red !important;
+}
