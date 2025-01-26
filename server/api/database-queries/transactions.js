@@ -333,4 +333,64 @@ const getTotalIncome = async (userID) => {
 
 }
 
-module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome };
+const getWeeklyCats = async (userID, transType) => {
+  const query = `SELECT c.name AS category, SUM(t.amount) AS amount
+  FROM transaction AS t, category AS c
+  WHERE t.category_id = c.category_id
+  AND t.user_id = $1
+  AND t.type = $2
+  AND transaction_date >= DATE_TRUNC('week', CURRENT_DATE)
+  AND transaction_date < (DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week')
+  GROUP BY c.name;`;
+
+  const result = await pool.query(query, [userID, transType]);
+
+  const formattedRows = result.rows.map(row => ({
+    ...row,
+    amount: Number(row.amount),
+  }));
+
+  return formattedRows;
+}
+
+const getMonthlyCats = async (userID, transType) => {
+  const query = `SELECT c.name AS category, SUM(t.amount) AS amount
+  FROM transaction AS t, category AS c
+  WHERE t.category_id = c.category_id
+  AND t.user_id = $1
+  AND t.type = $2
+  AND transaction_date >= DATE_TRUNC('month', CURRENT_DATE)
+  AND transaction_date < (DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month')
+  GROUP BY c.name;`;
+
+  const result = await pool.query(query, [userID, transType]);
+
+  const formattedRows = result.rows.map(row => ({
+    ...row,
+    amount: Number(row.amount),
+  }));
+
+  return formattedRows;
+}
+
+const getYearlyCats = async (userID, transType) => {
+  const query = `SELECT c.name AS category, SUM(t.amount) AS amount
+  FROM transaction AS t, category AS c
+  WHERE t.category_id = c.category_id
+  AND t.user_id = $1
+  AND t.type = $2
+  AND transaction_date >= DATE_TRUNC('year', CURRENT_DATE)
+  AND transaction_date < (DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year')
+  GROUP BY c.name;`;
+
+  const result = await pool.query(query, [userID, transType]);
+
+  const formattedRows = result.rows.map(row => ({
+    ...row,
+    amount: Number(row.amount),
+  }));
+
+  return formattedRows;
+}
+
+module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome, getWeeklyCats, getMonthlyCats, getYearlyCats };

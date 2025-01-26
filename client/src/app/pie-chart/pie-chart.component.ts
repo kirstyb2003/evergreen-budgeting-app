@@ -1,9 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { AgCharts } from "ag-charts-angular";
-import { AgChartOptions } from "ag-charts-community";
+import { AgChartOptions, AgChartTheme } from "ag-charts-community";
+import { catchError, map, Observable, of } from 'rxjs';
+import { QueryService } from '../services/query.service';
+import { time_period } from '../reports-page/reports-page.component';
+
+var chartTheme: AgChartTheme = {
+  palette: {
+    fills: ["#014700", "#0077B6", "#6A0572", "#00AF7F", "#0096C7", "#9B5DE5", "#7EC636", "#023E8A", "#8338EC", "#26E9B7", "#4361EE", "#C77DFF", "#B6E483", "#3A0CA3"],
+    strokes: ["black"],
+  },
+};
 
 @Component({
   selector: 'app-pie-chart',
@@ -12,8 +22,8 @@ import { AgChartOptions } from "ag-charts-community";
   templateUrl: './pie-chart.component.html',
   styleUrl: './pie-chart.component.scss'
 })
-export class PieChartComponent {
-  @Input({ required: true }) currentUser!: number;
+export class PieChartComponent implements OnInit, OnChanges {
+  @Input({ required: true }) userID!: string;
   @Input({ required: true }) timePeriod!: "weekly" | "monthly" | "yearly";
 
   transType: string = "Income";
@@ -22,15 +32,9 @@ export class PieChartComponent {
 
   options: AgChartOptions;
 
-  constructor() {
+  constructor(private queryService: QueryService) {
     this.options = {
-      data: [
-        { category: "Bills", amount: 60000 },
-        { category: "Entertainment", amount: 40000 },
-        { category: "Cash", amount: 7000 },
-        { category: "Real Estate", amount: 5000 },
-        { category: "Commodities", amount: 3000 },
-      ],
+      theme: chartTheme,
       series: [
         {
           type: "pie",
@@ -38,17 +42,97 @@ export class PieChartComponent {
           legendItemKey: "category",
         },
       ],
+      overlays: {
+        noData: {
+          text: "No data for this time period"
+        }
+      }
     };
   }
 
   ngOnInit(): void {
+    this.updateChartTitle();
+    this.getChartData();
+
     this.transTypeControl.valueChanges.subscribe((val) => {
-      console.log('Dropdown value changed:', val);
       this.transType = val!.charAt(0).toUpperCase() + val!.slice(1);
 
       if (this.transType === "Expense") {
         this.transType += "s";
       }
+
+      this.getChartData();
+      this.updateChartTitle();
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.timePeriod = changes['timePeriod'].currentValue;
+
+    this.getChartData();
+    this.updateChartTitle();
+  }
+
+  getChartData() {
+    if (this.timePeriod === "weekly") {
+      this.getWeeklyCats().subscribe(data => {
+        this.updateChartData(data);
+      });
+    } else if (this.timePeriod === "monthly") {
+      this.getMonthlyCats().subscribe(data => {
+        this.updateChartData(data);
+      });
+    } else if (this.timePeriod === "yearly") {
+      this.getYearlyCats().subscribe(data => {
+        this.updateChartData(data);
+      });
+    }
+  }
+
+  getWeeklyCats(): Observable<{ category: string, amount: number }[]> {
+    return this.queryService.getWeeklyCats(this.transTypeControl.value as time_period, this.userID).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error('Error retrieving weekly transactions', error);
+        return of([]);
+      })
+    );
+  }
+
+  getMonthlyCats(): Observable<{ category: string, amount: number }[]> {
+    return this.queryService.getMonthlyCats(this.transTypeControl.value as time_period, this.userID).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error('Error retrieving monthly transactions', error);
+        return of([]);
+      })
+    );
+  }
+
+  getYearlyCats(): Observable<{ category: string, amount: number }[]> {
+    return this.queryService.getYearlyCats(this.transTypeControl.value as time_period, this.userID).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error('Error retrieving yearly transactions', error);
+        return of([]);
+      })
+    );
+  }
+
+  updateChartData(data: { category: string, amount: number }[]) {
+    const newOptions = {
+      ...this.options,
+      data,
+    };
+    this.options = newOptions;
+  }
+
+  updateChartTitle() {
+    this.options = {
+      ...this.options,
+      title: {
+        text: `Your ${this.timePeriod.charAt(0).toUpperCase() + this.timePeriod.slice(1)} ${this.transType}`,
+      },
+    };
   }
 }

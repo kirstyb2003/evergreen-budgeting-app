@@ -145,4 +145,16 @@ export class QueryService {
   getIncomeAmount(userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/transactions/total-income/${userID}`);
   }
+
+  getWeeklyCats(transType: string, userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/week/${transType}`);
+  }
+
+  getMonthlyCats(transType: string, userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/month/${transType}`);
+  }
+
+  getYearlyCats(transType: string, userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/year/${transType}`);
+  }
 }

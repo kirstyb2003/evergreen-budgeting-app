@@ -11,7 +11,7 @@ import { PieChartComponent } from "../pie-chart/pie-chart.component";
 import { LineGraphComponent } from "../line-graph/line-graph.component";
 import { BarChartComponent } from "../bar-chart/bar-chart.component";
 
-type time_period = "weekly" | "monthly" | "yearly";
+export type time_period = "weekly" | "monthly" | "yearly";
 
 @Component({
   selector: 'app-reports-page',
@@ -37,7 +37,6 @@ export class ReportsPageComponent implements OnInit {
     });
 
     this.timePeriodControl.valueChanges.subscribe((val) => {
-      console.log('Dropdown value changed:', val);
       this.timePeriod = val! as time_period;
     });
   }
