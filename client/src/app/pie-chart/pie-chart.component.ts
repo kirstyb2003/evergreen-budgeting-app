@@ -45,6 +45,9 @@ export class PieChartComponent implements OnInit, OnChanges {
       overlays: {
         noData: {
           text: "No data for this time period"
+        },
+        unsupportedBrowser: {
+          text: ""
         }
       }
     };

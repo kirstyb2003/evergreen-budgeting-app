@@ -31,8 +31,8 @@ h2 {
     text-align: center;
 }
 
-::ng-deep .drop-down {
-    width: auto;
+::ng-deep .trans-drop-down {
+    width: 62%;
     margin: 0;
     display: inline-flex;
 }
@@ -43,4 +43,23 @@ h2 {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+@media (max-width: 768px) {
+    .heading {
+        grid-template-columns: 0.5fr 2.5fr;
+    }
+
+    .title {
+        font-size: 1.2rem;
+    }
+
+    .trans-type {
+        margin-left: 10px;
+        justify-content: flex-start;
+
+        .trans-drop-down {
+            width: 120px;
+        }
+    }
 }
