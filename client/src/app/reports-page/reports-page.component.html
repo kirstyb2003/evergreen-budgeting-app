@@ -15,11 +15,11 @@
 </div>
 
 <div class="pie">
-    <app-pie-chart [userID]="currentUser.user_id" [timePeriod]="timePeriod"></app-pie-chart>
+    <app-pie-chart [userID]="currentUser.user_id" [timePeriod]="timePeriod" [currencySymbol]="currencySymbol"></app-pie-chart>
 </div>
 
 
 <div class="line-and-bar">
-    <app-line-graph class="line"></app-line-graph>
+    <app-line-graph class="line" [userID]="currentUser.user_id" [timePeriod]="timePeriod" [currencySymbol]="currencySymbol"></app-line-graph>
     <app-bar-chart class="bar"></app-bar-chart>
 </div>

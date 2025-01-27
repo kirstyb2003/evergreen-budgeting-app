@@ -1,0 +1,43 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+.heading {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.title {
+    grid-area: 1 / 2 / 2 / 3;
+    text-align: center;
+}
+
+h2 {
+    color: $main-green;
+    text-align: center;
+}
+
+.chart {
+    grid-area: 2 / 1 / 3 / 4;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .heading {
+        grid-template-columns: 1fr;
+    }
+
+    .title {
+        font-size: 1.2rem;
+        margin: auto; 
+        display: flex;
+        justify-content: center;
+    }
+}

@@ -6,7 +6,6 @@ import { AgCharts } from "ag-charts-angular";
 import { AgChartOptions, AgChartTheme } from "ag-charts-community";
 import { catchError, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
-import { time_period } from '../reports-page/reports-page.component';
 
 var chartTheme: AgChartTheme = {
   palette: {
@@ -25,6 +24,7 @@ var chartTheme: AgChartTheme = {
 export class PieChartComponent implements OnInit, OnChanges {
   @Input({ required: true }) userID!: string;
   @Input({ required: true }) timePeriod!: "weekly" | "monthly" | "yearly";
+  @Input({ required: true }) currencySymbol!: string;
 
   transType: string = "Income";
 
@@ -93,7 +93,7 @@ export class PieChartComponent implements OnInit, OnChanges {
   }
 
   getWeeklyCats(): Observable<{ category: string, amount: number }[]> {
-    return this.queryService.getWeeklyCats(this.transTypeControl.value as time_period, this.userID).pipe(
+    return this.queryService.getWeeklyCats(this.transTypeControl.value as string, this.userID).pipe(
       map(response => response),
       catchError(error => {
         console.error('Error retrieving weekly transactions', error);
@@ -103,7 +103,7 @@ export class PieChartComponent implements OnInit, OnChanges {
   }
 
   getMonthlyCats(): Observable<{ category: string, amount: number }[]> {
-    return this.queryService.getMonthlyCats(this.transTypeControl.value as time_period, this.userID).pipe(
+    return this.queryService.getMonthlyCats(this.transTypeControl.value as string, this.userID).pipe(
       map(response => response),
       catchError(error => {
         console.error('Error retrieving monthly transactions', error);
@@ -113,7 +113,7 @@ export class PieChartComponent implements OnInit, OnChanges {
   }
 
   getYearlyCats(): Observable<{ category: string, amount: number }[]> {
-    return this.queryService.getYearlyCats(this.transTypeControl.value as time_period, this.userID).pipe(
+    return this.queryService.getYearlyCats(this.transTypeControl.value as string, this.userID).pipe(
       map(response => response),
       catchError(error => {
         console.error('Error retrieving yearly transactions', error);

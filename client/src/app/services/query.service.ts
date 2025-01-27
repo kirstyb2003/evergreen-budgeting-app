@@ -157,4 +157,16 @@ export class QueryService {
   getYearlyCats(transType: string, userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/transactions/${userID}/year/${transType}`);
   }
+
+  getWeeklyTimeSeries(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/timeseries/week`);
+  }
+
+  getMonthlyTimeSeries(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/timeseries/month`);
+  }
+
+  getYearlyTimeSeries(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/timeseries/year`);
+  }
 }

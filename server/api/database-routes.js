@@ -1,7 +1,7 @@
 const express = require('express');
 const { createUser, findUserByUsername, findUserByEmail, authenticateLogin } = require('./database-queries/users');
 const { getCategories } = require('./database-queries/categories');
-const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome, getYearlyCats, getWeeklyCats, getMonthlyCats } = require('./database-queries/transactions');
+const { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome, getYearlyCats, getWeeklyCats, getMonthlyCats, getWeeklySeries, getMonthlySeries, getYearlySeries } = require('./database-queries/transactions');
 const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavingsGoal, updateSavingsGoal, getTotalGoalAmount } = require('./database-queries/savings_goal');
 const { setBudget, getBudget, deleteCategories, getMonthlyBudget } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
@@ -391,6 +391,45 @@ router.get('/transactions/:userID/year/:transType', allowCors(async (req, res) =
 
   try {
     const cats = await getYearlyCats(userID, transType);
+    res.json(cats);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching total outgoings');
+  }
+
+}));
+
+router.get('/transactions/:userID/timeseries/week', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const cats = await getWeeklySeries(userID);
+    res.json(cats);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching total outgoings');
+  }
+
+}));
+
+router.get('/transactions/:userID/timeseries/month', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const cats = await getMonthlySeries(userID);
+    res.json(cats);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching total outgoings');
+  }
+
+}));
+
+router.get('/transactions/:userID/timeseries/year', allowCors(async (req, res) => {
+  const { userID } = req.params;
+
+  try {
+    const cats = await getYearlySeries(userID);
     res.json(cats);
   } catch (err) {
     console.error(err);

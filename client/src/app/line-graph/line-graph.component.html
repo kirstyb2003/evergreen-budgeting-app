@@ -1,1 +1,7 @@
-<p>line-graph works!</p>
+<div class="heading">
+    <h2 class="title">{{ timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1) }} Income vs Expenditure</h2>
+
+    <div class="chart">
+        <ag-charts [options]="options" style="height:100%; width: 100%"></ag-charts>
+    </div>
+</div>
