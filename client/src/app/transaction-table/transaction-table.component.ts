@@ -9,6 +9,7 @@ import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -102,7 +103,7 @@ export function reverseFormatMoney(formattedMoney: string, currencySymbol: strin
 @Component({
   selector: 'app-transaction-table',
   standalone: true,
-  imports: [AgGridAngular, NgIf, RouterLink, MatIconModule, MatButtonModule],
+  imports: [AgGridAngular, NgIf, RouterLink, MatIconModule, MatButtonModule, MatTooltip],
   templateUrl: './transaction-table.component.html',
   styleUrl: './transaction-table.component.scss'
 })

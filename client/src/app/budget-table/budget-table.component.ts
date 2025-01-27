@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -23,7 +24,7 @@ type ROW_DATA_STRUCTURE = {
 @Component({
   selector: 'app-budget-table',
   standalone: true,
-  imports: [AgGridAngular, RouterLink, MatIconModule, MatButtonModule, MatMenuModule],
+  imports: [AgGridAngular, RouterLink, MatIconModule, MatButtonModule, MatMenuModule, MatTooltip],
   templateUrl: './budget-table.component.html',
   styleUrl: './budget-table.component.scss'
 })

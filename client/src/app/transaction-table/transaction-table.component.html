@@ -5,7 +5,7 @@
     <div class="table-title home" *ngIf="currentUrl === '/home'">
         <div class="title" [routerLink]="['/transactions', transactionType]">{{ title }}</div>
         <div class="edit">
-            <button mat-icon-button [routerLink]="['/log-transaction', transactionType]" [queryParams]="{ prev: currentUrl }">
+            <button mat-icon-button [routerLink]="['/log-transaction', transactionType]" [queryParams]="{ prev: currentUrl }" matTooltip="Add a Transaction">
                 <mat-icon>add</mat-icon>
             </button>
         </div>
