@@ -452,7 +452,7 @@ const getMonthlySeries = async (userID) => {
     GROUP BY 
       date_trunc('week', ds.week_start_date)
     ORDER BY 
-      date_trunc('week', ds.week_start_date) DESC;`;
+      date_trunc('week', ds.week_start_date) ASC;`;
 
   const result = await pool.query(query, [userID]);
 
@@ -492,8 +492,100 @@ const getYearlySeries = async (userID) => {
 
   const result = await pool.query(query, [userID]);
 
+  return result.rows.reverse();
+}
+
+const getWeeklyExpenses = async (userID) => {
+  const query = `
+  WITH date_series AS (
+    SELECT 
+      generate_series(
+        CURRENT_DATE - interval '6 days',
+        CURRENT_DATE,                     
+        '1 day'::interval                
+      ) AS date
+    )
+  SELECT 
+    to_char(ds.date, 'Mon DD') AS time_period,
+    COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0) AS total
+  FROM 
+    date_series ds
+  LEFT JOIN 
+    transaction t 
+  ON 
+    t.transaction_date = ds.date AND t.user_id = $1
+  GROUP BY 
+    ds.date
+  ORDER BY 
+    ds.date;`;
+
+  const result = await pool.query(query, [userID]);
+
   return result.rows;
 }
 
+const getMonthlyExpenses = async (userID) => {
+  const query = `
+  WITH date_series AS (
+    SELECT 
+      generate_series(
+        CURRENT_DATE - interval '4 weeks', 
+        CURRENT_DATE,                     
+        '1 week'::interval                
+      ) AS week_start_date
+    )
+    SELECT 
+      to_char(date_trunc('week', ds.week_start_date), 'Mon DD') AS time_period,
+      COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0) AS total
+    FROM 
+      date_series ds
+    LEFT JOIN 
+      transaction t 
+    ON 
+      t.transaction_date >= date_trunc('week', ds.week_start_date)
+      AND t.transaction_date < date_trunc('week', ds.week_start_date) + interval '1 week'
+      AND t.user_id = $1
+    GROUP BY 
+      date_trunc('week', ds.week_start_date)
+    ORDER BY 
+      date_trunc('week', ds.week_start_date) ASC;`;
 
-module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome, getWeeklyCats, getMonthlyCats, getYearlyCats, getWeeklySeries, getMonthlySeries, getYearlySeries };
+  const result = await pool.query(query, [userID]);
+
+  return result.rows;
+}
+
+const getYearlyExpenses = async (userID) => {
+  const query = `
+  WITH date_series AS (
+    SELECT 
+      generate_series(
+        CURRENT_DATE - interval '1 year', 
+        CURRENT_DATE,                     
+        '1 month'::interval                
+      ) AS month_start_date
+    ) 
+    SELECT 
+      to_char(ds.month_start_date, 'Mon YYYY') AS time_period,  -- This formats the label as 'Jan 2025'
+      COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0) AS total
+    FROM 
+      date_series ds
+    LEFT JOIN 
+      transaction t 
+    ON 
+      t.transaction_date >= date_trunc('month', ds.month_start_date) 
+      AND t.transaction_date < date_trunc('month', ds.month_start_date) + interval '1 month'
+      AND t.user_id = $1
+    GROUP BY 
+      ds.month_start_date
+    ORDER BY 
+      ds.month_start_date DESC
+    LIMIT 12;`;
+
+  const result = await pool.query(query, [userID]);
+
+  return result.rows.reverse();
+}
+
+
+module.exports = { logTransaction, getBalance, getTotalByType, getPastTransactions, getUpcomingTransactions, deleteTransaction, getTransaction, updateTransaction, getMonthlySpend, getMonthlySpendByCategory, getTotalOutgoings, getTotalIncome, getWeeklyCats, getMonthlyCats, getYearlyCats, getWeeklySeries, getMonthlySeries, getYearlySeries, getWeeklyExpenses, getMonthlyExpenses, getYearlyExpenses, };

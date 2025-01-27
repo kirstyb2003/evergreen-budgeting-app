@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AgChartOptions } from 'ag-charts-community';
+import { AgCartesianChartOptions } from 'ag-charts-community';
 import { QueryService } from '../services/query.service';
 import { AgCharts } from 'ag-charts-angular';
 import { Observable, map, catchError, of } from 'rxjs';
-import { time_period } from '../reports-page/reports-page.component';
 
 @Component({
   selector: 'app-line-graph',
@@ -17,7 +16,7 @@ export class LineGraphComponent implements OnInit, OnChanges {
   @Input({ required: true }) timePeriod!: "weekly" | "monthly" | "yearly";
   @Input({ required: true }) currencySymbol!: string;
 
-  options: AgChartOptions;
+  options: AgCartesianChartOptions;
 
   constructor(private queryService: QueryService) {
     this.options = {
@@ -27,6 +26,9 @@ export class LineGraphComponent implements OnInit, OnChanges {
         label: {
           rotation: 0,
         },
+        title: {
+          text: ''
+        }
       },
       {
         type: 'number',
@@ -71,11 +73,15 @@ export class LineGraphComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.updateAxisLabel();
 
+    this.getChartData();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.timePeriod = changes['timePeriod'].currentValue;
+
+    this.updateAxisLabel();
 
     this.getChartData();
   }
@@ -138,6 +144,33 @@ export class LineGraphComponent implements OnInit, OnChanges {
       ...this.options,
       data: formattedData,
     };
+  }
+
+  updateAxisLabel() {
+    let xAxisLabel = '';
+    switch (this.timePeriod) {
+      case 'weekly':
+        xAxisLabel = 'Days of the Week';
+        break;
+      case 'monthly':
+        xAxisLabel = 'Week Starting Dates';
+        break;
+      case 'yearly':
+        xAxisLabel = 'Months';
+        break;
+    }
+
+    this.options = {
+      ...this.options,
+      axes: this.options.axes!.map((axis) =>
+        axis.position === 'bottom'
+          ? {
+              ...axis,
+              title: { text: xAxisLabel },
+            }
+          : axis
+      ),
+    }
   }
 
 }

@@ -1,1 +1,7 @@
-<p>bar-chart works!</p>
+<div class="heading">
+    <h2 class="title">{{ timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1) }} Spending Comparison</h2>
+
+    <div class="chart">
+        <ag-charts [options]="options" style="height:100%; width: 80%"></ag-charts>
+    </div>
+</div>

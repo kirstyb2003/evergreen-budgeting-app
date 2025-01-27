@@ -169,4 +169,16 @@ export class QueryService {
   getYearlyTimeSeries(userID: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/transactions/${userID}/timeseries/year`);
   }
+
+  getWeeklyExpenses(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/expenses/week`);
+  }
+
+  getMonthlyExpenses(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/expenses/month`);
+  }
+
+  getYearlyExpenses(userID: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/${userID}/expenses/year`);
+  }
 }
