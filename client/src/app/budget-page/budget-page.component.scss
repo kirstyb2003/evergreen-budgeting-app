@@ -1,0 +1,26 @@
+.budget-page {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 150px;
+  }
+  
+  .watering-can {
+    height: 150px;
+    width: 100px;
+    position: relative;
+  }
+  
+  .water {
+    fill: lightblue;
+    transition: height 0.3s ease, y 0.3s ease;
+  }
+  

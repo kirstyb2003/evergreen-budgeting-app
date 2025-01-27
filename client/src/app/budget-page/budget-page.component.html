@@ -1,2 +1,7 @@
 <app-nav-bar></app-nav-bar>
 <app-bank-balance (calculateTotal)="receiveTotal($event)" pageType="budget"></app-bank-balance>
+<div class="budget-page">
+    <div *ngFor="let category of categories" class="category-card">
+        
+    </div>
+</div>
