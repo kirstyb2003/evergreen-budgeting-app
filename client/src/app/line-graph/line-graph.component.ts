@@ -33,8 +33,8 @@ export class LineGraphComponent implements OnInit, OnChanges {
         position: 'left',
         label: {
           formatter: (params) => {
-            return params.value < 0 ? `-${this.currencySymbol}${Number(-params.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
-            : `${this.currencySymbol}${Number(params.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            return params.value < 0 ? `-${this.currencySymbol}${Number(-params.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+              : `${this.currencySymbol}${Number(params.value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
           },
         },
       },
@@ -83,12 +83,10 @@ export class LineGraphComponent implements OnInit, OnChanges {
   getChartData() {
     if (this.timePeriod === "weekly") {
       this.getWeeklyTimeSeries().subscribe(data => {
-        console.log(data)
         this.updateChartData(data);
       });
     } else if (this.timePeriod === "monthly") {
       this.getMonthlyTimeSeries().subscribe(data => {
-        console.log(data)
         this.updateChartData(data);
       });
     } else if (this.timePeriod === "yearly") {
@@ -130,16 +128,11 @@ export class LineGraphComponent implements OnInit, OnChanges {
 
   updateChartData(data: { time_period: string, income: string, expense: string, net: string }[]) {
     const formattedData = data.map(item => ({
-      time: new Date(item.time_period).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      }),
+      time: item.time_period,
       income: parseFloat(item.income),
       expense: parseFloat(item.expense),
       net: parseFloat(item.net),
     }));
-
-    console.log(formattedData)
 
     this.options = {
       ...this.options,

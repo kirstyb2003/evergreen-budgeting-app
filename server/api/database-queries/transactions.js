@@ -468,10 +468,10 @@ const getYearlySeries = async (userID) => {
         CURRENT_DATE - interval '1 year', 
         CURRENT_DATE,                     
         '1 month'::interval                
-      ) AS month_end_date
+      ) AS month_start_date
     ) 
     SELECT 
-      to_char(ds.month_end_date, 'Mon YYYY') AS time_period,
+      to_char(ds.month_start_date, 'Mon YYYY') AS time_period,  -- This formats the label as 'Jan 2025'
       COALESCE(SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END), 0) AS income,
       COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount ELSE 0 END), 0) AS expense,
       COALESCE(SUM(CASE WHEN t.type = 'income' THEN t.amount ELSE 0 END), 0) - 
@@ -481,13 +481,14 @@ const getYearlySeries = async (userID) => {
     LEFT JOIN 
       transaction t 
     ON 
-      t.transaction_date >= date_trunc('month', ds.month_end_date) 
-      AND t.transaction_date < date_trunc('month', ds.month_end_date) + interval '1 month'
+      t.transaction_date >= date_trunc('month', ds.month_start_date) 
+      AND t.transaction_date < date_trunc('month', ds.month_start_date) + interval '1 month'
       AND t.user_id = $1
     GROUP BY 
-      ds.month_end_date
+      ds.month_start_date
     ORDER BY 
-      ds.month_end_date DESC;`;
+      ds.month_start_date DESC
+    LIMIT 12;`;
 
   const result = await pool.query(query, [userID]);
 
