@@ -1,8 +1,15 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AgCartesianChartOptions } from 'ag-charts-community';
+import { AgCartesianChartOptions, AgChartTheme } from 'ag-charts-community';
 import { QueryService } from '../services/query.service';
 import { AgCharts } from 'ag-charts-angular';
 import { Observable, map, catchError, of } from 'rxjs';
+
+var chartTheme: AgChartTheme = {
+  palette: {
+    fills: ["#7EC636"],
+    strokes: ["black"],
+  },
+};
 
 @Component({
   selector: 'app-bar-chart',
@@ -20,6 +27,7 @@ export class BarChartComponent implements OnInit, OnChanges {
 
   constructor(private queryService: QueryService) {
     this.options = {
+      theme: chartTheme,
       axes: [{
         type: 'category',
         position: 'bottom',
