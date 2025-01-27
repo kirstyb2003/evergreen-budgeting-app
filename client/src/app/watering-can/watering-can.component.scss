@@ -1,0 +1,48 @@
+$dark-green: #014700;
+$main-green: #007355;
+$light-green: #7EC636;
+
+.watering-can-area {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-content: center;
+    border-radius: 8px;
+    margin: 1rem;
+}
+
+.over-budget {
+    border: 3px dashed red;
+}
+
+.within-budget {
+    border: 3px solid $light-green;
+}
+
+.budget-amount {
+    font-size: 1rem;
+
+}
+
+.svg-container {
+    margin: auto;
+    justify-content: center;
+    display: flex;
+    padding-bottom: 10px;
+}
+
+.cat-name {
+    justify-content: center;
+    text-decoration: underline;
+    color: $main-green;
+    font-weight: bold;
+    display: flex;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .watering-can-area {
+        margin-bottom: 0 !important;
+    }
+}

@@ -4,7 +4,7 @@ import { currencyMap } from '../data-structures/currency-codes';
 import { AuthenticationService } from '../services/authentication.service';
 import { QueryService } from '../services/query.service';
 import { catchError, map, Observable, of } from 'rxjs';
-import { CurrencyPipe, NgClass, NgIf, NgStyle } from '@angular/common';
+import { CurrencyPipe, NgStyle } from '@angular/common';
 
 let cellHeaderMap = new Map<string, string>([
   ["expense", "Total Amount Spent"],
