@@ -17,11 +17,10 @@ import { MatIcon } from '@angular/material/icon';
 import { currencyMap } from '../data-structures/currency-codes';
 
 @Component({
-  selector: 'app-set-budget-page',
-  standalone: true,
-  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatCheckboxModule, MatIcon],
-  templateUrl: './set-budget-page.component.html',
-  styleUrls: ['./set-budget-page.component.scss', '../form.component.scss']
+    selector: 'app-set-budget-page',
+    imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatCheckboxModule, MatIcon],
+    templateUrl: './set-budget-page.component.html',
+    styleUrls: ['./set-budget-page.component.scss', '../form.component.scss']
 })
 export class SetBudgetPageComponent {
   currentUser!: any;

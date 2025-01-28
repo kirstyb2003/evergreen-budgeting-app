@@ -12,11 +12,10 @@ import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
-  selector: 'app-table-action',
-  standalone: true,
-  imports: [MatButtonModule, MatIcon, RouterLink, MatDialogModule, NgIf],
-  templateUrl: './table-action.component.html',
-  styleUrl: './table-action.component.scss'
+    selector: 'app-table-action',
+    imports: [MatButtonModule, MatIcon, RouterLink, MatDialogModule, NgIf],
+    templateUrl: './table-action.component.html',
+    styleUrl: './table-action.component.scss'
 })
 export class TableActionComponent implements ICellRendererAngularComp {
   currentUrl!: String;
@@ -84,12 +83,11 @@ export class TableActionComponent implements ICellRendererAngularComp {
 }
 
 @Component({
-  selector: 'dialog-delete-transaction',
-  templateUrl: '../display-savings-goals/delete-confirmation-dialog.html',
-  styleUrl: '../display-savings-goals/delete-confirmation-dialog.scss',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, NgIf, MatRadioModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'dialog-delete-transaction',
+    templateUrl: '../display-savings-goals/delete-confirmation-dialog.html',
+    styleUrl: '../display-savings-goals/delete-confirmation-dialog.scss',
+    imports: [MatDialogModule, MatButtonModule, NgIf, MatRadioModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogDeleteTrans {
   selectedOption: 'single' | 'all' | 'after' = 'single';

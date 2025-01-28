@@ -22,11 +22,10 @@ type ROW_DATA_STRUCTURE = {
 }
 
 @Component({
-  selector: 'app-budget-table',
-  standalone: true,
-  imports: [AgGridAngular, RouterLink, MatIconModule, MatButtonModule, MatMenuModule, MatTooltip],
-  templateUrl: './budget-table.component.html',
-  styleUrl: './budget-table.component.scss'
+    selector: 'app-budget-table',
+    imports: [AgGridAngular, RouterLink, MatIconModule, MatButtonModule, MatMenuModule, MatTooltip],
+    templateUrl: './budget-table.component.html',
+    styleUrl: './budget-table.component.scss'
 })
 export class BudgetTableComponent implements OnInit {
   @Input({ required: true }) userID!: string;

@@ -14,11 +14,10 @@ let cellHeaderMap = new Map<string, string>([
 ]);
 
 @Component({
-  selector: 'app-bank-balance',
-  standalone: true,
-  imports: [CurrencyPipe, NgStyle],
-  templateUrl: './bank-balance.component.html',
-  styleUrl: './bank-balance.component.scss'
+    selector: 'app-bank-balance',
+    imports: [CurrencyPipe, NgStyle],
+    templateUrl: './bank-balance.component.html',
+    styleUrl: './bank-balance.component.scss'
 })
 export class BankBalanceComponent implements OnInit {
   @Input({ required: true }) pageType!: string | null;

@@ -24,11 +24,10 @@ type SAVINGS_GOAL_STRUCTURE = {
 }
 
 @Component({
-  selector: 'app-display-savings-goals',
-  standalone: true,
-  imports: [CdkDropList, CdkDrag, MatButtonModule, RouterLink, MatIcon, MatDialogModule, NgIf, MatProgressBarModule],
-  templateUrl: './display-savings-goals.component.html',
-  styleUrl: './display-savings-goals.component.scss'
+    selector: 'app-display-savings-goals',
+    imports: [CdkDropList, CdkDrag, MatButtonModule, RouterLink, MatIcon, MatDialogModule, NgIf, MatProgressBarModule],
+    templateUrl: './display-savings-goals.component.html',
+    styleUrl: './display-savings-goals.component.scss'
 })
 export class DisplaySavingsGoalsComponent implements OnInit {
   @Input({ required: true }) userID!: string;
@@ -177,12 +176,11 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 }
 
 @Component({
-  selector: 'dialog-delete-goal',
-  templateUrl: 'delete-confirmation-dialog.html',
-  styleUrl: 'delete-confirmation-dialog.scss',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, NgIf, MatRadioModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'dialog-delete-goal',
+    templateUrl: 'delete-confirmation-dialog.html',
+    styleUrl: 'delete-confirmation-dialog.scss',
+    imports: [MatDialogModule, MatButtonModule, NgIf, MatRadioModule, FormsModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogDeleteGoal {
   selectedOption: 'single' | 'all' | 'after' = 'single';

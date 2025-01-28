@@ -14,11 +14,10 @@ import { BarChartComponent } from "../bar-chart/bar-chart.component";
 export type time_period = "weekly" | "monthly" | "yearly";
 
 @Component({
-  selector: 'app-reports-page',
-  standalone: true,
-  imports: [NavBarComponent, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, PieChartComponent, LineGraphComponent, BarChartComponent],
-  templateUrl: './reports-page.component.html',
-  styleUrl: './reports-page.component.scss'
+    selector: 'app-reports-page',
+    imports: [NavBarComponent, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, PieChartComponent, LineGraphComponent, BarChartComponent],
+    templateUrl: './reports-page.component.html',
+    styleUrl: './reports-page.component.scss'
 })
 export class ReportsPageComponent implements OnInit {
 

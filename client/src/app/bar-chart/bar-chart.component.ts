@@ -12,11 +12,10 @@ var chartTheme: AgChartTheme = {
 };
 
 @Component({
-  selector: 'app-bar-chart',
-  standalone: true,
-  imports: [AgCharts],
-  templateUrl: './bar-chart.component.html',
-  styleUrl: './bar-chart.component.scss'
+    selector: 'app-bar-chart',
+    imports: [AgCharts],
+    templateUrl: './bar-chart.component.html',
+    styleUrl: './bar-chart.component.scss'
 })
 export class BarChartComponent implements OnInit, OnChanges {
   @Input({ required: true }) userID!: string;

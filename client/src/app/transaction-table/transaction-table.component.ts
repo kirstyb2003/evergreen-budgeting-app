@@ -101,11 +101,10 @@ export function reverseFormatMoney(formattedMoney: string, currencySymbol: strin
 
 
 @Component({
-  selector: 'app-transaction-table',
-  standalone: true,
-  imports: [AgGridAngular, NgIf, RouterLink, MatIconModule, MatButtonModule, MatTooltip],
-  templateUrl: './transaction-table.component.html',
-  styleUrl: './transaction-table.component.scss'
+    selector: 'app-transaction-table',
+    imports: [AgGridAngular, NgIf, RouterLink, MatIconModule, MatButtonModule, MatTooltip],
+    templateUrl: './transaction-table.component.html',
+    styleUrl: './transaction-table.component.scss'
 })
 export class TransactionTableComponent implements OnInit, OnChanges {
   @Input({ required: true }) timeFrame: string = '';

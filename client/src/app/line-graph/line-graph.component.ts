@@ -5,11 +5,10 @@ import { AgCharts } from 'ag-charts-angular';
 import { Observable, map, catchError, of } from 'rxjs';
 
 @Component({
-  selector: 'app-line-graph',
-  standalone: true,
-  imports: [AgCharts],
-  templateUrl: './line-graph.component.html',
-  styleUrl: './line-graph.component.scss'
+    selector: 'app-line-graph',
+    imports: [AgCharts],
+    templateUrl: './line-graph.component.html',
+    styleUrl: './line-graph.component.scss'
 })
 export class LineGraphComponent implements OnInit, OnChanges {
   @Input({ required: true }) userID!: string;

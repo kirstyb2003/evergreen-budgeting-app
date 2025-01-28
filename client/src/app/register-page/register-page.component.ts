@@ -73,11 +73,10 @@ function uniqueValue(field: string, httpConnect: AuthenticationService): AsyncVa
 }
 
 @Component({
-  selector: 'app-register-page',
-  standalone: true,
-  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatCheckboxModule],
-  templateUrl: './register-page.component.html',
-  styleUrls: ['../form.component.scss']
+    selector: 'app-register-page',
+    imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatCheckboxModule],
+    templateUrl: './register-page.component.html',
+    styleUrls: ['../form.component.scss']
 })
 export class RegisterPageComponent implements OnInit{
   currencyList: { name: string; code: string }[] = currencyList;

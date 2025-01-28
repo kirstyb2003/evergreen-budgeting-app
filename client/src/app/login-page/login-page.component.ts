@@ -11,11 +11,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
-  selector: 'app-login-page',
-  standalone: true,
-  imports: [NavBarComponent, ReactiveFormsModule, RouterLink, NgIf, MatError, MatButtonModule, MatFormFieldModule, MatInputModule],
-  templateUrl: './login-page.component.html',
-  styleUrls: ['../form.component.scss'],
+    selector: 'app-login-page',
+    imports: [NavBarComponent, ReactiveFormsModule, RouterLink, NgIf, MatError, MatButtonModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './login-page.component.html',
+    styleUrls: ['../form.component.scss']
 })
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;

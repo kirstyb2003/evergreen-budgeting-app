@@ -10,11 +10,10 @@ import { NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-transaction-display-page',
-  standalone: true,
-  imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent, DisplaySavingsGoalsComponent, NgIf, MatButtonModule, RouterLink],
-  templateUrl: './transaction-display-page.component.html',
-  styleUrl: './transaction-display-page.component.scss'
+    selector: 'app-transaction-display-page',
+    imports: [NavBarComponent, BankBalanceComponent, TransactionTableComponent, DisplaySavingsGoalsComponent, NgIf, MatButtonModule, RouterLink],
+    templateUrl: './transaction-display-page.component.html',
+    styleUrl: './transaction-display-page.component.scss'
 })
 export class TransactionDisplayPageComponent implements OnInit {
   currentUser!: any;

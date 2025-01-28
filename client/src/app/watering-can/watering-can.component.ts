@@ -3,11 +3,10 @@ import { formatMoney } from '../transaction-table/transaction-table.component';
 import { CurrencyPipe, NgClass, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-watering-can',
-  standalone: true,
-  imports: [CurrencyPipe, NgClass, NgIf],
-  templateUrl: './watering-can.component.html',
-  styleUrl: './watering-can.component.scss'
+    selector: 'app-watering-can',
+    imports: [CurrencyPipe, NgClass, NgIf],
+    templateUrl: './watering-can.component.html',
+    styleUrl: './watering-can.component.scss'
 })
 export class WateringCanComponent {
   @Input({ required: true }) spent: number = 0;

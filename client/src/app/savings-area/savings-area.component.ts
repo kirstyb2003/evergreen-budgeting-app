@@ -9,11 +9,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-savings-area',
-  standalone: true,
-  imports: [MatButtonModule, RouterLink, MatIcon, MatProgressBarModule, MatTooltipModule],
-  templateUrl: './savings-area.component.html',
-  styleUrl: './savings-area.component.scss'
+    selector: 'app-savings-area',
+    imports: [MatButtonModule, RouterLink, MatIcon, MatProgressBarModule, MatTooltipModule],
+    templateUrl: './savings-area.component.html',
+    styleUrl: './savings-area.component.scss'
 })
 
 export class SavingsAreaComponent implements OnInit {

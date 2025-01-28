@@ -24,11 +24,10 @@ type ROW_DATA_STRUCTURE = {
 }
 
 @Component({
-  selector: 'app-budget-page',
-  standalone: true,
-  imports: [NavBarComponent, BankBalanceComponent, NgFor, WateringCanComponent, RouterLink, MatButtonModule],
-  templateUrl: './budget-page.component.html',
-  styleUrl: './budget-page.component.scss'
+    selector: 'app-budget-page',
+    imports: [NavBarComponent, BankBalanceComponent, NgFor, WateringCanComponent, RouterLink, MatButtonModule],
+    templateUrl: './budget-page.component.html',
+    styleUrl: './budget-page.component.scss'
 })
 export class BudgetPageComponent {
   total!: number;

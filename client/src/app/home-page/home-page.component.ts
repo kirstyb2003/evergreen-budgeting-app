@@ -9,11 +9,10 @@ import { NetIncomeTableComponent } from "../net-income-table/net-income-table.co
 import { SavingsAreaComponent } from "../savings-area/savings-area.component";
 
 @Component({
-  selector: 'app-home-page',
-  standalone: true,
-  imports: [NavBarComponent, TransactionTableComponent, BudgetTableComponent, NetIncomeTableComponent, SavingsAreaComponent],
-  templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.scss'
+    selector: 'app-home-page',
+    imports: [NavBarComponent, TransactionTableComponent, BudgetTableComponent, NetIncomeTableComponent, SavingsAreaComponent],
+    templateUrl: './home-page.component.html',
+    styleUrl: './home-page.component.scss'
 })
 export class HomePageComponent implements OnInit {
   currentUser!: any;

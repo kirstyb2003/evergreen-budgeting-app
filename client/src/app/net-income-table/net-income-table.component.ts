@@ -17,11 +17,10 @@ type ROW_DATA_STRUCTURE = {
 }
 
 @Component({
-  selector: 'app-net-income-table',
-  standalone: true,
-  imports: [AgGridAngular, MatIconModule, MatButtonModule, MatMenuModule],
-  templateUrl: './net-income-table.component.html',
-  styleUrl: './net-income-table.component.scss'
+    selector: 'app-net-income-table',
+    imports: [AgGridAngular, MatIconModule, MatButtonModule, MatMenuModule],
+    templateUrl: './net-income-table.component.html',
+    styleUrl: './net-income-table.component.scss'
 })
 
 export class NetIncomeTableComponent implements OnInit {

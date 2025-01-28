@@ -21,12 +21,11 @@ import moment from 'moment';
 import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
-  selector: 'app-log-transaction-page',
-  standalone: true,
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, provideMomentDateAdapter()],
-  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule, MatRadioModule],
-  templateUrl: './log-transaction-page.component.html',
-  styleUrls: ['../form.component.scss']
+    selector: 'app-log-transaction-page',
+    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, provideMomentDateAdapter()],
+    imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule, MatRadioModule],
+    templateUrl: './log-transaction-page.component.html',
+    styleUrls: ['../form.component.scss']
 })
 export class LogTransactionPageComponent {
   currentUser!: any;

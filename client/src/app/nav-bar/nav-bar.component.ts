@@ -7,11 +7,10 @@ import { AuthenticationService } from '../services/authentication.service';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-nav-bar',
-  standalone: true,
-  imports: [RouterLink, MatButtonModule, MatMenuModule, MatIconModule, RouterLinkActive, NgIf],
-  templateUrl: './nav-bar.component.html',
-  styleUrl: './nav-bar.component.scss'
+    selector: 'app-nav-bar',
+    imports: [RouterLink, MatButtonModule, MatMenuModule, MatIconModule, RouterLinkActive, NgIf],
+    templateUrl: './nav-bar.component.html',
+    styleUrl: './nav-bar.component.scss'
 })
 export class NavBarComponent {
   timedOutCloser: any;

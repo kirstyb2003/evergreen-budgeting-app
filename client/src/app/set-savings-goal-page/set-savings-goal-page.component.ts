@@ -19,12 +19,11 @@ import 'moment/locale/en-gb';
 import moment from 'moment';
 
 @Component({
-  selector: 'app-set-savings-goal-page',
-  standalone: true,
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, provideMomentDateAdapter()],
-  imports: [NavBarComponent, ReactiveFormsModule, NgIf, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule],
-  templateUrl: './set-savings-goal-page.component.html',
-  styleUrls: ['../form.component.scss']
+    selector: 'app-set-savings-goal-page',
+    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, provideMomentDateAdapter()],
+    imports: [NavBarComponent, ReactiveFormsModule, NgIf, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatDatepickerModule, MatCheckboxModule],
+    templateUrl: './set-savings-goal-page.component.html',
+    styleUrls: ['../form.component.scss']
 })
 export class SetSavingsGoalPageComponent {
   currentUser!: any;
