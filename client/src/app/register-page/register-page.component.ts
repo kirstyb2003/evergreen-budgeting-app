@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatError } from '@angular/material/form-field';
 import {MatDividerModule} from '@angular/material/divider';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 export function passwordStrengthValidator(): ValidatorFn {
   return (control:AbstractControl) : ValidationErrors | null => {
@@ -74,7 +75,7 @@ function uniqueValue(field: string, httpConnect: AuthenticationService): AsyncVa
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule],
+  imports: [NavBarComponent, ReactiveFormsModule, NgIf, NgFor, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatError, MatDividerModule, MatCheckboxModule],
   templateUrl: './register-page.component.html',
   styleUrls: ['../form.component.scss']
 })
@@ -101,6 +102,7 @@ export class RegisterPageComponent implements OnInit{
       password_confirm: new FormControl('', [Validators.required, passwordMatchValidator("password")]),
       default_currency: new FormControl('', Validators.required), 
       starting_balance: new FormControl('0'),
+      consent: new FormControl(false, Validators.required),
     });
   }
 
@@ -126,6 +128,10 @@ export class RegisterPageComponent implements OnInit{
 
   get starting_balance() {
     return this.registerForm.get("starting_balance")!;
+  }
+
+  get consent() {
+    return this.registerForm.get("consent")!;
   }
 
   onSubmit() {

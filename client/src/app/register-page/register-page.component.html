@@ -53,11 +53,11 @@
                 <mat-option value="" disabled>Please select a currency type</mat-option>
                 <ng-container *ngFor="let curr of currencyList.slice(0, 3)">
                     <mat-option [value]="curr.code">{{ curr.name }}</mat-option>
-                  </ng-container>
-                  <mat-divider></mat-divider>
-                  <ng-container *ngFor="let curr of currencyList.slice(3)">
+                </ng-container>
+                <mat-divider></mat-divider>
+                <ng-container *ngFor="let curr of currencyList.slice(3)">
                     <mat-option [value]="curr.code">{{ curr.name }}</mat-option>
-                  </ng-container>
+                </ng-container>
             </mat-select>
             <mat-error *ngIf="default_currency.touched && default_currency.hasError('required')">
                 A default currency is required.
@@ -68,6 +68,14 @@
             <mat-label>Starting Balance</mat-label>
             <input matInput type="number" formControlName="starting_balance" />
         </mat-form-field>
+
+
+        <mat-checkbox formControlName="consent" required>Evergreen Budgeting is for educational purposes only. While I
+            strive to protect your data, I cannot guarantee complete security. By using this app, you acknowledge and
+            accept these risks.</mat-checkbox>
+        <mat-error *ngIf="consent.touched && consent.hasError('required')">
+            Your consent is required to progress registering.
+        </mat-error>
 
         <button mat-raised-button color="primary" type="submit" class="submit_button">
             Register
