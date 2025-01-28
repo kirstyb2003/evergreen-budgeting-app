@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { AgCharts } from "ag-charts-angular";
-import { AgChartOptions, AgChartTheme } from "ag-charts-community";
+import { AgCartesianSeriesTooltipRendererParams, AgChartOptions, AgChartTheme, AgPieSeriesLabelFormatterParams, AgPieSeriesOptions, AgPieSeriesTooltipRendererParams } from "ag-charts-community";
 import { catchError, map, Observable, of } from 'rxjs';
 import { QueryService } from '../services/query.service';
 
@@ -15,10 +15,10 @@ var chartTheme: AgChartTheme = {
 };
 
 @Component({
-    selector: 'app-pie-chart',
-    imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, AgCharts],
-    templateUrl: './pie-chart.component.html',
-    styleUrl: './pie-chart.component.scss'
+  selector: 'app-pie-chart',
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, AgCharts],
+  templateUrl: './pie-chart.component.html',
+  styleUrl: './pie-chart.component.scss'
 })
 export class PieChartComponent implements OnInit, OnChanges {
   @Input({ required: true }) userID!: string;
@@ -29,17 +29,26 @@ export class PieChartComponent implements OnInit, OnChanges {
 
   transTypeControl = new FormControl('income');
 
-  options: AgChartOptions;
+  options!: AgChartOptions;
 
   constructor(private queryService: QueryService) {
+    
+  }
+
+  ngOnInit(): void {
+    
     this.options = {
       theme: chartTheme,
       series: [
         {
-          type: "pie",
-          angleKey: "amount",
-          legendItemKey: "category",
-        },
+          type: 'pie',
+          angleKey: 'amount',
+          legendItemKey: 'category',
+          labelKey: 'category',
+          tooltip: {
+            renderer: (params: AgPieSeriesTooltipRendererParams<any>) => this.renderer(params)
+          }
+        } as AgPieSeriesOptions
       ],
       overlays: {
         noData: {
@@ -48,11 +57,9 @@ export class PieChartComponent implements OnInit, OnChanges {
         unsupportedBrowser: {
           text: ""
         }
-      }
+      },
     };
-  }
 
-  ngOnInit(): void {
     this.updateChartTitle();
     this.getChartData();
 
@@ -137,4 +144,15 @@ export class PieChartComponent implements OnInit, OnChanges {
       },
     };
   }
+  
+  renderer({datum, legendItemKey, angleKey}: AgPieSeriesTooltipRendererParams<any>) {
+  return {
+    data: [
+      {
+        label: datum[legendItemKey!],
+        value: `${this.currencySymbol}${datum[angleKey].toFixed(2)}`
+      },
+    ],
+  };
+}
 }
