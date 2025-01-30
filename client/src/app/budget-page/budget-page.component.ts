@@ -58,7 +58,7 @@ export class BudgetPageComponent {
   getCats() {
       this.getBudget().subscribe(budget => {
         const populateBudget = budget.map(async (row) => {
-          const amountSpent = await firstValueFrom(this.getSpentAmount(row.name));
+          const amountSpent = await firstValueFrom(this.getSpentAmount(row.name, row.category_type));
           const spent = Number(amountSpent) || 0;
     
           return {
@@ -82,8 +82,8 @@ export class BudgetPageComponent {
       );
     }
   
-    getSpentAmount(category: string): Observable<number> {
-      return this.queryService.getSpentAmount(this.currentUser.user_id, category).pipe(
+    getSpentAmount(category: string, type: string): Observable<number> {
+      return this.queryService.getSpentAmount(this.currentUser.user_id, category, type).pipe(
         map(response => response),
         catchError(error => {
           console.error(`Error retrieving the spent amount for category '${category}'`, error);

@@ -19,8 +19,8 @@ const logTransaction = async (req, userID) => {
     repeatGroupId = uuidv4();
   }
 
-  const categoryQuery = `SELECT category_id FROM category WHERE name = $1 LIMIT 1;`;
-  const categoryResult = await pool.query(categoryQuery, [category]);
+  const categoryQuery = `SELECT category_id FROM category WHERE name = $1 AND category_type = $2 LIMIT 1;`;
+  const categoryResult = await pool.query(categoryQuery, [category, type]);
   const categoryId = categoryResult.rows[0].category_id;
 
   const transactionValues = dates.map(date => [userID, categoryId, type, name, new Date(date).toISOString().substring(0, 10), amount, shop || null, payment_method || null, repeat || false, repeat_schedule || null, end_date ? new Date(end_date).toISOString().substring(0, 10) : null, repeatGroupId]);
@@ -189,8 +189,8 @@ const updateTransaction = async (req, transID, updateOption) => {
 
   const { type, category, name, transaction_date, amount, shop = null, payment_method = null, repeat = false, repeat_schedule = null, end_date = null } = transactionData;
 
-  const categoryQuery = `SELECT category_id FROM category WHERE name = $1 LIMIT 1;`;
-  const categoryResult = await pool.query(categoryQuery, [category]);
+  const categoryQuery = `SELECT category_id FROM category WHERE name = $1 AND category_type = $2 LIMIT 1;`;
+  const categoryResult = await pool.query(categoryQuery, [category, type]);
   const categoryId = categoryResult.rows[0]?.category_id;
 
   if (!categoryId) {
@@ -287,10 +287,10 @@ const getMonthlySpend = async (userID) => {
   return parseFloat(result.rows[0]?.total) || 0.00;
 };
 
-const getMonthlySpendByCategory = async (userID, cat) => {
+const getMonthlySpendByCategory = async (userID, cat, type) => {
 
-  const categoryQuery = `SELECT category_id FROM category WHERE name = $1 LIMIT 1;`;
-  const categoryResult = await pool.query(categoryQuery, [cat]);
+  const categoryQuery = `SELECT category_id FROM category WHERE name = $1 AND CATEGORY_TYPE = $2 LIMIT 1;`;
+  const categoryResult = await pool.query(categoryQuery, [cat, type]);
   const categoryId = categoryResult.rows[0]?.category_id;
 
   const query = `SELECT SUM(amount) as total

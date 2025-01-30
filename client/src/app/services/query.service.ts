@@ -134,8 +134,8 @@ export class QueryService {
     return this.http.get(`${this.apiUrl}/spent/month/${userID}`);
   }
 
-  getSpentAmount(userID: string, category: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/transactions/spent/${userID}/${category}` );
+  getSpentAmount(userID: string, category: string, type: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/transactions/spent/${userID}/${category}/${type}` );
   }
 
   getOutgoingsAmount(userID: string): Observable<any> {

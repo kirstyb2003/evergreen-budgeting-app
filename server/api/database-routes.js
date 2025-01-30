@@ -311,11 +311,11 @@ router.get('/spent/month/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/transactions/spent/:userID/:category', allowCors(async (req, res) => {
-  const { userID, category } = req.params;
+router.get('/transactions/spent/:userID/:category/:type', allowCors(async (req, res) => {
+  const { userID, category, type } = req.params;
 
   try {
-    const total = await getMonthlySpendByCategory(userID, category);
+    const total = await getMonthlySpendByCategory(userID, category, type);
     res.json(total);
   } catch (err) {
     console.error(err);

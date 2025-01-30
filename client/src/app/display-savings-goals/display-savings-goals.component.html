@@ -31,7 +31,7 @@
                     <mat-progress-bar mode="determinate"
                         [value]="((goal.currently_saved!)/goal.goal_amount)*100"></mat-progress-bar>
                 </div>
-                <div class="saved">{{ formatMoney(goal.currently_saved || 0.00) }}</div>
+                <div class="saved">{{ formatMoney(goal.currently_saved || 0.00) }} saved</div>
                 <div class="date" *ngIf="goal.goal_due_date">Target Date: {{ goal.goal_due_date }}</div>
             </div>
         </div>
