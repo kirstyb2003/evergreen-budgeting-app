@@ -10,7 +10,7 @@ let cellHeaderMap = new Map<string, string>([
   ["expense", "Total Spent (All Time)"],
   ["income", "Total Income (All Time)"],
   ["savings", "Total Saved (All Time)"],
-  ["budget", "Net Monthly Balance"]
+  ["budget", "Net Monthly Spending"]
 ]);
 
 @Component({
