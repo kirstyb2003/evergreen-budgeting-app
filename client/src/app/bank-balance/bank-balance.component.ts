@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { currencyMap } from '../data-structures/currency-codes';
 import { AuthenticationService } from '../services/authentication.service';
@@ -7,19 +7,19 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { CurrencyPipe, NgStyle } from '@angular/common';
 
 let cellHeaderMap = new Map<string, string>([
-  ["expense", "Total Amount Spent"],
-  ["income", "Total Income"],
-  ["savings", "Total Saved"],
-  ["budget", "Amount Spent"]
+  ["expense", "Total Spent (All Time)"],
+  ["income", "Total Income (All Time)"],
+  ["savings", "Total Saved (All Time)"],
+  ["budget", "Net Monthly Balance"]
 ]);
 
 @Component({
-    selector: 'app-bank-balance',
-    imports: [CurrencyPipe, NgStyle],
-    templateUrl: './bank-balance.component.html',
-    styleUrl: './bank-balance.component.scss'
+  selector: 'app-bank-balance',
+  imports: [CurrencyPipe, NgStyle],
+  templateUrl: './bank-balance.component.html',
+  styleUrl: './bank-balance.component.scss'
 })
-export class BankBalanceComponent implements OnInit {
+export class BankBalanceComponent implements OnInit, OnChanges {
   @Input({ required: true }) pageType!: string | null;
   @Output() calculateTotal = new EventEmitter<number>();
 
@@ -41,6 +41,16 @@ export class BankBalanceComponent implements OnInit {
       this.currSymbol = currencyMap[currency].symbol;
     });
 
+    this.setUpComponent();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.pageType = changes['pageType'].currentValue;
+
+    this.setUpComponent();
+  }
+
+  setUpComponent() {
     if (!this.pageType) {
       this.pageType = "income";
     }
@@ -72,9 +82,6 @@ export class BankBalanceComponent implements OnInit {
         this.calculateTotal.emit(total);
       });
     }
-
-
-
   }
 
   getBankBalance(): Observable<number> {
@@ -123,5 +130,5 @@ export class BankBalanceComponent implements OnInit {
     }
     return { color: 'black', 'font-weight': 400 };
   }
-  
+
 }

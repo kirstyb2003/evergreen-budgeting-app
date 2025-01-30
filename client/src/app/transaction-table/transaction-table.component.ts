@@ -91,9 +91,9 @@ export function numComparator(num1: string, num2: string, currencySymbol: string
 
 export function reverseFormatMoney(formattedMoney: string, currencySymbol: string): number {
   if (!formattedMoney) return NaN;
-  
+
   const cleanString = formattedMoney.replace(currencySymbol, "").replace(",", "").trim();
-  
+
   const amount = parseFloat(cleanString);
 
   return isNaN(amount) ? NaN : amount;
@@ -101,10 +101,10 @@ export function reverseFormatMoney(formattedMoney: string, currencySymbol: strin
 
 
 @Component({
-    selector: 'app-transaction-table',
-    imports: [AgGridAngular, NgIf, RouterLink, MatIconModule, MatButtonModule, MatTooltip],
-    templateUrl: './transaction-table.component.html',
-    styleUrl: './transaction-table.component.scss'
+  selector: 'app-transaction-table',
+  imports: [AgGridAngular, NgIf, RouterLink, MatIconModule, MatButtonModule, MatTooltip],
+  templateUrl: './transaction-table.component.html',
+  styleUrl: './transaction-table.component.scss'
 })
 export class TransactionTableComponent implements OnInit, OnChanges {
   @Input({ required: true }) timeFrame: string = '';
@@ -143,7 +143,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       if (params.node.rowPinned) {
         return 'pinned-total-row';
       }
-      return '';  
+      return '';
     }
   };
 
@@ -159,9 +159,9 @@ export class TransactionTableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      this.transactionType = changes['transactionType'].currentValue;
+    this.transactionType = changes['transactionType'].currentValue;
 
-      this.setupComponent();
+    this.setupComponent();
   }
 
   setupComponent() {
