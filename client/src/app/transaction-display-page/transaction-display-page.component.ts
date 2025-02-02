@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';

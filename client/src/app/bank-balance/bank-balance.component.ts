@@ -26,6 +26,7 @@ export class BankBalanceComponent implements OnInit, OnChanges {
   balance: number = 0.00;
   total: number = 0.00;
 
+  user_id!: string;
   currentUser: any;
 
   cellHeader: string = "Total";
@@ -35,19 +36,25 @@ export class BankBalanceComponent implements OnInit, OnChanges {
   constructor(private authService: AuthenticationService, private router: Router, private queryService: QueryService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user.user;
-      let currency = this.currentUser.default_currency;
-      this.currSymbol = currencyMap[currency].symbol;
-    });
-
+    this.setUpUser();
     this.setUpComponent();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.pageType = changes['pageType'].currentValue;
+    
+    this.setUpUser();
 
     this.setUpComponent();
+  }
+
+  setUpUser() {
+    this.authService.currentUser.subscribe(user => {
+      this.currentUser = user.user;
+      this.user_id = this.currentUser.user_id;
+      let currency = this.currentUser.default_currency;
+      this.currSymbol = currencyMap[currency].symbol;
+    });
   }
 
   setUpComponent() {
@@ -85,7 +92,7 @@ export class BankBalanceComponent implements OnInit, OnChanges {
   }
 
   getBankBalance(): Observable<number> {
-    return this.queryService.getBalance(this.currentUser.user_id).pipe(
+    return this.queryService.getBalance(this.user_id).pipe(
       map(response => response),
       catchError(error => {
         console.error('Error retrieving bank balance', error);
@@ -95,7 +102,7 @@ export class BankBalanceComponent implements OnInit, OnChanges {
   }
 
   getTotal(): Observable<number> {
-    return this.queryService.getTotal(this.currentUser.user_id, this.pageType!).pipe(
+    return this.queryService.getTotal(this.user_id, this.pageType!).pipe(
       map(response => response),
       catchError(error => {
         console.error(`Error retrieving total ${this.pageType}s`, error);
@@ -105,7 +112,7 @@ export class BankBalanceComponent implements OnInit, OnChanges {
   }
 
   getMonthlyBudget(): Observable<number> {
-    return this.queryService.getMonthlyBudget(this.currentUser.user_id).pipe(
+    return this.queryService.getMonthlyBudget(this.user_id).pipe(
       map(response => response),
       catchError(error => {
         console.error('Error retrieving monthly budget total', error);
@@ -115,7 +122,7 @@ export class BankBalanceComponent implements OnInit, OnChanges {
   }
 
   getMonthlySpend(): Observable<number> {
-    return this.queryService.getMonthlySpend(this.currentUser.user_id).pipe(
+    return this.queryService.getMonthlySpend(this.user_id).pipe(
       map(response => response),
       catchError(error => {
         console.error('Error retrieving bank balance', error);
