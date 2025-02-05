@@ -64,7 +64,8 @@ export class SavingsAreaComponent implements OnInit {
   }
 
   formatMoney(amount: number): string {
-    return `${this.currencySymbol}${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    const formattedAmount = Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return amount < 0 ? `-${this.currencySymbol}${formattedAmount.substring(1)}` : `${this.currencySymbol}${formattedAmount}`;
   }
 }
 
