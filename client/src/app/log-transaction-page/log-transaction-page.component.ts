@@ -33,7 +33,7 @@ export class LogTransactionPageComponent {
   transactionType: string | null = null;
   transID: string | null = null;
   typeList: String[] = ["expense", "income", "savings"];
-  methodList: String[] = ["credit", "debit", "cheque", "cash"];
+  methodList: String[] = ["credit", "debit", "cheque", "cash", "bank_transfer"];
   repeatSchedList: String[] = ["daily", "weekly", "monthly", "yearly"];
 
   transactionForm!: FormGroup;

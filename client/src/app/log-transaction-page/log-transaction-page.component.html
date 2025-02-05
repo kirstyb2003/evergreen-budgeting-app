@@ -65,7 +65,7 @@
             <mat-select formControlName="payment_method">
                 <mat-option value="" disabled>Please select a payment method</mat-option>
                 <ng-container *ngFor="let m of methodList">
-                    <mat-option [value]="m">{{ m }}</mat-option>
+                    <mat-option [value]="m">{{ m === "bank_transfer" ? "bank transfer" : m }}</mat-option>
                 </ng-container>
             </mat-select>
         </mat-form-field>

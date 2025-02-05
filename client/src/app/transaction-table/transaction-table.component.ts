@@ -45,6 +45,16 @@ export function formatMoney(moneyString: string, currencySymbol: string): string
   return amount < 0 ? `-${currencySymbol}${formattedAmount}` : `${currencySymbol}${formattedAmount}`;
 }
 
+export function formatPaymentMethod(methodString: string): string {
+  if (!methodString || methodString === "null") return "";
+
+  if (methodString === "bank_transfer") {
+    return "Bank Transfer";
+  } else {
+    return methodString.charAt(0).toUpperCase() + methodString.slice(1)
+  }
+}
+
 const filterParams: IDateFilterParams = {
   comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
     const dateAsString = formatDate(cellValue);
@@ -191,7 +201,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
       { field: "amount", valueFormatter: (params) => formatMoney(params.value, this.currencySymbol), comparator: (value1, value2) => numComparator(value1, value2, this.currencySymbol) },
       { field: "transaction_date", headerName: "Transaction Date", valueFormatter: (params) => formatDate(params.value), sort: this.dateOrder, filter: 'agDateColumnFilter', filterParams: filterParams },
       { field: "shop" },
-      { field: "payment_method", headerName: "Payment Method" },
+      { field: "payment_method", headerName: "Payment Method", valueFormatter: (params) => formatPaymentMethod(params.value) },
 
     ]
   }
