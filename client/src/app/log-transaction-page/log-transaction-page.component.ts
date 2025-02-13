@@ -19,6 +19,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import 'moment/locale/en-gb';
 import moment from 'moment';
 import { MatRadioModule } from '@angular/material/radio';
+import { formatDate } from '../transaction-table/transaction-table.component';
 
 @Component({
     selector: 'app-log-transaction-page',
@@ -41,6 +42,8 @@ export class LogTransactionPageComponent {
   categoriesList!: { name: String }[];
 
   prevUrl: string | null = null;
+
+  formatDate = formatDate;
 
   constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 

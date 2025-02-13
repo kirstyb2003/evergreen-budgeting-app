@@ -7,7 +7,7 @@
     <mat-radio-group [(ngModel)]="selectedOption" class="delete-options">
       <mat-radio-button value="single">Delete only this occurrence</mat-radio-button>
       <mat-radio-button value="all">Delete all occurrences</mat-radio-button>
-      <mat-radio-button value="after">Delete all occurrences after this transaction's date</mat-radio-button>
+      <mat-radio-button value="after">Delete all occurrences after this transaction's date: {{ data.date }}</mat-radio-button>
     </mat-radio-group>
   </div>
 </mat-dialog-content>

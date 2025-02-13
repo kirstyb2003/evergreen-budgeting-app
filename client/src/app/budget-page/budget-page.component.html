@@ -6,7 +6,7 @@
         {{ categories.length === 0 ? "Set Budget" : "Edit Budget" }}
     </button>
 </div>
-<app-bank-balance (calculateTotal)="receiveTotal($event)" pageType="budget"></app-bank-balance>
+<app-bank-balance pageType="budget"></app-bank-balance>
 <div class="budget-page">
     <div *ngFor="let category of categories" class="category-card">
         <app-watering-can [spent]="category.spent" [budget]="category.amount" [name]="category.name" [type]="category.category_type" [currencySymbol]="currencySymbol"></app-watering-can>

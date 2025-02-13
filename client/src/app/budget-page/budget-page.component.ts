@@ -30,7 +30,6 @@ type ROW_DATA_STRUCTURE = {
     styleUrl: './budget-page.component.scss'
 })
 export class BudgetPageComponent {
-  total!: number;
   currentUser: any;
   currencySymbol!: string;
   currentUrl: string;
@@ -49,10 +48,6 @@ export class BudgetPageComponent {
     });
 
     this.getCats();
-  }
-
-  receiveTotal(total: number) {
-    this.total = total;
   }
 
   getCats() {

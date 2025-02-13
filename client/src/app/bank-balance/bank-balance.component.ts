@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { currencyMap } from '../data-structures/currency-codes';
 import { AuthenticationService } from '../services/authentication.service';
 import { QueryService } from '../services/query.service';
 import { catchError, map, Observable, of } from 'rxjs';
 import { CurrencyPipe, NgStyle } from '@angular/common';
+import { ComponentCommunicationService } from '../services/component-communication.service';
 
 let cellHeaderMap = new Map<string, string>([
   ["expense", "Total Spent (All Time)"],
@@ -33,18 +33,21 @@ export class BankBalanceComponent implements OnInit, OnChanges {
   balanceHeader: string = "Bank Balance";
   currSymbol!: string;
 
-  constructor(private authService: AuthenticationService, private router: Router, private queryService: QueryService, private route: ActivatedRoute) { }
+  constructor(private authService: AuthenticationService, private queryService: QueryService, private communicationService: ComponentCommunicationService) { }
 
   ngOnInit(): void {
     this.setUpUser();
     this.setUpComponent();
+
+    this.communicationService.refresh$.subscribe(() => {
+      this.setUpComponent();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.pageType = changes['pageType'].currentValue;
     
     this.setUpUser();
-
     this.setUpComponent();
   }
 
@@ -52,8 +55,7 @@ export class BankBalanceComponent implements OnInit, OnChanges {
     this.authService.currentUser.subscribe(user => {
       this.currentUser = user.user;
       this.user_id = this.currentUser.user_id;
-      let currency = this.currentUser.default_currency;
-      this.currSymbol = currencyMap[currency].symbol;
+      this.currSymbol = currencyMap[this.currentUser.default_currency].symbol;
     });
   }
 
@@ -77,7 +79,6 @@ export class BankBalanceComponent implements OnInit, OnChanges {
 
       this.getMonthlySpend().subscribe(total => {
         this.total = total;
-        this.calculateTotal.emit(total);
       });
     } else {
       this.getBankBalance().subscribe(balance => {

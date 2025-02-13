@@ -46,6 +46,10 @@ export class TransactionDisplayPageComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.transactionType = params.get('type');
 
+      if (this.transactionType == null) {
+        this.transactionType = "income";
+      }
+
       if (this.transactionType === "expense") {
         this.transactionTypeText = "Expenses";
       } else {

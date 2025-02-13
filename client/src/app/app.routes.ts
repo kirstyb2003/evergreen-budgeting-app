@@ -22,6 +22,7 @@ export const routes: Routes = [
     { path: 'log-transaction/:type', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
     { path: 'log-transaction/:type/:id', component: LogTransactionPageComponent, canActivate: [AuthGuard] },
     { path: 'transactions/:type', component: TransactionDisplayPageComponent, canActivate: [AuthGuard] },
+    { path: 'transactions', component: TransactionDisplayPageComponent, canActivate: [AuthGuard] },
     { path: 'set-budget', component: SetBudgetPageComponent, canActivate: [AuthGuard] },
     { path: 'set-savings-goal', component: SetSavingsGoalPageComponent, canActivate: [AuthGuard] },
     { path: 'set-savings-goal/:id', component: SetSavingsGoalPageComponent, canActivate: [AuthGuard] },

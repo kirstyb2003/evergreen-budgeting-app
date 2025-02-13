@@ -151,7 +151,7 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 
   openDeleteDialog(goal: SAVINGS_GOAL_STRUCTURE) {
     const dialogRef = this.dialog.open(DialogDeleteGoal, {
-      data: { name: goal.name, title: "Savings Goal", type: "savings goal", buttonText: "Goal", repeat: false },
+      data: { name: goal.name, title: "Savings Goal", type: "savings goal", buttonText: "Goal", repeat: false, date: '' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -186,5 +186,5 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 export class DialogDeleteGoal {
   selectedOption: 'single' | 'all' | 'after' = 'single';
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, title: string, type: string, buttonText: string, repeat: boolean }) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, title: string, type: string, buttonText: string, repeat: boolean, date: string }) { }
 }

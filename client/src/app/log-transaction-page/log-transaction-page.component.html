@@ -101,7 +101,7 @@
             <mat-radio-group formControlName="updateOption">
                 <mat-radio-button value="single">Update only this occurrence</mat-radio-button>
                 <mat-radio-button value="all">Update all occurrences</mat-radio-button>
-                <mat-radio-button value="after">Update all occurrences after this transaction's date</mat-radio-button>
+                <mat-radio-button value="after">Update all occurrences after this transaction's date: {{ formatDate(transaction_date.value) }}</mat-radio-button>
             </mat-radio-group>
             <mat-error *ngIf="transactionForm.get('updateOption')?.hasError('required')">
                 Please select how you want to apply this update.
