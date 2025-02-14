@@ -206,7 +206,7 @@ export class SetBudgetPageComponent {
   }
 
   checkTotalBudgetWarning() {
-    const totalBudgeted = parseFloat(this.budgetForm.get('total_budget')?.value.slice(1) || '0');
+    const totalBudgeted = parseFloat(this.budgetForm.get('total_budget')?.value.replace(/[^\d.-]/g, '') || '0');
     const total = parseFloat(this.budgetForm.get('total')?.value || '0');
 
     if (totalBudgeted > total && total !== 0) {
