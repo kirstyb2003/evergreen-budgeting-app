@@ -167,7 +167,15 @@ export class SetBudgetPageComponent {
         return sum + parseFloat(control.get('amount')?.value || '0');
       }, 0);
 
-      const savingsAmount = (Math.max(0, totalBudget - totalExpenses)).toFixed(2);
+      const totalSavings = this.savingsItems.controls.reduce((sum, control) => {
+        if (control.get('category')?.value === "Miscellaneous") {
+          return sum;
+        } else {
+          return sum + parseFloat(control.get('amount')?.value || '0');
+        }
+      }, 0);
+
+      const savingsAmount = (Math.max(0, totalBudget - totalExpenses - totalSavings)).toFixed(2);
 
       const savingsItem = this.savingsItems.controls.find((item) => item.get('category')?.value === 'Miscellaneous');
       if (savingsItem) {
