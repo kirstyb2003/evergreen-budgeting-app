@@ -38,7 +38,6 @@ export class AuthenticationService {
   }
 
   logout() {
-    console.log("Logging user out...")
     sessionStorage.removeItem('currentUser');
     sessionStorage.removeItem('token');
     this.currentUserSubject.next(null);
