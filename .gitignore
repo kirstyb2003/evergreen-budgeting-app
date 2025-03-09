@@ -10,6 +10,7 @@
 
 # Server folder
 /server/node_modules
+/server/.env
 
 # Node
 /node_modules

@@ -53,7 +53,7 @@ export class BankBalanceComponent implements OnInit, OnChanges {
 
   setUpUser() {
     this.authService.currentUser.subscribe(user => {
-      this.currentUser = user.user;
+      this.currentUser = user;
       this.user_id = this.currentUser.user_id;
       this.currSymbol = currencyMap[this.currentUser.default_currency].symbol;
     });

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require('cors');
 const dbRoutes = require('./database-routes');
 const errorHandler = require('./error-handler');
+require('dotenv').config();
 
 const app = express();
 

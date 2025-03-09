@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +13,8 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
-  constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser') || 'null'));
+  constructor(private http: HttpClient, private popup: MatSnackBar, private router: Router) {
+    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(sessionStorage.getItem('currentUser') || 'null'));
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -21,10 +23,11 @@ export class AuthenticationService {
   }
 
   loginUser(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/users/login`, userData).pipe(
+    return this.http.post<{ token: string; user: any }>(`${this.apiUrl}/users/login`, userData).pipe(
       map(response => {
-        localStorage.setItem('currentUser', JSON.stringify(response));
-        this.currentUserSubject.next(response);
+        sessionStorage.setItem('currentUser', JSON.stringify(response.user));
+        sessionStorage.setItem('token', response.token);
+        this.currentUserSubject.next(response.user);
         return response;
       })
     );
@@ -35,11 +38,21 @@ export class AuthenticationService {
   }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    console.log("Logging user out...")
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('token');
     this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
   isLoggedIn(): boolean {
     return !!this.currentUserSubject.value;
+  }
+
+  displayExpiredTokenPopup() {
+    this.popup.open('Your session has expired. You have been logged out.', 'Close', {
+      duration: 5000,
+      verticalPosition: 'top',
+    });
   }
 }

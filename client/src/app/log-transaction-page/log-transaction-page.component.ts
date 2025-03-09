@@ -49,7 +49,7 @@ export class LogTransactionPageComponent {
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
-      this.currentUser = user.user;
+      this.currentUser = user;
     });
 
     this.route.queryParams.subscribe(params => {

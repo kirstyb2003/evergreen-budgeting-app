@@ -42,7 +42,7 @@ export class BudgetPageComponent {
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
-      this.currentUser = user.user;
+      this.currentUser = user;
       let currency = this.currentUser.default_currency;
       this.currencySymbol = currencyMap[currency].symbol;
     });

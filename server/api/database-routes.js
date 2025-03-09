@@ -6,6 +6,11 @@ const { setSavingsGoal, getSavingsGoals, updateGoalRankings, deleteGoal, getSavi
 const { setBudget, getBudget, deleteCategories, getMonthlyBudget } = require('./database-queries/budget');
 const allowCors = require('./allow-cors');
 
+const jwt = require('jsonwebtoken');
+const secretKey = process.env.JWT_SECRET;
+
+const authenticateToken = require('./authMiddleware');
+
 const router = express.Router();
 
 router.post('/users/register', allowCors(async (req, res) => {
@@ -29,7 +34,8 @@ router.post('/users/login', allowCors(async (req, res) => {
       return res.status(401).json({ message: 'Invalid username, email or password' });
     }
 
-    res.status(200).json({ message: 'Login successful', user: user[0], });
+    const token = jwt.sign({ userId: user.user_id }, secretKey, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', user: user, token: token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: "Internal server error" });
@@ -73,7 +79,7 @@ router.get('/categories/:type', allowCors(async (req, res) => {
 }));
 
 
-router.post('/transactions/:userID', allowCors(async (req, res) => {
+router.post('/transactions/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
   const transactionData = req.body;
 
@@ -86,7 +92,7 @@ router.post('/transactions/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.post('/budget/:userID', allowCors(async (req, res) => {
+router.post('/budget/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
   const budgetData = req.body;
 
@@ -100,7 +106,7 @@ router.post('/budget/:userID', allowCors(async (req, res) => {
 
 }));
 
-router.get('/budget/:userID', async (req, res) => {
+router.get('/budget/:userID', authenticateToken, async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -112,7 +118,7 @@ router.get('/budget/:userID', async (req, res) => {
   }
 });
 
-router.post('/budget/delete/:userID', allowCors(async (req, res) => {
+router.post('/budget/delete/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
   const deleteCats = req.body;
 
@@ -126,7 +132,7 @@ router.post('/budget/delete/:userID', allowCors(async (req, res) => {
 
 }));
 
-router.post('/savings-goal/:userID', allowCors(async (req, res) => {
+router.post('/savings-goal/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
   const goalData = req.body;
 
@@ -139,7 +145,7 @@ router.post('/savings-goal/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/balance/:userID', allowCors(async (req, res) => {
+router.get('/balance/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -151,7 +157,7 @@ router.get('/balance/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/balance/:userID/:type', allowCors(async (req, res) => {
+router.get('/balance/:userID/:type', authenticateToken, allowCors(async (req, res) => {
   const { userID, type } = req.params;
 
   try {
@@ -163,7 +169,7 @@ router.get('/balance/:userID/:type', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/transactions/:userID/past/:type', allowCors(async (req, res) => {
+router.get('/transactions/:userID/past/:type', authenticateToken, allowCors(async (req, res) => {
   const { userID, type } = req.params;
 
   try {
@@ -175,7 +181,7 @@ router.get('/transactions/:userID/past/:type', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/transactions/:userID/upcoming/:type', allowCors(async (req, res) => {
+router.get('/transactions/:userID/upcoming/:type', authenticateToken, allowCors(async (req, res) => {
   const { userID, type } = req.params;
 
   try {
@@ -187,7 +193,7 @@ router.get('/transactions/:userID/upcoming/:type', allowCors(async (req, res) =>
   }
 }));
 
-router.get('/savings-goals/:userID', allowCors(async (req, res) => {
+router.get('/savings-goals/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -199,7 +205,7 @@ router.get('/savings-goals/:userID', allowCors(async (req, res) => {
   }
 }))
 
-router.post('/savings-goals/update', allowCors(async (req, res) => {
+router.post('/savings-goals/update', authenticateToken, allowCors(async (req, res) => {
   const goalData = req.body;
 
   try {
@@ -211,7 +217,7 @@ router.post('/savings-goals/update', allowCors(async (req, res) => {
   }
 }));
 
-router.post('/savings-goals/delete/:goalID', allowCors(async (req, res) => {
+router.post('/savings-goals/delete/:goalID', authenticateToken, allowCors(async (req, res) => {
   const { goalID } = req.params;
   const { userID } = req.body;
 
@@ -224,7 +230,7 @@ router.post('/savings-goals/delete/:goalID', allowCors(async (req, res) => {
   }
 }))
 
-router.get('/savings-goal/:id', allowCors(async (req, res) => {
+router.get('/savings-goal/:id', authenticateToken, allowCors(async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -236,7 +242,7 @@ router.get('/savings-goal/:id', allowCors(async (req, res) => {
   }
 }));
 
-router.post('/savings-goal/update/:goalID', allowCors(async (req, res) => {
+router.post('/savings-goal/update/:goalID', authenticateToken, allowCors(async (req, res) => {
   const { goalID } = req.params;
   const goalData = req.body;
 
@@ -249,7 +255,7 @@ router.post('/savings-goal/update/:goalID', allowCors(async (req, res) => {
   }
 }))
 
-router.post('/transaction/delete/:id', allowCors(async (req, res) => {
+router.post('/transaction/delete/:id', authenticateToken, allowCors(async (req, res) => {
   const { id } = req.params;
   const { repeatDelete, date } = req.body;
 
@@ -262,7 +268,7 @@ router.post('/transaction/delete/:id', allowCors(async (req, res) => {
   }
 }))
 
-router.get('/transaction/:id', allowCors(async (req, res) => {
+router.get('/transaction/:id', authenticateToken, allowCors(async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -274,7 +280,7 @@ router.get('/transaction/:id', allowCors(async (req, res) => {
   }
 }));
 
-router.post('/transactions/update/:updateOption/:transID', allowCors(async (req, res) => {
+router.post('/transactions/update/:updateOption/:transID', authenticateToken, allowCors(async (req, res) => {
   const { updateOption, transID } = req.params;
   const transactionData = req.body;
 
@@ -287,7 +293,7 @@ router.post('/transactions/update/:updateOption/:transID', allowCors(async (req,
   }
 }));
 
-router.get('/budget/total/:userID', allowCors(async (req, res) => {
+router.get('/budget/total/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -299,7 +305,7 @@ router.get('/budget/total/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/spent/month/:userID', allowCors(async (req, res) => {
+router.get('/spent/month/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -311,7 +317,7 @@ router.get('/spent/month/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/transactions/spent/:userID/:category/:type', allowCors(async (req, res) => {
+router.get('/transactions/spent/:userID/:category/:type', authenticateToken, allowCors(async (req, res) => {
   const { userID, category, type } = req.params;
 
   try {
@@ -323,7 +329,7 @@ router.get('/transactions/spent/:userID/:category/:type', allowCors(async (req, 
   }
 }));
 
-router.get('/transactions/outgoings/:userID', allowCors(async (req, res) => {
+router.get('/transactions/outgoings/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -335,7 +341,7 @@ router.get('/transactions/outgoings/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/transactions/total-income/:userID', allowCors(async (req, res) => {
+router.get('/transactions/total-income/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -347,7 +353,7 @@ router.get('/transactions/total-income/:userID', allowCors(async (req, res) => {
   }
 }));
 
-router.get('/savings-goals/total-goal/:userID', allowCors(async (req, res) => {
+router.get('/savings-goals/total-goal/:userID', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -360,7 +366,7 @@ router.get('/savings-goals/total-goal/:userID', allowCors(async (req, res) => {
 
 }));
 
-router.get('/transactions/:userID/week/:transType', allowCors(async (req, res) => {
+router.get('/transactions/:userID/week/:transType', authenticateToken, allowCors(async (req, res) => {
   const { transType, userID } = req.params;
 
   try {
@@ -373,7 +379,7 @@ router.get('/transactions/:userID/week/:transType', allowCors(async (req, res) =
 
 }));
 
-router.get('/transactions/:userID/month/:transType', allowCors(async (req, res) => {
+router.get('/transactions/:userID/month/:transType', authenticateToken, allowCors(async (req, res) => {
   const { transType, userID } = req.params;
 
   try {
@@ -386,7 +392,7 @@ router.get('/transactions/:userID/month/:transType', allowCors(async (req, res) 
 
 }));
 
-router.get('/transactions/:userID/year/:transType', allowCors(async (req, res) => {
+router.get('/transactions/:userID/year/:transType', authenticateToken, allowCors(async (req, res) => {
   const { transType, userID } = req.params;
 
   try {
@@ -399,7 +405,7 @@ router.get('/transactions/:userID/year/:transType', allowCors(async (req, res) =
 
 }));
 
-router.get('/transactions/:userID/timeseries/week', allowCors(async (req, res) => {
+router.get('/transactions/:userID/timeseries/week', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -412,7 +418,7 @@ router.get('/transactions/:userID/timeseries/week', allowCors(async (req, res) =
 
 }));
 
-router.get('/transactions/:userID/timeseries/month', allowCors(async (req, res) => {
+router.get('/transactions/:userID/timeseries/month', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -425,7 +431,7 @@ router.get('/transactions/:userID/timeseries/month', allowCors(async (req, res) 
 
 }));
 
-router.get('/transactions/:userID/timeseries/year', allowCors(async (req, res) => {
+router.get('/transactions/:userID/timeseries/year', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -438,7 +444,7 @@ router.get('/transactions/:userID/timeseries/year', allowCors(async (req, res) =
 
 }));
 
-router.get('/transactions/:userID/expenses/week', allowCors(async (req, res) => {
+router.get('/transactions/:userID/expenses/week', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -451,7 +457,7 @@ router.get('/transactions/:userID/expenses/week', allowCors(async (req, res) => 
 
 }));
 
-router.get('/transactions/:userID/expenses/month', allowCors(async (req, res) => {
+router.get('/transactions/:userID/expenses/month', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
@@ -464,7 +470,7 @@ router.get('/transactions/:userID/expenses/month', allowCors(async (req, res) =>
 
 }));
 
-router.get('/transactions/:userID/expenses/year', allowCors(async (req, res) => {
+router.get('/transactions/:userID/expenses/year', authenticateToken, allowCors(async (req, res) => {
   const { userID } = req.params;
 
   try {
