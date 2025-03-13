@@ -42,6 +42,7 @@ export class AuthenticationService {
     sessionStorage.removeItem('token');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+    window.location.reload();
   }
 
   isLoggedIn(): boolean {
