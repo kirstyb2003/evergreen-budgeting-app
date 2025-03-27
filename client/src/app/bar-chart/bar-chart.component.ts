@@ -68,17 +68,14 @@ export class BarChartComponent implements OnInit, OnChanges {
   getChartData() {
     if (this.timePeriod === "weekly") {
       this.getWeeklyExpenses().subscribe(data => {
-        console.log(data);
         this.updateChartData(data);
       });
     } else if (this.timePeriod === "monthly") {
       this.getMonthlyExpenses().subscribe(data => {
-        console.log(data);
         this.updateChartData(data);
       });
     } else if (this.timePeriod === "yearly") {
       this.getYearlyExpenses().subscribe(data => {
-        console.log(data);
         this.updateChartData(data);
       });
     }
