@@ -49,7 +49,7 @@ describe('BarChartComponent', () => {
     component.timePeriod = 'weekly';
     fixture.detectChanges();
     component.getChartData();
-    
+
     expect(queryServiceMock.getWeeklyExpenses).toHaveBeenCalledWith('123');
     expect(component.options.data).toEqual([
       { time: 'Mar 21', total: 24 },
@@ -152,17 +152,48 @@ describe('BarChartComponent', () => {
     expect(queryServiceMock.getYearlyExpenses).toHaveBeenCalled();
   });
 
-  it('should correctly format axis labels with currency symbol', () => {
+  it('should correctly format axis labels with currency symbol (GBP)', () => {
     component.currencySymbol = '£';
-    
+
     const numberAxis = component.options.axes!.find(axis => axis.position === 'left');
     expect(numberAxis).toBeDefined();
-  
+
     const formatter = numberAxis!.label!.formatter!;
-    
-    expect(formatter({value: 100, index: 0})).toBe('£100.00');
-    expect(formatter({value: -50, index: 0})).toBe('-£50.00');
-    expect(formatter({value: 0, index: 0})).toBe('£0.00');
+
+    expect(formatter({ value: 100, index: 0 })).toBe('£100.00');
+    expect(formatter({ value: -50, index: 0 })).toBe('-£50.00');
+    expect(formatter({ value: 0, index: 0 })).toBe('£0.00');
   });
 
+  it('should correctly format axis labels with currency symbol (ERN)', () => {
+    component.currencySymbol = 'Nfk';
+
+    const numberAxis = component.options.axes!.find(axis => axis.position === 'left');
+    expect(numberAxis).toBeDefined();
+
+    const formatter = numberAxis!.label!.formatter!;
+
+    expect(formatter({ value: 100, index: 0 })).toBe('Nfk100.00');
+    expect(formatter({ value: -50, index: 0 })).toBe('-Nfk50.00');
+    expect(formatter({ value: 0, index: 0 })).toBe('Nfk0.00');
+  });
+
+  it('should initialize chart options correctly', () => {
+    expect(component.options.theme).toBeDefined();
+    expect(component.options.series).toEqual([{ type: 'bar', xKey: 'time', yKey: 'total' }]);
+  });
+
+  it('should update chart data correctly', () => {
+    const testData = [
+      { time_period: 'Jan 01', total: '200' },
+      { time_period: 'Jan 02', total: '-50' },
+    ];
+
+    component.updateChartData(testData);
+
+    expect(component.options.data).toEqual([
+      { time: 'Jan 01', total: 200 },
+      { time: 'Jan 02', total: -50 },
+    ]);
+  });
 });
