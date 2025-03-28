@@ -178,7 +178,7 @@ describe('BarChartComponent', () => {
     expect(formatter({ value: 0, index: 0 })).toBe('Nfk0.00');
   });
 
-  it('should initialize chart options correctly', () => {
+  it('should initialise chart options correctly', () => {
     expect(component.options.theme).toBeDefined();
     expect(component.options.series).toEqual([{ type: 'bar', xKey: 'time', yKey: 'total' }]);
   });
