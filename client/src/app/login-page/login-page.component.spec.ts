@@ -21,7 +21,7 @@ describe('LoginPageComponent', () => {
   beforeEach(async () => {
     authServiceMock = {
       loginUser: jasmine.createSpy('loginUser').and.returnValue(of(true)),
-      isLoggedIn: jasmine.createSpy('isLoggedIn').and.returnValue(of(true))
+      isLoggedIn: jasmine.createSpy('isLoggedIn').and.returnValue(of(false))
     };
 
     snackBarMock = jasmine.createSpyObj('MatSnackBar', ['open']);
