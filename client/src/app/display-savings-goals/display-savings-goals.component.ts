@@ -155,6 +155,7 @@ export class DisplaySavingsGoalsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result)
       
       if (result) {
         this.removeSavingsGoal(goal.goal_id);
