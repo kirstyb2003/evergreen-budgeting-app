@@ -36,7 +36,6 @@ describe('BugdetPageComponent', () => {
   let fixture: ComponentFixture<BudgetPageComponent>;
   let authServiceMock: any;
   let queryServiceMock: any;
-  let routerMock: any;
 
   beforeEach(async () => {
     authServiceMock = {
@@ -55,11 +54,6 @@ describe('BugdetPageComponent', () => {
       getMonthlyBudget: jasmine.createSpy('getMonthlyBudget').and.returnValue(of(0)),
       getMonthlySpend: jasmine.createSpy('getMonthlySpend').and.returnValue(of(0))
     };
-
-
-    routerMock = {
-      url: of("/home")
-    }
 
     await TestBed.configureTestingModule({
       imports: [BudgetPageComponent, MockNavBarComponent, MockBankBalanceComponent],
