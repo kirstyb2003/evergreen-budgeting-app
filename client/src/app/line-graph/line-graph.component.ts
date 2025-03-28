@@ -88,17 +88,14 @@ export class LineGraphComponent implements OnInit, OnChanges {
   getChartData() {
     if (this.timePeriod === "weekly") {
       this.getWeeklyTimeSeries().subscribe(data => {
-        console.log(data)
         this.updateChartData(data);
       });
     } else if (this.timePeriod === "monthly") {
       this.getMonthlyTimeSeries().subscribe(data => {
-        console.log(data)
         this.updateChartData(data);
       });
     } else if (this.timePeriod === "yearly") {
       this.getYearlyTimeSeries().subscribe(data => {
-        console.log(data)
         this.updateChartData(data);
       });
     }
