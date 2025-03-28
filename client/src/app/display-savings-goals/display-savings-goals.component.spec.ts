@@ -94,7 +94,7 @@ describe('DisplaySavingsGoalsComponent', () => {
     component.onRankingUpdate();
 
     expect(queryServiceMock.updateGoalsRanking).toHaveBeenCalled();
-    expect(snackBarMock.open).toHaveBeenCalledWith('Goals ordering succeessfully saved.', 'Close', { duration: 3000 });
+    expect(snackBarMock.open).toHaveBeenCalledWith('Goals ordering successfully saved.', 'Close', { duration: 3000 });
   });
 
   it('should show message when ranking is not touched', () => {

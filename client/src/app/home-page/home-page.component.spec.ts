@@ -42,8 +42,6 @@ describe('HomePageComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
-
-    const httpTesting = TestBed.inject(HttpTestingController);
   });
 
   beforeEach(() => {
@@ -91,7 +89,7 @@ describe('HomePageComponent', () => {
 
   it('should render the SavingsAreaComponent with correct inputs', () => {
   const savingsAreaComponent = fixture.debugElement.query(By.css('.savings-area')).componentInstance;
-  
+
   expect(savingsAreaComponent).toBeTruthy();
   expect(savingsAreaComponent.userID).toBe(1);
   expect(savingsAreaComponent.currencySymbol).toBe(currencyMap['USD'].symbol);

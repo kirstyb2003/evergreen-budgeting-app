@@ -283,7 +283,7 @@ export class SetBudgetPageComponent {
 
       this.queryService.setBudget(allItems, this.currentUser.user_id).subscribe({
         next: (_response) => {
-          this.popup.open('Budget succeessfully saved.', 'Close', { duration: 3000 });
+          this.popup.open('Budget successfully saved.', 'Close', { duration: 3000 });
           this.router.navigateByUrl(this.prevUrl!);
         },
         error: (err) => {

@@ -181,7 +181,7 @@ onSubmit() {
       this.queryService.updateTransaction(formValue, this.transID, formValue.transaction_date, updateOptionSend).subscribe({
         next: (_response) => {
           this.router.navigateByUrl(this.prevUrl!);
-          this.popup.open('Transaction succeessfully updated.', 'Close', { duration: 3000 });
+          this.popup.open('Transaction successfully updated.', 'Close', { duration: 3000 });
         },
         error: (err) => {
           console.error('Error updating transaction', err);
@@ -192,7 +192,7 @@ onSubmit() {
       this.queryService.logTransaction(formValue, this.currentUser.user_id, dates).subscribe({
         next: (_response) => {
           this.router.navigateByUrl(this.prevUrl!);
-          this.popup.open('Transaction succeessfully saved.', 'Close', { duration: 3000 });
+          this.popup.open('Transaction successfully saved.', 'Close', { duration: 3000 });
         },
         error: (err) => {
           console.error('Error saving transaction', err);
