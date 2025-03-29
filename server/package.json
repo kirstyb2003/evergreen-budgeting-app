@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
+    "test-pipeline": "jest --watchAll=false",
     "start": "node api/index.js",
     "start-dev": "nodemon api/index.js localhost 3080"
   },

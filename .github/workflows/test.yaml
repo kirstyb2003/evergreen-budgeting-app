@@ -33,11 +33,11 @@ jobs:
         working-directory: ./client
         run: |
           npm install
-          npm test
+          npm test-pipeline
 
       # Run server tests
       - name: Test Node.js Server
         working-directory: ./server
         run: |
           npm install
-          npm test
+          npm test-pipeline
