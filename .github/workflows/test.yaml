@@ -33,7 +33,6 @@ jobs:
         working-directory: ./client
         run: |
           npm install
-          npm run build
           npm test
 
       # Run server tests
@@ -41,5 +40,4 @@ jobs:
         working-directory: ./server
         run: |
           npm install
-          npm install -g vercel
           npm test
