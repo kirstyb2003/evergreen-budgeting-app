@@ -4,8 +4,6 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { AuthenticationService } from '../services/authentication.service';
-import { Router } from '@angular/router';
-import { QueryService } from '../services/query.service';
 import { currencyMap } from '../data-structures/currency-codes';
 import { PieChartComponent } from "../pie-chart/pie-chart.component";
 import { LineGraphComponent } from "../line-graph/line-graph.component";
@@ -26,7 +24,7 @@ export class ReportsPageComponent implements OnInit {
   currentUser!: any;
   currencySymbol!: string;
 
-  constructor(private authService: AuthenticationService, private router: Router, private queryService: QueryService) { }
+  constructor(private authService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
