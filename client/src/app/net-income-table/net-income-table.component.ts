@@ -44,7 +44,7 @@ export class NetIncomeTableComponent implements OnInit {
     }
   };
 
-  private gridApi!: GridApi;
+  gridApi!: GridApi;
 
   colDefs!: ColDef[];
   rowData: ROW_DATA_STRUCTURE[] = [];
