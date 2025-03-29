@@ -24,16 +24,24 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 18
 
       # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Run server tests
-      - name: Run server tests
-        run: npm run test:server
-
       # Run client tests
-      - name: Run client tests
-        run: npm run test:client
+      - name: Test Angular Frontend
+        working-directory: ./client
+        run: |
+          npm install
+          npm run build
+          npm test
+
+      # Run server tests
+      - name: Test Node.js Server
+        working-directory: ./server
+        run: |
+          npm install
+          npm install -g vercel
+          npm test
