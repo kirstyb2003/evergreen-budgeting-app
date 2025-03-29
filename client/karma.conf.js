@@ -28,9 +28,10 @@ module.exports = function (config) {
     browsers: ['ChromeHeadless'],
     singleRun: false,
     restartOnFileChange: true,
-    browserDisconnectTimeout: 20000,
-    browserDisconnectTolerance: 3,
-    browserNoActivityTimeout: 120000,
-    captureTimeout: 240000
+    browserDisconnectTimeout: 30000,
+    browserDisconnectTolerance: 5,
+    browserNoActivityTimeout: 180000,
+    captureTimeout: 300000,
+    concurrency: 1
   });
 };
