@@ -67,7 +67,7 @@ export class BudgetTableComponent implements OnInit {
     }
   };
 
-  private gridApi!: GridApi;
+  gridApi!: GridApi;
 
   colDefs!: ColDef[];
   rowData!: ROW_DATA_STRUCTURE[];
@@ -109,7 +109,7 @@ export class BudgetTableComponent implements OnInit {
       });
       Promise.all(populateBudget).then(budget => {
         this.rowData = budget;
-  
+
         this.calculateTotal();
       });
     });
