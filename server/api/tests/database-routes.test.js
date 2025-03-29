@@ -21,6 +21,16 @@ app.use('/api', dbRoutes);
 
 // Unit Tests
 describe('Database Routes - Unit Tests', () => {
+  let consoleErrorSpy;
+
+  beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   describe('POST /users/register', () => {
     it('should create a new user and return userId', async () => {
       createUser.mockResolvedValueOnce({ user_id: 1 });

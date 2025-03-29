@@ -46,10 +46,10 @@ const deleteCategories = async (deleteCats, userID) => {
         const catID = await getCategoryID(name, type);
 
         if (!catID) {
-            return catID.status(404).json({ error: `Category, ${category}, not found` });
+            throw new Error(`Category, ${name}, not found`);
         }
 
-        const query = `DELETE FROM budget WHERE user_id = $1 AND category_id = $2;`
+        const query = `DELETE FROM budget WHERE user_id = $1 AND category_id = $2;`;
 
         const result = await pool.query(query, [userID, catID.category_id]);
         deletedCats.push(result.rows[0]);
