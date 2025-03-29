@@ -3,12 +3,10 @@ name: Run Tests
 on:
   push:
     branches:
-      - main
-      - develop
+      - '**'
   pull_request:
     branches:
-      - main
-      - develop
+      - '**'
 
 jobs:
   test:
@@ -24,24 +22,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
 
       # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Run client tests
-      - name: Test Angular Frontend
-        working-directory: ./client
-        run: |
-          npm install
-          npm run build
-          npm test
-
       # Run server tests
-      - name: Test Node.js Server
-        working-directory: ./server
-        run: |
-          npm install
-          npm install -g vercel
-          npm test
+      - name: Run server tests
+        run: npm run test:server
+
+      # Run client tests
+      - name: Run client tests
+        run: npm run test:client
