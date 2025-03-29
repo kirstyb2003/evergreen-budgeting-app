@@ -32,7 +32,7 @@ describe('NetIncomeTableComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize column definitions correctly', () => {
+  it('should initialise column definitions correctly', () => {
     component.ngOnInit();
     expect(component.colDefs.length).toBe(2);
     expect(component.colDefs[0].field).toBe('type');
