@@ -38,11 +38,11 @@ export class AuthenticationService {
   }
 
   logout() {
-    console.log("Logging user out...")
     sessionStorage.removeItem('currentUser');
     sessionStorage.removeItem('token');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+    window.location.reload();
   }
 
   isLoggedIn(): boolean {
