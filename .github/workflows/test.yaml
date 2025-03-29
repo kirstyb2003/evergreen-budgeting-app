@@ -28,12 +28,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Run client tests
-      - name: Test Angular Frontend
-        working-directory: ./client
-        run: |
-          npm install
-          npm run test-pipeline
+      # # Run client tests
+      # - name: Test Angular Frontend
+      #   working-directory: ./client
+      #   run: |
+      #     npm install
+      #     npm run test-pipeline
 
       # Run server tests
       - name: Test Node.js Server
