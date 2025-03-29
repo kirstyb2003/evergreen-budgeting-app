@@ -28,6 +28,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Install Chrome dependencies
+      - name: Install Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3 libxss1 libasound2 fonts-liberation libappindicator3-1 xdg-utils
+
       # Run server tests
       - name: Test Node.js Server
         working-directory: ./server
