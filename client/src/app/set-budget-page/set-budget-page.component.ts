@@ -254,9 +254,6 @@ export class SetBudgetPageComponent {
       }
     });
 
-    console.error("errors: ")
-    console.error(errors)
-
     return (errors.length === 1 && errors[0] === 'warning');
   }
 

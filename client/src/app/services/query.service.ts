@@ -23,7 +23,7 @@ export class QueryService {
       this.authService.logout();
       this.authService.displayExpiredTokenPopup();
     }
-    console.error(error);
+    
     return of(null);
   }
 
