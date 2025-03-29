@@ -21,6 +21,10 @@ app.use(errorHandler);
 
 // Server setup
 const PORT = process.env.PORT || 3080;
-app.listen(PORT, () => {
-  console.log(`Server Running: http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server Running: http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

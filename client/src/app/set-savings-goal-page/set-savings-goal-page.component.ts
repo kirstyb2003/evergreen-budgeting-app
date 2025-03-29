@@ -94,7 +94,7 @@ export class SetSavingsGoalPageComponent {
         this.queryService.updateSavingsGoal(this.goalID, formValue).subscribe({
           next: (_response) => {
             this.router.navigateByUrl(this.prevUrl!);
-            this.popup.open('Savings goal succeessfully updated.', 'Close', { duration: 3000 });
+            this.popup.open('Savings goal successfully updated.', 'Close', { duration: 3000 });
           },
           error: (err) => {
             console.error('Error updating goal', err);
@@ -105,7 +105,7 @@ export class SetSavingsGoalPageComponent {
         this.queryService.setSavingsGoal(formValue, this.currentUser.user_id).subscribe({
           next: (_response) => {
             this.router.navigateByUrl(this.prevUrl!);
-            this.popup.open('Savings goal succeessfully saved.', 'Close', { duration: 3000 });
+            this.popup.open('Savings goal successfully saved.', 'Close', { duration: 3000 });
           },
           error: (err) => {
             console.error('Error saving goal', err);

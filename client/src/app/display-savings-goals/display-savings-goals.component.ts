@@ -103,7 +103,7 @@ export class DisplaySavingsGoalsComponent implements OnInit {
 
       this.queryService.updateGoalsRanking(idAndRanking).subscribe({
         next: (_response) => {
-          this.popup.open('Goals ordering succeessfully saved.', 'Close', { duration: 3000 });
+          this.popup.open('Goals ordering successfully saved.', 'Close', { duration: 3000 });
         },
         error: (err) => {
           console.error('Error saving goals ordering', err);

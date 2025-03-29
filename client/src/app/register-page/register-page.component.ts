@@ -50,7 +50,7 @@ function passwordMatchValidator(passwordControlName: string): ValidatorFn {
   };
 }
 
-function uniqueValue(field: string, httpConnect: AuthenticationService): AsyncValidatorFn {
+export function uniqueValue(field: string, httpConnect: AuthenticationService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
     const value = control.value;
 

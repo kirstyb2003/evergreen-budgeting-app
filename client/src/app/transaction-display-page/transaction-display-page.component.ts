@@ -46,16 +46,20 @@ export class TransactionDisplayPageComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.transactionType = params.get('type');
 
-      if (this.transactionType == null) {
-        this.transactionType = "income";
-      }
-
-      if (this.transactionType === "expense") {
-        this.transactionTypeText = "Expenses";
-      } else {
-        this.transactionTypeText = this.transactionType!.charAt(0).toUpperCase() + this.transactionType!.slice(1);
-      }
+      this.setUpValues();
     });
+  }
+
+  setUpValues() {
+    if (this.transactionType == null) {
+      this.transactionType = "income";
+    }
+
+    if (this.transactionType === "expense") {
+      this.transactionTypeText = "Expenses";
+    } else {
+      this.transactionTypeText = this.transactionType!.charAt(0).toUpperCase() + this.transactionType!.slice(1);
+    }
   }
 
   receiveTotal(total: number) {

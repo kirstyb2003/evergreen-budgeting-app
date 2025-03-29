@@ -33,6 +33,8 @@ export class SavingsAreaComponent implements OnInit {
   }
 
   setupGoals() {
+    this.currently_saved = 0;
+
     this.getTotalSaved().subscribe(total => {
       this.currently_saved += total;
     });

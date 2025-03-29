@@ -55,10 +55,10 @@ export function formatPaymentMethod(methodString: string): string {
   }
 }
 
-const filterParams: IDateFilterParams = {
+export const filterParams: IDateFilterParams = {
   comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
     const dateAsString = formatDate(cellValue);
-    if (dateAsString == null) return -1;
+    if (dateAsString == null || dateAsString == "") return -1;
     const dateParts = dateAsString.split("/");
     const cellDate = new Date(
       Number(dateParts[2]),
@@ -157,7 +157,7 @@ export class TransactionTableComponent implements OnInit, OnChanges {
     }
   };
 
-  private gridApi!: GridApi;
+  gridApi!: GridApi;
 
   colDefs!: ColDef[];
   rowData!: ROW_DATA_STRUCTURE[];

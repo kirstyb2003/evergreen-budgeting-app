@@ -7,10 +7,12 @@
 /client/tmp
 /client/out-tsc
 /client/bazel-out
+/client/coverage
 
 # Server folder
 /server/node_modules
 /server/.env
+/server/coverage
 
 # Node
 /node_modules

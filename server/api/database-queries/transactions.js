@@ -301,7 +301,12 @@ const getMonthlySpendByCategory = async (userID, cat, type) => {
   AND transaction_date < (DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month');`
 
   const result = await pool.query(query, [categoryId, userID]);
-  return parseFloat(result.rows[0]?.total) || 0.00;
+
+  if (result == null || result.rows == null || result.rows.length === 0 || result.rows[0].total === null) {
+    return 0.00;
+  }
+
+  return parseFloat(result.rows[0]?.total);
 
 };
 
