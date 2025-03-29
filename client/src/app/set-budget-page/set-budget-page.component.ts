@@ -36,11 +36,10 @@ export class SetBudgetPageComponent {
   numOfCategories: number = 0;
   numOfSavings: number = 0;
 
-  loadedInBudget: Boolean = false;
   categoriesLoadedIn: { name: string, type: string }[] = [];
   categoriesSubmitted: { name: string, type: string }[] = [];
 
-  constructor(private authService: AuthenticationService, private router: Router, private popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
+  constructor(private authService: AuthenticationService, private router: Router, public popup: MatSnackBar, private queryService: QueryService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
@@ -99,7 +98,6 @@ export class SetBudgetPageComponent {
 
       if (this.budgetItems.length == 0) {
         this.addBudgetItem(this.budgetItems, 1);
-        this.loadedInBudget = true;
       }
 
       this.calculateTotalBudgeted();
@@ -255,6 +253,9 @@ export class SetBudgetPageComponent {
         });
       }
     });
+
+    console.error("errors: ")
+    console.error(errors)
 
     return (errors.length === 1 && errors[0] === 'warning');
   }
