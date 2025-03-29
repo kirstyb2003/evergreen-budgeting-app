@@ -1,1 +1,14 @@
-{ "name": "evergreen-budgeting-server", "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/api" }] }
+{
+    "name": "evergreen-budgeting-server",
+    "version": 2,
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/api"
+        }
+    ],
+    "ignoreFiles": [
+        "tests/**",
+        "coverage/**"
+    ]
+}
