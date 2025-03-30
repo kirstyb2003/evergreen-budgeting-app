@@ -4,6 +4,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { WindowService } from './window.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,12 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
-  constructor(private http: HttpClient, private popup: MatSnackBar, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private popup: MatSnackBar,
+    private router: Router,
+    private windowService: WindowService
+  ) {
     this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(sessionStorage.getItem('currentUser') || 'null'));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -42,7 +48,7 @@ export class AuthenticationService {
     sessionStorage.removeItem('token');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
-    window.location.reload();
+    this.windowService.reload();
   }
 
   isLoggedIn(): boolean {

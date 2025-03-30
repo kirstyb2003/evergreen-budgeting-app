@@ -3,18 +3,23 @@ const allowedOrigins = [
   "https://evergreen-budgeting-app.web.app"
 ];
 
-// Only give localhost access if we're not in prod
+// Only give localhost access if we're in dev
 if (process.env.NODE_ENV === 'development') {
   allowedOrigins.push("http://localhost:4200");
 }
 
+// Only give localhost port 3000 access if we're testing
+if (process.env.NODE_ENV === 'test') {
+  allowedOrigins.push("http://localhost:3000");
+}
+
 const allowCors = (fn) => async (req, res) => {
-  const origin = req.headers.origin;
+  const origin = req.headers.origin || '';
 
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   } else {
-    res.status(403).json({ message: 'Forbidden: Invalid Origin' });
+    res.status(401).json({ message: 'Unauthorised: Invalid Origin' });
     return;
   }
 
@@ -35,4 +40,4 @@ const allowCors = (fn) => async (req, res) => {
   return await fn(req, res);
 };
 
-module.exports = allowCors;  
+module.exports = allowCors;
