@@ -1,17 +1,28 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthenticationService } from './authentication.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { WindowService } from './window.service';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let httpMock: HttpTestingController;
+  let windowServiceMock: jasmine.SpyObj<WindowService>;
 
   beforeEach(() => {
+    windowServiceMock = jasmine.createSpyObj('WindowService', ['reload']);
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, MatSnackBarModule, RouterTestingModule],
-      providers: [AuthenticationService],
+      imports: [MatSnackBarModule],
+      providers: [
+        AuthenticationService,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+        { provide: WindowService, useValue: windowServiceMock },
+      ],
     });
     service = TestBed.inject(AuthenticationService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -69,6 +80,7 @@ describe('AuthenticationService', () => {
 
   it('should log out a user and clear session data', () => {
     spyOn(service['router'], 'navigate');
+
     sessionStorage.setItem('currentUser', JSON.stringify({ id: 1, username: 'testuser' }));
     sessionStorage.setItem('token', 'mockToken');
 
@@ -77,6 +89,7 @@ describe('AuthenticationService', () => {
     expect(sessionStorage.getItem('currentUser')).toBeNull();
     expect(sessionStorage.getItem('token')).toBeNull();
     expect(service['router'].navigate).toHaveBeenCalledWith(['/login']);
+    expect(windowServiceMock.reload).toHaveBeenCalled(); // Verify the service was called
   });
 
   it('should check if a user is logged in', () => {
