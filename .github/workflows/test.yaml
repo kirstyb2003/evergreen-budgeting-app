@@ -1,0 +1,49 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    name: Run Server and Client Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Install Chrome dependencies
+      - name: Install Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libnss3 libxss1 fonts-liberation libappindicator3-1 xdg-utils
+
+      # Run server tests
+      - name: Test Node.js Server
+        working-directory: ./server
+        run: |
+          npm install
+          npm run test-pipeline
+
+      # Run client tests
+      - name: Test Angular Frontend
+        working-directory: ./client
+        run: |
+          npm install
+          npm run test-pipeline
