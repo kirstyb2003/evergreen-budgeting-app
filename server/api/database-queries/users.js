@@ -24,7 +24,14 @@ const findUserByEmail = async (email) => {
 const authenticateLogin = async (username_or_email, password) => {
   const query = `SELECT * FROM users WHERE (username = $1 OR email = $1) AND password = crypt($2, password)`;
   const result = await pool.query(query, [username_or_email, password]);
-  
+
+  const username = await pool.query(`SELECT * FROM users WHERE (username = $1 OR email = $1)`, [username_or_email]);
+  const passwordCheck = await pool.query(`SELECT * FROM users WHERE password = crypt($1, password)`, [password]);
+
+  console.error(username.rows[0]);
+  console.error(passwordCheck.rows[0]);
+
+
   if (result.rows.length > 0) {
     const { password, ...userWithoutPassword } = result.rows[0];
     return userWithoutPassword;
