@@ -19,6 +19,8 @@ const app = express();
 app.use(express.json());
 app.use('/api', dbRoutes);
 
+const originDomain = "http://localhost:3000";
+
 // Unit Tests
 describe('Database Routes - Unit Tests', () => {
   let consoleErrorSpy;
@@ -37,6 +39,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/users/register')
+        .set('Origin', originDomain)
         .send({
           username: 'testuser',
           email: 'test@example.com',
@@ -61,6 +64,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/users/register')
+        .set('Origin', originDomain)
         .send({
           username: 'testuser',
           email: 'test@example.com',
@@ -81,6 +85,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/users/login')
+        .set('Origin', originDomain)
         .send({
           username_or_email: 'testuser',
           password: 'password123',
@@ -105,6 +110,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/users/login')
+        .set('Origin', originDomain)
         .send({
           username_or_email: 'testuser',
           password: 'wrongpassword',
@@ -119,6 +125,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/users/login')
+        .set('Origin', originDomain)
         .send({
           username_or_email: 'testuser',
           password: 'password123',
@@ -133,7 +140,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return categories for the given type', async () => {
       getCategories.mockResolvedValueOnce([{ id: 1, name: 'Food' }]);
 
-      const res = await request(app).get('/api/categories/expense');
+      const res = await request(app).get('/api/categories/expense').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, name: 'Food' }]);
@@ -143,7 +150,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getCategories.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/categories/expense');
+      const res = await request(app).get('/api/categories/expense').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.body).toEqual({ error: 'Internal server error' });
@@ -154,7 +161,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return users matching the username', async () => {
       findUserByUsername.mockResolvedValueOnce([{ id: 1, username: 'testuser' }]);
 
-      const res = await request(app).get('/api/users/find/username/testuser');
+      const res = await request(app).get('/api/users/find/username/testuser').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, username: 'testuser' }]);
@@ -164,7 +171,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       findUserByUsername.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/users/find/username/testuser');
+      const res = await request(app).get('/api/users/find/username/testuser').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.body).toEqual({ error: 'Internal server error' });
@@ -175,7 +182,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return users matching the email', async () => {
       findUserByEmail.mockResolvedValueOnce([{ id: 1, email: 'test@example.com' }]);
 
-      const res = await request(app).get('/api/users/find/email/test@example.com');
+      const res = await request(app).get('/api/users/find/email/test@example.com').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, email: 'test@example.com' }]);
@@ -185,7 +192,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       findUserByEmail.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/users/find/email/test@example.com');
+      const res = await request(app).get('/api/users/find/email/test@example.com').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.body).toEqual({ error: 'Internal server error' });
@@ -199,6 +206,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/transactions/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ amount: 100, description: 'Test transaction' });
 
@@ -216,6 +224,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/transactions/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ amount: 100, description: 'Test transaction' });
 
@@ -226,6 +235,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/transactions/1')
+        .set('Origin', originDomain)
         .send({ amount: 100, description: 'Test transaction' });
 
       expect(res.statusCode).toBe(401);
@@ -239,6 +249,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/transaction/delete/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ repeatDelete: true, date: '2023-10-01' });
 
@@ -255,6 +266,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/transaction/delete/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ repeatDelete: true, date: '2023-10-01' });
 
@@ -265,6 +277,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/transaction/delete/1')
+        .set('Origin', originDomain)
         .send({ repeatDelete: true, date: '2023-10-01' });
 
       expect(res.statusCode).toBe(401);
@@ -276,7 +289,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return a transaction by ID', async () => {
       getTransaction.mockResolvedValueOnce({ id: 1, amount: 100, description: 'Test transaction' });
 
-      const res = await request(app).get('/api/transaction/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transaction/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ id: 1, amount: 100, description: 'Test transaction' });
@@ -286,14 +299,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getTransaction.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transaction/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transaction/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching transaction 1');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transaction/1');
+      const res = await request(app).get('/api/transaction/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -306,6 +319,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/transactions/update/replace/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ amount: 200, description: 'Updated transaction' });
 
@@ -326,6 +340,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/transactions/update/replace/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ amount: 200, description: 'Updated transaction' });
 
@@ -336,6 +351,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/transactions/update/replace/1')
+        .set('Origin', originDomain)
         .send({ amount: 200, description: 'Updated transaction' });
 
       expect(res.statusCode).toBe(401);
@@ -350,6 +366,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/budget/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ category: 'Food', amount: 500 });
 
@@ -367,6 +384,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/budget/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ category: 'Food', amount: 500 });
 
@@ -377,6 +395,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/budget/1')
+        .set('Origin', originDomain)
         .send({ category: 'Food', amount: 500 });
 
       expect(res.statusCode).toBe(401);
@@ -388,7 +407,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the budget for the given user ID', async () => {
       getBudget.mockResolvedValueOnce([{ id: 1, category: 'Food', amount: 500 }]);
 
-      const res = await request(app).get('/api/budget/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/budget/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, category: 'Food', amount: 500 }]);
@@ -398,14 +417,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getBudget.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/budget/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/budget/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching budget');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/budget/1');
+      const res = await request(app).get('/api/budget/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -419,6 +438,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/budget/delete/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send([{ category: 'Food' }]);
 
@@ -436,6 +456,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/budget/delete/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send([{ category: 'Food' }]);
 
@@ -446,6 +467,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/budget/delete/1')
+        .set('Origin', originDomain)
         .send([{ category: 'Food' }]);
 
       expect(res.statusCode).toBe(401);
@@ -457,7 +479,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the monthly budget total for the given user ID', async () => {
       getMonthlyBudget.mockResolvedValueOnce({ total: 1000 });
 
-      const res = await request(app).get('/api/budget/total/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/budget/total/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ total: 1000 });
@@ -467,14 +489,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getMonthlyBudget.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/budget/total/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/budget/total/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching monthly budget total');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/budget/total/1');
+      const res = await request(app).get('/api/budget/total/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -485,7 +507,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the monthly spend for the given user ID', async () => {
       getMonthlySpend.mockResolvedValueOnce({ total: 500 });
 
-      const res = await request(app).get('/api/spent/month/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/spent/month/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ total: 500 });
@@ -495,14 +517,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getMonthlySpend.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/spent/month/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/spent/month/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching monthly budget total');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/spent/month/1');
+      const res = await request(app).get('/api/spent/month/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -515,6 +537,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .get('/api/transactions/spent/1/Food/expense')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken');
 
       expect(res.statusCode).toBe(200);
@@ -527,6 +550,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .get('/api/transactions/spent/1/Food/expense')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken');
 
       expect(res.statusCode).toBe(500);
@@ -534,7 +558,7 @@ describe('Database Routes - Unit Tests', () => {
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/spent/1/Food/expense');
+      const res = await request(app).get('/api/transactions/spent/1/Food/expense').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -548,6 +572,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goal/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ goal: 'Save $1000', amount: 1000 });
 
@@ -565,6 +590,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goal/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ goal: 'Save $1000', amount: 1000 });
 
@@ -575,6 +601,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/savings-goal/1')
+        .set('Origin', originDomain)
         .send({ goal: 'Save $1000', amount: 1000 });
 
       expect(res.statusCode).toBe(401);
@@ -588,6 +615,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goals/delete/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ userID: 1 });
 
@@ -604,6 +632,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goals/delete/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ userID: 1 });
 
@@ -614,6 +643,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/savings-goals/delete/1')
+        .set('Origin', originDomain)
         .send({ userID: 1 });
 
       expect(res.statusCode).toBe(401);
@@ -625,7 +655,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return a savings goal by ID', async () => {
       getSavingsGoal.mockResolvedValueOnce({ id: 1, goal: 'Save $1000', amount: 1000 });
 
-      const res = await request(app).get('/api/savings-goal/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/savings-goal/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ id: 1, goal: 'Save $1000', amount: 1000 });
@@ -635,14 +665,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getSavingsGoal.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/savings-goal/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/savings-goal/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching goal 1');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/savings-goal/1');
+      const res = await request(app).get('/api/savings-goal/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -655,6 +685,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goal/update/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ goal: 'Save $2000', amount: 2000 });
 
@@ -671,6 +702,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goal/update/1')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send({ goal: 'Save $2000', amount: 2000 });
 
@@ -681,6 +713,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/savings-goal/update/1')
+        .set('Origin', originDomain)
         .send({ goal: 'Save $2000', amount: 2000 });
 
       expect(res.statusCode).toBe(401);
@@ -692,7 +725,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the balance for the given user ID', async () => {
       getBalance.mockResolvedValueOnce({ balance: 1000 });
 
-      const res = await request(app).get('/api/balance/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/balance/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ balance: 1000 });
@@ -702,14 +735,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getBalance.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/balance/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/balance/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching bank balance');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/balance/1');
+      const res = await request(app).get('/api/balance/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -720,7 +753,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the total balance for the given type', async () => {
       getTotalByType.mockResolvedValueOnce({ total: 500 });
 
-      const res = await request(app).get('/api/balance/1/savings').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/balance/1/savings').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ total: 500 });
@@ -730,14 +763,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getTotalByType.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/balance/1/savings').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/balance/1/savings').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total balance for savings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/balance/1/savings');
+      const res = await request(app).get('/api/balance/1/savings').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -748,7 +781,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return past transactions for the given type', async () => {
       getPastTransactions.mockResolvedValueOnce([{ id: 1, amount: 100, type: 'expense' }]);
 
-      const res = await request(app).get('/api/transactions/1/past/expense').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/past/expense').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, amount: 100, type: 'expense' }]);
@@ -758,14 +791,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getPastTransactions.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/past/expense').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/past/expense').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching past expense transactions');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/past/expense');
+      const res = await request(app).get('/api/transactions/1/past/expense').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -776,7 +809,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return upcoming transactions for the given type', async () => {
       getUpcomingTransactions.mockResolvedValueOnce([{ id: 1, amount: 200, type: 'income' }]);
 
-      const res = await request(app).get('/api/transactions/1/upcoming/income').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/upcoming/income').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, amount: 200, type: 'income' }]);
@@ -786,14 +819,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getUpcomingTransactions.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/upcoming/income').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/upcoming/income').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching upcoming income transactions');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/upcoming/income');
+      const res = await request(app).get('/api/transactions/1/upcoming/income').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -804,7 +837,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the total outgoings for the given user ID', async () => {
       getTotalOutgoings.mockResolvedValueOnce({ total: 800 });
 
-      const res = await request(app).get('/api/transactions/outgoings/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/outgoings/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ total: 800 });
@@ -814,14 +847,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getTotalOutgoings.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/outgoings/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/outgoings/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/outgoings/1');
+      const res = await request(app).get('/api/transactions/outgoings/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -832,7 +865,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the total income for the given user ID', async () => {
       getTotalIncome.mockResolvedValueOnce({ total: 1500 });
 
-      const res = await request(app).get('/api/transactions/total-income/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/total-income/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ total: 1500 });
@@ -842,14 +875,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getTotalIncome.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/total-income/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/total-income/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/total-income/1');
+      const res = await request(app).get('/api/transactions/total-income/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -860,7 +893,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return the total savings goal amount for the given user ID', async () => {
       getTotalGoalAmount.mockResolvedValueOnce({ total: 5000 });
 
-      const res = await request(app).get('/api/savings-goals/total-goal/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/savings-goals/total-goal/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({ total: 5000 });
@@ -870,14 +903,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getTotalGoalAmount.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/savings-goals/total-goal/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/savings-goals/total-goal/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/savings-goals/total-goal/1');
+      const res = await request(app).get('/api/savings-goals/total-goal/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -888,7 +921,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return weekly transactions for the given type and user ID', async () => {
       getWeeklyCats.mockResolvedValueOnce([{ id: 1, category: 'Food', amount: 100 }]);
 
-      const res = await request(app).get('/api/transactions/1/week/expense').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/week/expense').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, category: 'Food', amount: 100 }]);
@@ -898,14 +931,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getWeeklyCats.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/week/expense').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/week/expense').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/week/expense');
+      const res = await request(app).get('/api/transactions/1/week/expense').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -916,7 +949,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return monthly transactions for the given type and user ID', async () => {
       getMonthlyCats.mockResolvedValueOnce([{ id: 1, category: 'Rent', amount: 1200 }]);
 
-      const res = await request(app).get('/api/transactions/1/month/expense').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/month/expense').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, category: 'Rent', amount: 1200 }]);
@@ -926,14 +959,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getMonthlyCats.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/month/expense').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/month/expense').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/month/expense');
+      const res = await request(app).get('/api/transactions/1/month/expense').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -944,7 +977,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return yearly transactions for the given type and user ID', async () => {
       getYearlyCats.mockResolvedValueOnce([{ id: 1, category: 'Salary', amount: 50000 }]);
 
-      const res = await request(app).get('/api/transactions/1/year/income').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/year/income').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, category: 'Salary', amount: 50000 }]);
@@ -954,14 +987,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getYearlyCats.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/year/income').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/year/income').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/year/income');
+      const res = await request(app).get('/api/transactions/1/year/income').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -972,7 +1005,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return weekly timeseries data for the given user ID', async () => {
       getWeeklySeries.mockResolvedValueOnce([{ week: '2023-W40', total: 500 }]);
 
-      const res = await request(app).get('/api/transactions/1/timeseries/week').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/timeseries/week').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ week: '2023-W40', total: 500 }]);
@@ -982,14 +1015,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getWeeklySeries.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/timeseries/week').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/timeseries/week').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/timeseries/week');
+      const res = await request(app).get('/api/transactions/1/timeseries/week').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -1000,7 +1033,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return monthly timeseries data for the given user ID', async () => {
       getMonthlySeries.mockResolvedValueOnce([{ month: '2023-10', total: 2000 }]);
 
-      const res = await request(app).get('/api/transactions/1/timeseries/month').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/timeseries/month').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ month: '2023-10', total: 2000 }]);
@@ -1010,14 +1043,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getMonthlySeries.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/timeseries/month').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/timeseries/month').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/timeseries/month');
+      const res = await request(app).get('/api/transactions/1/timeseries/month').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -1028,7 +1061,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return yearly timeseries data for the given user ID', async () => {
       getYearlySeries.mockResolvedValueOnce([{ year: '2023', total: 24000 }]);
 
-      const res = await request(app).get('/api/transactions/1/timeseries/year').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/timeseries/year').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ year: '2023', total: 24000 }]);
@@ -1038,14 +1071,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getYearlySeries.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/timeseries/year').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/timeseries/year').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/timeseries/year');
+      const res = await request(app).get('/api/transactions/1/timeseries/year').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -1056,7 +1089,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return weekly expenses for the given user ID', async () => {
       getWeeklyExpenses.mockResolvedValueOnce([{ week: '2023-W40', total: 300 }]);
 
-      const res = await request(app).get('/api/transactions/1/expenses/week').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/expenses/week').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ week: '2023-W40', total: 300 }]);
@@ -1066,14 +1099,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getWeeklyExpenses.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/expenses/week').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/expenses/week').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/expenses/week');
+      const res = await request(app).get('/api/transactions/1/expenses/week').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -1084,7 +1117,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return monthly expenses for the given user ID', async () => {
       getMonthlyExpenses.mockResolvedValueOnce([{ month: '2023-10', total: 1200 }]);
 
-      const res = await request(app).get('/api/transactions/1/expenses/month').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/expenses/month').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ month: '2023-10', total: 1200 }]);
@@ -1094,14 +1127,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getMonthlyExpenses.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/expenses/month').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/expenses/month').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/expenses/month');
+      const res = await request(app).get('/api/transactions/1/expenses/month').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -1112,7 +1145,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return yearly expenses for the given user ID', async () => {
       getYearlyExpenses.mockResolvedValueOnce([{ year: '2023', total: 14400 }]);
 
-      const res = await request(app).get('/api/transactions/1/expenses/year').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/expenses/year').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ year: '2023', total: 14400 }]);
@@ -1122,14 +1155,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getYearlyExpenses.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/transactions/1/expenses/year').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/transactions/1/expenses/year').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching total outgoings');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/transactions/1/expenses/year');
+      const res = await request(app).get('/api/transactions/1/expenses/year').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -1140,7 +1173,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return savings goals for the given user ID', async () => {
       getSavingsGoals.mockResolvedValueOnce([{ id: 1, goal: 'Save $5000', amount: 5000 }]);
 
-      const res = await request(app).get('/api/savings-goals/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/savings-goals/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual([{ id: 1, goal: 'Save $5000', amount: 5000 }]);
@@ -1150,14 +1183,14 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 500 if an error occurs', async () => {
       getSavingsGoals.mockRejectedValueOnce(new Error('Database error'));
 
-      const res = await request(app).get('/api/savings-goals/1').set('Authorization', 'Bearer validToken');
+      const res = await request(app).get('/api/savings-goals/1').set('Authorization', 'Bearer validToken').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(500);
       expect(res.text).toBe('Error fetching savings goals');
     });
 
     it('should return 401 if no token is provided', async () => {
-      const res = await request(app).get('/api/savings-goals/1');
+      const res = await request(app).get('/api/savings-goals/1').set('Origin', originDomain);
 
       expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({ error: 'Access token required' });
@@ -1170,6 +1203,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goals/update')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send([{ id: 1, rank: 1 }, { id: 2, rank: 2 }]);
 
@@ -1186,6 +1220,7 @@ describe('Database Routes - Unit Tests', () => {
 
       const res = await request(app)
         .post('/api/savings-goals/update')
+        .set('Origin', originDomain)
         .set('Authorization', 'Bearer validToken')
         .send([{ id: 1, rank: 1 }, { id: 2, rank: 2 }]);
 
@@ -1196,6 +1231,7 @@ describe('Database Routes - Unit Tests', () => {
     it('should return 401 if no token is provided', async () => {
       const res = await request(app)
         .post('/api/savings-goals/update')
+        .set('Origin', originDomain)
         .send([{ id: 1, rank: 1 }, { id: 2, rank: 2 }]);
 
       expect(res.statusCode).toBe(401);
@@ -1207,13 +1243,14 @@ describe('Database Routes - Unit Tests', () => {
 // Integration Tests
 describe('Database Routes - Integration Tests', () => {
   it('should return 404 for unknown routes', async () => {
-    const res = await request(app).get('/api/unknown-route');
+    const res = await request(app).get('/api/unknown-route').set('Origin', originDomain);
     expect(res.statusCode).toBe(404);
   });
 
   it('should handle CORS preflight requests', async () => {
     const res = await request(app)
       .options('/api/users/register')
+      .set('Origin', originDomain)
       .set('Access-Control-Request-Method', 'POST')
       .set('Origin', 'http://example.com');
 
