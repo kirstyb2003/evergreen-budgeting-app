@@ -28,8 +28,8 @@ const authenticateLogin = async (username_or_email, password) => {
   const username = await pool.query(`SELECT * FROM users WHERE (username = $1 OR email = $1)`, [username_or_email]);
   const passwordCheck = await pool.query(`SELECT * FROM users WHERE password = crypt($1, password)`, [password]);
 
-  console.error(username.rows[0]);
-  console.error(passwordCheck.rows[0]);
+  console.error(username);
+  console.error(passwordCheck);
 
 
   if (result.rows.length > 0) {
