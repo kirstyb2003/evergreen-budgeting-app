@@ -30,6 +30,7 @@ router.post('/users/login', allowCors(async (req, res) => {
 
   try {
     const user = await authenticateLogin(username_or_email, password);
+    console.error("In router login: ", user);
     if (user.length === 0) {
       return res.status(401).json({ message: 'Invalid username, email or password' });
     }
