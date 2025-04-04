@@ -1,5 +1,5 @@
 # Evergreen Budgeting Application
-This repository contains the code for my budgeting application creating for my level 4 individual project. 
+This repository contains the code for my budgeting application, created for my level 4 individual project. 
 
 Any admin documents, such as my dissertation, presentation, meeting minutes with my supervisor, data collected and ethics approvals can be found in my admin respository [here](https://github.com/kirstyb2003/Personal-Budget-Tracker/).
 
