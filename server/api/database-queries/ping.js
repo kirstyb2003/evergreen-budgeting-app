@@ -1,7 +1,7 @@
 const pool = require('../pool');
 
 const pingDatabase = async () => {
-    const result = await pool.query("SELECT 1");
+    const result = await pool.query("SELECT name FROM category;");
     return result.rows;
 };
 
