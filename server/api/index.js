@@ -22,6 +22,7 @@ app.use(errorHandler);
 const cron = require('node-cron');
 const { pingDatabase } = require('./database-queries/ping');
 
+// Pings the database at 12pm each day
 cron.schedule('0 12 * * *', async () => {
   try {
     await pingDatabase();
@@ -31,6 +32,7 @@ cron.schedule('0 12 * * *', async () => {
   }
 });
 
+// Health check to view output from the ping query
 app.get('/api/ping', async (req, res) => {
   try {
     const result = await pingDatabase();
