@@ -33,10 +33,10 @@ cron.schedule('0 12 * * *', async () => {
 
 app.get('/api/ping', async (req, res) => {
   try {
-    await pingDatabase();
-    res.send('Database is awake!');
+    const result = await pingDatabase();
+    res.status(200).send(result);
   } catch (err) {
-    res.status(500).send('Database ping failed');
+    res.status(500).send(err);
   }
 });
 
