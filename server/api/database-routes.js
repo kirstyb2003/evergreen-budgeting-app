@@ -483,5 +483,4 @@ router.get('/transactions/:userID/expenses/year', authenticateToken, allowCors(a
 
 }));
 
-
 module.exports = router;
